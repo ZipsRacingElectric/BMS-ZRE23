@@ -46,6 +46,12 @@
   Section: Included Files
 */
 #include "mcc_generated_files/system.h"
+#include <stdint.h>
+
+#include "mcc_generated_files/pin_manager.h"
+
+#define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
+#include <libpic30.h>        // __delayXXX() functions macros defined here
 
 /*
                          Main application
@@ -59,7 +65,30 @@ int main(void)
     CAN2_STDBY_SetHigh();
     while (1)
     {
-        // Add your application code
+        LED8_SetHigh();
+        __delay_ms(500);
+        LED8_SetLow();
+        LED7_SetHigh();
+        __delay_ms(500);
+        LED7_SetLow();
+        LED6_SetHigh();
+        __delay_ms(500);
+        LED6_SetLow();
+        LED5_SetHigh();
+        __delay_ms(500);
+        LED5_SetLow();
+        LED4_SetHigh();
+        __delay_ms(500);
+        LED4_SetLow();
+        LED3_SetHigh();
+        __delay_ms(500);
+        LED3_SetLow();
+        LED2_SetHigh();
+        __delay_ms(500);
+        LED2_SetLow();
+        LED1_SetHigh();
+        __delay_ms(500);
+        LED1_SetLow();
     }
     return 1; 
 }

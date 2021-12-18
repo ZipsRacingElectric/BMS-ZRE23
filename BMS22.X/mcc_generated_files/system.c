@@ -103,17 +103,17 @@
 #include "clock.h"
 #include "system.h"
 #include "system_types.h"
-#include "can2.h"
+#include "dma.h"
 #include "interrupt_manager.h"
 #include "traps.h"
-#include "dma.h"
 #include "can1.h"
+#include "can2.h"
 
 void SYSTEM_Initialize(void)
 {
     PIN_MANAGER_Initialize();
-    CLOCK_Initialize();
     INTERRUPT_Initialize();
+    CLOCK_Initialize();
     CAN2_Initialize();
     CAN1_Initialize();
     DMA_Initialize();

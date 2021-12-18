@@ -56,6 +56,444 @@
 */
 /**
   @Summary
+    Sets the GPIO pin, RB11, high using LATB11.
+
+  @Description
+    Sets the GPIO pin, RB11, high using LATB11.
+
+  @Preconditions
+    The RB11 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RB11 high (1)
+    LED3_SetHigh();
+    </code>
+
+*/
+#define LED3_SetHigh()          (_LATB11 = 1)
+/**
+  @Summary
+    Sets the GPIO pin, RB11, low using LATB11.
+
+  @Description
+    Sets the GPIO pin, RB11, low using LATB11.
+
+  @Preconditions
+    The RB11 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RB11 low (0)
+    LED3_SetLow();
+    </code>
+
+*/
+#define LED3_SetLow()           (_LATB11 = 0)
+/**
+  @Summary
+    Toggles the GPIO pin, RB11, using LATB11.
+
+  @Description
+    Toggles the GPIO pin, RB11, using LATB11.
+
+  @Preconditions
+    The RB11 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Toggle RB11
+    LED3_Toggle();
+    </code>
+
+*/
+#define LED3_Toggle()           (_LATB11 ^= 1)
+/**
+  @Summary
+    Reads the value of the GPIO pin, RB11.
+
+  @Description
+    Reads the value of the GPIO pin, RB11.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    uint16_t portValue;
+
+    // Read RB11
+    postValue = LED3_GetValue();
+    </code>
+
+*/
+#define LED3_GetValue()         _RB11
+/**
+  @Summary
+    Configures the GPIO pin, RB11, as an input.
+
+  @Description
+    Configures the GPIO pin, RB11, as an input.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RB11 as an input
+    LED3_SetDigitalInput();
+    </code>
+
+*/
+#define LED3_SetDigitalInput()  (_TRISB11 = 1)
+/**
+  @Summary
+    Configures the GPIO pin, RB11, as an output.
+
+  @Description
+    Configures the GPIO pin, RB11, as an output.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RB11 as an output
+    LED3_SetDigitalOutput();
+    </code>
+
+*/
+#define LED3_SetDigitalOutput() (_TRISB11 = 0)
+/**
+  @Summary
+    Sets the GPIO pin, RB12, high using LATB12.
+
+  @Description
+    Sets the GPIO pin, RB12, high using LATB12.
+
+  @Preconditions
+    The RB12 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RB12 high (1)
+    LED2_SetHigh();
+    </code>
+
+*/
+#define LED2_SetHigh()          (_LATB12 = 1)
+/**
+  @Summary
+    Sets the GPIO pin, RB12, low using LATB12.
+
+  @Description
+    Sets the GPIO pin, RB12, low using LATB12.
+
+  @Preconditions
+    The RB12 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RB12 low (0)
+    LED2_SetLow();
+    </code>
+
+*/
+#define LED2_SetLow()           (_LATB12 = 0)
+/**
+  @Summary
+    Toggles the GPIO pin, RB12, using LATB12.
+
+  @Description
+    Toggles the GPIO pin, RB12, using LATB12.
+
+  @Preconditions
+    The RB12 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Toggle RB12
+    LED2_Toggle();
+    </code>
+
+*/
+#define LED2_Toggle()           (_LATB12 ^= 1)
+/**
+  @Summary
+    Reads the value of the GPIO pin, RB12.
+
+  @Description
+    Reads the value of the GPIO pin, RB12.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    uint16_t portValue;
+
+    // Read RB12
+    postValue = LED2_GetValue();
+    </code>
+
+*/
+#define LED2_GetValue()         _RB12
+/**
+  @Summary
+    Configures the GPIO pin, RB12, as an input.
+
+  @Description
+    Configures the GPIO pin, RB12, as an input.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RB12 as an input
+    LED2_SetDigitalInput();
+    </code>
+
+*/
+#define LED2_SetDigitalInput()  (_TRISB12 = 1)
+/**
+  @Summary
+    Configures the GPIO pin, RB12, as an output.
+
+  @Description
+    Configures the GPIO pin, RB12, as an output.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RB12 as an output
+    LED2_SetDigitalOutput();
+    </code>
+
+*/
+#define LED2_SetDigitalOutput() (_TRISB12 = 0)
+/**
+  @Summary
+    Sets the GPIO pin, RB13, high using LATB13.
+
+  @Description
+    Sets the GPIO pin, RB13, high using LATB13.
+
+  @Preconditions
+    The RB13 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RB13 high (1)
+    LED1_SetHigh();
+    </code>
+
+*/
+#define LED1_SetHigh()          (_LATB13 = 1)
+/**
+  @Summary
+    Sets the GPIO pin, RB13, low using LATB13.
+
+  @Description
+    Sets the GPIO pin, RB13, low using LATB13.
+
+  @Preconditions
+    The RB13 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RB13 low (0)
+    LED1_SetLow();
+    </code>
+
+*/
+#define LED1_SetLow()           (_LATB13 = 0)
+/**
+  @Summary
+    Toggles the GPIO pin, RB13, using LATB13.
+
+  @Description
+    Toggles the GPIO pin, RB13, using LATB13.
+
+  @Preconditions
+    The RB13 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Toggle RB13
+    LED1_Toggle();
+    </code>
+
+*/
+#define LED1_Toggle()           (_LATB13 ^= 1)
+/**
+  @Summary
+    Reads the value of the GPIO pin, RB13.
+
+  @Description
+    Reads the value of the GPIO pin, RB13.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    uint16_t portValue;
+
+    // Read RB13
+    postValue = LED1_GetValue();
+    </code>
+
+*/
+#define LED1_GetValue()         _RB13
+/**
+  @Summary
+    Configures the GPIO pin, RB13, as an input.
+
+  @Description
+    Configures the GPIO pin, RB13, as an input.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RB13 as an input
+    LED1_SetDigitalInput();
+    </code>
+
+*/
+#define LED1_SetDigitalInput()  (_TRISB13 = 1)
+/**
+  @Summary
+    Configures the GPIO pin, RB13, as an output.
+
+  @Description
+    Configures the GPIO pin, RB13, as an output.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RB13 as an output
+    LED1_SetDigitalOutput();
+    </code>
+
+*/
+#define LED1_SetDigitalOutput() (_TRISB13 = 0)
+/**
+  @Summary
     Sets the GPIO pin, RB14, high using LATB14.
 
   @Description
@@ -202,6 +640,152 @@
 #define CAN2_STDBY_SetDigitalOutput() (_TRISB14 = 0)
 /**
   @Summary
+    Sets the GPIO pin, RB7, high using LATB7.
+
+  @Description
+    Sets the GPIO pin, RB7, high using LATB7.
+
+  @Preconditions
+    The RB7 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RB7 high (1)
+    LED8_SetHigh();
+    </code>
+
+*/
+#define LED8_SetHigh()          (_LATB7 = 1)
+/**
+  @Summary
+    Sets the GPIO pin, RB7, low using LATB7.
+
+  @Description
+    Sets the GPIO pin, RB7, low using LATB7.
+
+  @Preconditions
+    The RB7 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RB7 low (0)
+    LED8_SetLow();
+    </code>
+
+*/
+#define LED8_SetLow()           (_LATB7 = 0)
+/**
+  @Summary
+    Toggles the GPIO pin, RB7, using LATB7.
+
+  @Description
+    Toggles the GPIO pin, RB7, using LATB7.
+
+  @Preconditions
+    The RB7 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Toggle RB7
+    LED8_Toggle();
+    </code>
+
+*/
+#define LED8_Toggle()           (_LATB7 ^= 1)
+/**
+  @Summary
+    Reads the value of the GPIO pin, RB7.
+
+  @Description
+    Reads the value of the GPIO pin, RB7.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    uint16_t portValue;
+
+    // Read RB7
+    postValue = LED8_GetValue();
+    </code>
+
+*/
+#define LED8_GetValue()         _RB7
+/**
+  @Summary
+    Configures the GPIO pin, RB7, as an input.
+
+  @Description
+    Configures the GPIO pin, RB7, as an input.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RB7 as an input
+    LED8_SetDigitalInput();
+    </code>
+
+*/
+#define LED8_SetDigitalInput()  (_TRISB7 = 1)
+/**
+  @Summary
+    Configures the GPIO pin, RB7, as an output.
+
+  @Description
+    Configures the GPIO pin, RB7, as an output.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RB7 as an output
+    LED8_SetDigitalOutput();
+    </code>
+
+*/
+#define LED8_SetDigitalOutput() (_TRISB7 = 0)
+/**
+  @Summary
     Sets the GPIO pin, RC12, high using LATC12.
 
   @Description
@@ -346,6 +930,590 @@
 
 */
 #define CAN1_STDBY_SetDigitalOutput() (_TRISC12 = 0)
+/**
+  @Summary
+    Sets the GPIO pin, RC3, high using LATC3.
+
+  @Description
+    Sets the GPIO pin, RC3, high using LATC3.
+
+  @Preconditions
+    The RC3 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RC3 high (1)
+    LED4_SetHigh();
+    </code>
+
+*/
+#define LED4_SetHigh()          (_LATC3 = 1)
+/**
+  @Summary
+    Sets the GPIO pin, RC3, low using LATC3.
+
+  @Description
+    Sets the GPIO pin, RC3, low using LATC3.
+
+  @Preconditions
+    The RC3 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RC3 low (0)
+    LED4_SetLow();
+    </code>
+
+*/
+#define LED4_SetLow()           (_LATC3 = 0)
+/**
+  @Summary
+    Toggles the GPIO pin, RC3, using LATC3.
+
+  @Description
+    Toggles the GPIO pin, RC3, using LATC3.
+
+  @Preconditions
+    The RC3 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Toggle RC3
+    LED4_Toggle();
+    </code>
+
+*/
+#define LED4_Toggle()           (_LATC3 ^= 1)
+/**
+  @Summary
+    Reads the value of the GPIO pin, RC3.
+
+  @Description
+    Reads the value of the GPIO pin, RC3.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    uint16_t portValue;
+
+    // Read RC3
+    postValue = LED4_GetValue();
+    </code>
+
+*/
+#define LED4_GetValue()         _RC3
+/**
+  @Summary
+    Configures the GPIO pin, RC3, as an input.
+
+  @Description
+    Configures the GPIO pin, RC3, as an input.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RC3 as an input
+    LED4_SetDigitalInput();
+    </code>
+
+*/
+#define LED4_SetDigitalInput()  (_TRISC3 = 1)
+/**
+  @Summary
+    Configures the GPIO pin, RC3, as an output.
+
+  @Description
+    Configures the GPIO pin, RC3, as an output.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RC3 as an output
+    LED4_SetDigitalOutput();
+    </code>
+
+*/
+#define LED4_SetDigitalOutput() (_TRISC3 = 0)
+/**
+  @Summary
+    Sets the GPIO pin, RC4, high using LATC4.
+
+  @Description
+    Sets the GPIO pin, RC4, high using LATC4.
+
+  @Preconditions
+    The RC4 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RC4 high (1)
+    LED7_SetHigh();
+    </code>
+
+*/
+#define LED7_SetHigh()          (_LATC4 = 1)
+/**
+  @Summary
+    Sets the GPIO pin, RC4, low using LATC4.
+
+  @Description
+    Sets the GPIO pin, RC4, low using LATC4.
+
+  @Preconditions
+    The RC4 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RC4 low (0)
+    LED7_SetLow();
+    </code>
+
+*/
+#define LED7_SetLow()           (_LATC4 = 0)
+/**
+  @Summary
+    Toggles the GPIO pin, RC4, using LATC4.
+
+  @Description
+    Toggles the GPIO pin, RC4, using LATC4.
+
+  @Preconditions
+    The RC4 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Toggle RC4
+    LED7_Toggle();
+    </code>
+
+*/
+#define LED7_Toggle()           (_LATC4 ^= 1)
+/**
+  @Summary
+    Reads the value of the GPIO pin, RC4.
+
+  @Description
+    Reads the value of the GPIO pin, RC4.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    uint16_t portValue;
+
+    // Read RC4
+    postValue = LED7_GetValue();
+    </code>
+
+*/
+#define LED7_GetValue()         _RC4
+/**
+  @Summary
+    Configures the GPIO pin, RC4, as an input.
+
+  @Description
+    Configures the GPIO pin, RC4, as an input.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RC4 as an input
+    LED7_SetDigitalInput();
+    </code>
+
+*/
+#define LED7_SetDigitalInput()  (_TRISC4 = 1)
+/**
+  @Summary
+    Configures the GPIO pin, RC4, as an output.
+
+  @Description
+    Configures the GPIO pin, RC4, as an output.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RC4 as an output
+    LED7_SetDigitalOutput();
+    </code>
+
+*/
+#define LED7_SetDigitalOutput() (_TRISC4 = 0)
+/**
+  @Summary
+    Sets the GPIO pin, RC5, high using LATC5.
+
+  @Description
+    Sets the GPIO pin, RC5, high using LATC5.
+
+  @Preconditions
+    The RC5 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RC5 high (1)
+    LED6_SetHigh();
+    </code>
+
+*/
+#define LED6_SetHigh()          (_LATC5 = 1)
+/**
+  @Summary
+    Sets the GPIO pin, RC5, low using LATC5.
+
+  @Description
+    Sets the GPIO pin, RC5, low using LATC5.
+
+  @Preconditions
+    The RC5 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RC5 low (0)
+    LED6_SetLow();
+    </code>
+
+*/
+#define LED6_SetLow()           (_LATC5 = 0)
+/**
+  @Summary
+    Toggles the GPIO pin, RC5, using LATC5.
+
+  @Description
+    Toggles the GPIO pin, RC5, using LATC5.
+
+  @Preconditions
+    The RC5 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Toggle RC5
+    LED6_Toggle();
+    </code>
+
+*/
+#define LED6_Toggle()           (_LATC5 ^= 1)
+/**
+  @Summary
+    Reads the value of the GPIO pin, RC5.
+
+  @Description
+    Reads the value of the GPIO pin, RC5.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    uint16_t portValue;
+
+    // Read RC5
+    postValue = LED6_GetValue();
+    </code>
+
+*/
+#define LED6_GetValue()         _RC5
+/**
+  @Summary
+    Configures the GPIO pin, RC5, as an input.
+
+  @Description
+    Configures the GPIO pin, RC5, as an input.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RC5 as an input
+    LED6_SetDigitalInput();
+    </code>
+
+*/
+#define LED6_SetDigitalInput()  (_TRISC5 = 1)
+/**
+  @Summary
+    Configures the GPIO pin, RC5, as an output.
+
+  @Description
+    Configures the GPIO pin, RC5, as an output.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RC5 as an output
+    LED6_SetDigitalOutput();
+    </code>
+
+*/
+#define LED6_SetDigitalOutput() (_TRISC5 = 0)
+/**
+  @Summary
+    Sets the GPIO pin, RC6, high using LATC6.
+
+  @Description
+    Sets the GPIO pin, RC6, high using LATC6.
+
+  @Preconditions
+    The RC6 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RC6 high (1)
+    LED5_SetHigh();
+    </code>
+
+*/
+#define LED5_SetHigh()          (_LATC6 = 1)
+/**
+  @Summary
+    Sets the GPIO pin, RC6, low using LATC6.
+
+  @Description
+    Sets the GPIO pin, RC6, low using LATC6.
+
+  @Preconditions
+    The RC6 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RC6 low (0)
+    LED5_SetLow();
+    </code>
+
+*/
+#define LED5_SetLow()           (_LATC6 = 0)
+/**
+  @Summary
+    Toggles the GPIO pin, RC6, using LATC6.
+
+  @Description
+    Toggles the GPIO pin, RC6, using LATC6.
+
+  @Preconditions
+    The RC6 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Toggle RC6
+    LED5_Toggle();
+    </code>
+
+*/
+#define LED5_Toggle()           (_LATC6 ^= 1)
+/**
+  @Summary
+    Reads the value of the GPIO pin, RC6.
+
+  @Description
+    Reads the value of the GPIO pin, RC6.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    uint16_t portValue;
+
+    // Read RC6
+    postValue = LED5_GetValue();
+    </code>
+
+*/
+#define LED5_GetValue()         _RC6
+/**
+  @Summary
+    Configures the GPIO pin, RC6, as an input.
+
+  @Description
+    Configures the GPIO pin, RC6, as an input.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RC6 as an input
+    LED5_SetDigitalInput();
+    </code>
+
+*/
+#define LED5_SetDigitalInput()  (_TRISC6 = 1)
+/**
+  @Summary
+    Configures the GPIO pin, RC6, as an output.
+
+  @Description
+    Configures the GPIO pin, RC6, as an output.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RC6 as an output
+    LED5_SetDigitalOutput();
+    </code>
+
+*/
+#define LED5_SetDigitalOutput() (_TRISC6 = 0)
 
 /**
     Section: Function Prototypes
