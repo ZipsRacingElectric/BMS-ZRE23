@@ -54,6 +54,9 @@ int main(void)
 {
     // initialize the device
     SYSTEM_Initialize();
+    
+    CAN1_STDBY_SetHigh();
+    CAN2_STDBY_SetHigh();
     while (1)
     {
         // Add your application code

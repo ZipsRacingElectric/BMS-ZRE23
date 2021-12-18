@@ -48,14 +48,14 @@
 
 void CLOCK_Initialize(void)
 {
-    // FRCDIV FRC/2; PLLPRE 2; DOZE 1:8; PLLPOST 1:2; DOZEN disabled; ROI disabled; 
-    CLKDIV = 0x3100;
+    // FRCDIV FRC/2; PLLPRE 2; DOZE 1:8; PLLPOST 1:4; DOZEN disabled; ROI disabled; 
+    CLKDIV = 0x3140;
     // TUN Center frequency; 
     OSCTUN = 0x00;
     // ROON disabled; ROSEL FOSC; RODIV 0; ROSSLP disabled; 
     REFOCON = 0x00;
-    // PLLDIV 38; 
-    PLLFBD = 0x26;
+    // PLLDIV 50; 
+    PLLFBD = 0x32;
     // ENAPLL disabled; APSTSCLR 1:1; APLLCK disabled; FRCSEL FRC; SELACLK Auxiliary Oscillators; ASRCSEL No clock input; 
     ACLKCON = 0x2740;
     // LFSR 0; 

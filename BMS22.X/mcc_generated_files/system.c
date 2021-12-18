@@ -76,7 +76,7 @@
 #pragma config WDTWIN = WIN25    //Watchdog Timer Window Select bits->WDT Window is 25% of WDT period
 
 // FICD
-#pragma config ICS = PGD1    //ICD Communication Channel Select bits->Communicate on PGEC1 and PGED1
+#pragma config ICS = PGD2    //ICD Communication Channel Select bits->Communicate on PGEC2 and PGED2
 #pragma config JTAGEN = OFF    //JTAG Enable bit->JTAG is disabled
 #pragma config BTSWP = OFF    //BOOTSWP Instruction Enable/Disable bit->BOOTSWP instruction is disabled
 
@@ -103,16 +103,18 @@
 #include "clock.h"
 #include "system.h"
 #include "system_types.h"
-#include "can1.h"
+#include "can2.h"
 #include "interrupt_manager.h"
 #include "traps.h"
 #include "dma.h"
+#include "can1.h"
 
 void SYSTEM_Initialize(void)
 {
     PIN_MANAGER_Initialize();
-    INTERRUPT_Initialize();
     CLOCK_Initialize();
+    INTERRUPT_Initialize();
+    CAN2_Initialize();
     CAN1_Initialize();
     DMA_Initialize();
     INTERRUPT_GlobalEnable();

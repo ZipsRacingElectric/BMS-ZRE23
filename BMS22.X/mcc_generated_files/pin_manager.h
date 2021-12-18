@@ -54,6 +54,298 @@
 /**
     Section: Device Pin Macros
 */
+/**
+  @Summary
+    Sets the GPIO pin, RB14, high using LATB14.
+
+  @Description
+    Sets the GPIO pin, RB14, high using LATB14.
+
+  @Preconditions
+    The RB14 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RB14 high (1)
+    CAN2_STDBY_SetHigh();
+    </code>
+
+*/
+#define CAN2_STDBY_SetHigh()          (_LATB14 = 1)
+/**
+  @Summary
+    Sets the GPIO pin, RB14, low using LATB14.
+
+  @Description
+    Sets the GPIO pin, RB14, low using LATB14.
+
+  @Preconditions
+    The RB14 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RB14 low (0)
+    CAN2_STDBY_SetLow();
+    </code>
+
+*/
+#define CAN2_STDBY_SetLow()           (_LATB14 = 0)
+/**
+  @Summary
+    Toggles the GPIO pin, RB14, using LATB14.
+
+  @Description
+    Toggles the GPIO pin, RB14, using LATB14.
+
+  @Preconditions
+    The RB14 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Toggle RB14
+    CAN2_STDBY_Toggle();
+    </code>
+
+*/
+#define CAN2_STDBY_Toggle()           (_LATB14 ^= 1)
+/**
+  @Summary
+    Reads the value of the GPIO pin, RB14.
+
+  @Description
+    Reads the value of the GPIO pin, RB14.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    uint16_t portValue;
+
+    // Read RB14
+    postValue = CAN2_STDBY_GetValue();
+    </code>
+
+*/
+#define CAN2_STDBY_GetValue()         _RB14
+/**
+  @Summary
+    Configures the GPIO pin, RB14, as an input.
+
+  @Description
+    Configures the GPIO pin, RB14, as an input.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RB14 as an input
+    CAN2_STDBY_SetDigitalInput();
+    </code>
+
+*/
+#define CAN2_STDBY_SetDigitalInput()  (_TRISB14 = 1)
+/**
+  @Summary
+    Configures the GPIO pin, RB14, as an output.
+
+  @Description
+    Configures the GPIO pin, RB14, as an output.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RB14 as an output
+    CAN2_STDBY_SetDigitalOutput();
+    </code>
+
+*/
+#define CAN2_STDBY_SetDigitalOutput() (_TRISB14 = 0)
+/**
+  @Summary
+    Sets the GPIO pin, RC12, high using LATC12.
+
+  @Description
+    Sets the GPIO pin, RC12, high using LATC12.
+
+  @Preconditions
+    The RC12 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RC12 high (1)
+    CAN1_STDBY_SetHigh();
+    </code>
+
+*/
+#define CAN1_STDBY_SetHigh()          (_LATC12 = 1)
+/**
+  @Summary
+    Sets the GPIO pin, RC12, low using LATC12.
+
+  @Description
+    Sets the GPIO pin, RC12, low using LATC12.
+
+  @Preconditions
+    The RC12 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RC12 low (0)
+    CAN1_STDBY_SetLow();
+    </code>
+
+*/
+#define CAN1_STDBY_SetLow()           (_LATC12 = 0)
+/**
+  @Summary
+    Toggles the GPIO pin, RC12, using LATC12.
+
+  @Description
+    Toggles the GPIO pin, RC12, using LATC12.
+
+  @Preconditions
+    The RC12 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Toggle RC12
+    CAN1_STDBY_Toggle();
+    </code>
+
+*/
+#define CAN1_STDBY_Toggle()           (_LATC12 ^= 1)
+/**
+  @Summary
+    Reads the value of the GPIO pin, RC12.
+
+  @Description
+    Reads the value of the GPIO pin, RC12.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    uint16_t portValue;
+
+    // Read RC12
+    postValue = CAN1_STDBY_GetValue();
+    </code>
+
+*/
+#define CAN1_STDBY_GetValue()         _RC12
+/**
+  @Summary
+    Configures the GPIO pin, RC12, as an input.
+
+  @Description
+    Configures the GPIO pin, RC12, as an input.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RC12 as an input
+    CAN1_STDBY_SetDigitalInput();
+    </code>
+
+*/
+#define CAN1_STDBY_SetDigitalInput()  (_TRISC12 = 1)
+/**
+  @Summary
+    Configures the GPIO pin, RC12, as an output.
+
+  @Description
+    Configures the GPIO pin, RC12, as an output.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RC12 as an output
+    CAN1_STDBY_SetDigitalOutput();
+    </code>
+
+*/
+#define CAN1_STDBY_SetDigitalOutput() (_TRISC12 = 0)
 
 /**
     Section: Function Prototypes
