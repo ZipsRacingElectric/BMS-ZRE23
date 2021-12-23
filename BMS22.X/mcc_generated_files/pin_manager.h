@@ -219,11 +219,11 @@
   @Example
     <code>
     // Set RB12 high (1)
-    LED2_SetHigh();
+    LED2_CAN_STATUS_SetHigh();
     </code>
 
 */
-#define LED2_SetHigh()          (_LATB12 = 1)
+#define LED2_CAN_STATUS_SetHigh()          (_LATB12 = 1)
 /**
   @Summary
     Sets the GPIO pin, RB12, low using LATB12.
@@ -243,11 +243,11 @@
   @Example
     <code>
     // Set RB12 low (0)
-    LED2_SetLow();
+    LED2_CAN_STATUS_SetLow();
     </code>
 
 */
-#define LED2_SetLow()           (_LATB12 = 0)
+#define LED2_CAN_STATUS_SetLow()           (_LATB12 = 0)
 /**
   @Summary
     Toggles the GPIO pin, RB12, using LATB12.
@@ -267,11 +267,11 @@
   @Example
     <code>
     // Toggle RB12
-    LED2_Toggle();
+    LED2_CAN_STATUS_Toggle();
     </code>
 
 */
-#define LED2_Toggle()           (_LATB12 ^= 1)
+#define LED2_CAN_STATUS_Toggle()           (_LATB12 ^= 1)
 /**
   @Summary
     Reads the value of the GPIO pin, RB12.
@@ -293,11 +293,11 @@
     uint16_t portValue;
 
     // Read RB12
-    postValue = LED2_GetValue();
+    postValue = LED2_CAN_STATUS_GetValue();
     </code>
 
 */
-#define LED2_GetValue()         _RB12
+#define LED2_CAN_STATUS_GetValue()         _RB12
 /**
   @Summary
     Configures the GPIO pin, RB12, as an input.
@@ -317,11 +317,11 @@
   @Example
     <code>
     // Sets the RB12 as an input
-    LED2_SetDigitalInput();
+    LED2_CAN_STATUS_SetDigitalInput();
     </code>
 
 */
-#define LED2_SetDigitalInput()  (_TRISB12 = 1)
+#define LED2_CAN_STATUS_SetDigitalInput()  (_TRISB12 = 1)
 /**
   @Summary
     Configures the GPIO pin, RB12, as an output.
@@ -341,11 +341,11 @@
   @Example
     <code>
     // Sets the RB12 as an output
-    LED2_SetDigitalOutput();
+    LED2_CAN_STATUS_SetDigitalOutput();
     </code>
 
 */
-#define LED2_SetDigitalOutput() (_TRISB12 = 0)
+#define LED2_CAN_STATUS_SetDigitalOutput() (_TRISB12 = 0)
 /**
   @Summary
     Sets the GPIO pin, RB13, high using LATB13.
@@ -365,11 +365,11 @@
   @Example
     <code>
     // Set RB13 high (1)
-    LED1_SetHigh();
+    LED1_HEARTBEAT_SetHigh();
     </code>
 
 */
-#define LED1_SetHigh()          (_LATB13 = 1)
+#define LED1_HEARTBEAT_SetHigh()          (_LATB13 = 1)
 /**
   @Summary
     Sets the GPIO pin, RB13, low using LATB13.
@@ -389,11 +389,11 @@
   @Example
     <code>
     // Set RB13 low (0)
-    LED1_SetLow();
+    LED1_HEARTBEAT_SetLow();
     </code>
 
 */
-#define LED1_SetLow()           (_LATB13 = 0)
+#define LED1_HEARTBEAT_SetLow()           (_LATB13 = 0)
 /**
   @Summary
     Toggles the GPIO pin, RB13, using LATB13.
@@ -413,11 +413,11 @@
   @Example
     <code>
     // Toggle RB13
-    LED1_Toggle();
+    LED1_HEARTBEAT_Toggle();
     </code>
 
 */
-#define LED1_Toggle()           (_LATB13 ^= 1)
+#define LED1_HEARTBEAT_Toggle()           (_LATB13 ^= 1)
 /**
   @Summary
     Reads the value of the GPIO pin, RB13.
@@ -439,11 +439,11 @@
     uint16_t portValue;
 
     // Read RB13
-    postValue = LED1_GetValue();
+    postValue = LED1_HEARTBEAT_GetValue();
     </code>
 
 */
-#define LED1_GetValue()         _RB13
+#define LED1_HEARTBEAT_GetValue()         _RB13
 /**
   @Summary
     Configures the GPIO pin, RB13, as an input.
@@ -463,11 +463,11 @@
   @Example
     <code>
     // Sets the RB13 as an input
-    LED1_SetDigitalInput();
+    LED1_HEARTBEAT_SetDigitalInput();
     </code>
 
 */
-#define LED1_SetDigitalInput()  (_TRISB13 = 1)
+#define LED1_HEARTBEAT_SetDigitalInput()  (_TRISB13 = 1)
 /**
   @Summary
     Configures the GPIO pin, RB13, as an output.
@@ -487,11 +487,11 @@
   @Example
     <code>
     // Sets the RB13 as an output
-    LED1_SetDigitalOutput();
+    LED1_HEARTBEAT_SetDigitalOutput();
     </code>
 
 */
-#define LED1_SetDigitalOutput() (_TRISB13 = 0)
+#define LED1_HEARTBEAT_SetDigitalOutput() (_TRISB13 = 0)
 /**
   @Summary
     Sets the GPIO pin, RB14, high using LATB14.

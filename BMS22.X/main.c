@@ -49,9 +49,7 @@
 #include <stdint.h>
 
 #include "mcc_generated_files/pin_manager.h"
-#include "mcc_generated_files/can1.h"
-#include "mcc_generated_files/can2.h"
-#include "mcc_generated_files/can_types.h"
+#include "can_driver.h"
 
 #define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
 #include <libpic30.h>        // __delayXXX() functions macros defined here
@@ -63,72 +61,15 @@ int main(void)
 {
     // initialize the device
     SYSTEM_Initialize();
+    can_initialize();
     
-    CAN1_TransmitEnable();
-    CAN1_ReceiveEnable();
-    CAN1_OperationModeSet(CAN_NORMAL_OPERATION_MODE);
-    
-    CAN2_TransmitEnable();
-    CAN2_ReceiveEnable();
-    CAN2_OperationModeSet(CAN_NORMAL_OPERATION_MODE);
-    
-    CAN1_STDBY_SetLow();
-    CAN2_STDBY_SetLow();
-    
-    uint8_t can_data[2] = {0, 1};
     while (1)
     {
-        can_data[0]++;
-        can_data[1]++;
-        CAN_MSG_FIELD overhead = {
-            .idType = CAN_FRAME_STD,
-            .frameType = CAN_FRAME_DATA,
-            .dlc = CAN_DLC_2,
-        };
-        
-        CAN_MSG_OBJ msg = {
-            .msgId = 0x100,
-            .field = overhead,
-            .data = can_data,
-        };
-        
-        CAN_TX_MSG_REQUEST_STATUS status = CAN1_Transmit(CAN_PRIORITY_MEDIUM, &msg);
-        if(status == CAN_TX_MSG_REQUEST_SUCCESS)
-        {
-            LED8_SetHigh();
-        }
-        else
-        {
-            LED8_SetLow();
-        }
-        
-        status = CAN2_Transmit(CAN_PRIORITY_MEDIUM, &msg);
-        if(status == CAN_TX_MSG_REQUEST_SUCCESS)
-        {
-            LED7_SetHigh();
-        }
-        else
-        {
-            LED7_SetLow();
-        }
-        LED6_SetHigh();
-        __delay_ms(500);
-        LED6_SetLow();
-        LED5_SetHigh();
-        __delay_ms(500);
-        LED5_SetLow();
-        LED4_SetHigh();
-        __delay_ms(500);
-        LED4_SetLow();
-        LED3_SetHigh();
-        __delay_ms(500);
-        LED3_SetLow();
-        LED2_SetHigh();
-        __delay_ms(500);
-        LED2_SetLow();
-        LED1_SetHigh();
-        __delay_ms(500);
-        LED1_SetLow();
+        send_status_msg();
+        LED1_HEARTBEAT_SetHigh();
+        __delay_ms(200);
+        LED1_HEARTBEAT_SetLow();
+        __delay_ms(200);
     }
     return 1; 
 }

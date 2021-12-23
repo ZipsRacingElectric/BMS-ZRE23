@@ -101,10 +101,10 @@ void PIN_MANAGER_Initialize (void)
      ***************************************************************************/
     __builtin_write_OSCCONL(OSCCON & 0xbf); // unlock PPS
 
-    RPOR2bits.RP20R = 0x000F;    //RA4->ECAN2:C2TX
     RPINR26bits.C1RXR = 0x0011;    //RA1->ECAN1:C1RXR
     RPOR0bits.RP16R = 0x000E;    //RA0->ECAN1:C1TX
     RPINR26bits.C2RXR = 0x0013;    //RA3->ECAN2:C2RXR
+    RPOR2bits.RP20R = 0x000F;    //RA4->ECAN2:C2TX
 
     __builtin_write_OSCCONL(OSCCON | 0x40); // lock PPS
 }

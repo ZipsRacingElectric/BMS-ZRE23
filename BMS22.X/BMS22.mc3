@@ -10576,11 +10576,11 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="Custom Name RB12"/>
-         <value>LED2</value>
+         <value>LED2_CAN_STATUS</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="Custom Name RB13"/>
-         <value>LED1</value>
+         <value>LED1_HEARTBEAT</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="Custom Name RB14"/>
@@ -15617,12 +15617,12 @@
          <hash>f3be23ca0d2b138f6db8ae2697bca9be81aefd76788f8a65d8aacb93d602c520</hash>
       </entry>
       <entry>
-         <file>mcc_generated_files\dma.h</file>
-         <hash>e73a00fe6e98de08b45c8ec237d04866ce9f996ea84bcc0dc0ecc15b0079aa00</hash>
-      </entry>
-      <entry>
          <file>mcc_generated_files\can1.h</file>
          <hash>e001330c5151d019e51d9886862788bc15add7431cd1f5a150ce62ccc2b426be</hash>
+      </entry>
+      <entry>
+         <file>mcc_generated_files\dma.h</file>
+         <hash>e73a00fe6e98de08b45c8ec237d04866ce9f996ea84bcc0dc0ecc15b0079aa00</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\system_types.h</file>
@@ -15638,7 +15638,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\system.c</file>
-         <hash>3e79139b4f8f6468fa1920449a0c6204041961bfcda012bc1c012a8228264e69</hash>
+         <hash>d77af81856ff6ec0c4a3b03e5f144237ac6c5840ce9b1876d164b668a9c03a68</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\clock.h</file>
@@ -15654,7 +15654,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\mcc.h</file>
-         <hash>a9538ec9b58e06f4947eb78a34a27149b9f0d7593fad4ea29dfa6be14990a726</hash>
+         <hash>3f9c393c3ebe036350084877f493b83447956c48bbe13483675315912ada728b</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\reset.c</file>
@@ -15665,20 +15665,20 @@
          <hash>4a3def2b4faf78c0c80e8985298b05772eeae0ae992a62f54682153256ab8a27</hash>
       </entry>
       <entry>
-         <file>main.c</file>
-         <hash>9e11dab396ad62a8e86f86a339b0b033ccc4d71622300b7d73c8a06c7c34ca5e</hash>
-      </entry>
-      <entry>
          <file>mcc_generated_files\can_types.h</file>
          <hash>313b0f88ebe4e19bf422ee20747d72fcd5f239a05428c9997d612e5f93ca31a3</hash>
       </entry>
       <entry>
+         <file>main.c</file>
+         <hash>9e11dab396ad62a8e86f86a339b0b033ccc4d71622300b7d73c8a06c7c34ca5e</hash>
+      </entry>
+      <entry>
          <file>mcc_generated_files\pin_manager.h</file>
-         <hash>8012c5aeaedcf4bdfae824267cfbcad6d36741ec26711212a9d3aeb687716923</hash>
+         <hash>59a448de7dffc7bb703f52046b22a4107f610025e128a92126f9e9afbdfc080d</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\pin_manager.c</file>
-         <hash>9541b8412fa83628ba725e3f25747bc59fc2f058f62e1f836fb4186e17c7c996</hash>
+         <hash>76aeb6e5e4896588f3798dff6282a9b00e7e81bdb741291ab5bf7fb132f775ae</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\can2.c</file>
