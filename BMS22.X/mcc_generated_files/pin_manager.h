@@ -56,6 +56,298 @@
 */
 /**
   @Summary
+    Sets the GPIO pin, RA2, high using LATA2.
+
+  @Description
+    Sets the GPIO pin, RA2, high using LATA2.
+
+  @Preconditions
+    The RA2 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RA2 high (1)
+    CS_LO_SetHigh();
+    </code>
+
+*/
+#define CS_LO_SetHigh()          (_LATA2 = 1)
+/**
+  @Summary
+    Sets the GPIO pin, RA2, low using LATA2.
+
+  @Description
+    Sets the GPIO pin, RA2, low using LATA2.
+
+  @Preconditions
+    The RA2 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RA2 low (0)
+    CS_LO_SetLow();
+    </code>
+
+*/
+#define CS_LO_SetLow()           (_LATA2 = 0)
+/**
+  @Summary
+    Toggles the GPIO pin, RA2, using LATA2.
+
+  @Description
+    Toggles the GPIO pin, RA2, using LATA2.
+
+  @Preconditions
+    The RA2 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Toggle RA2
+    CS_LO_Toggle();
+    </code>
+
+*/
+#define CS_LO_Toggle()           (_LATA2 ^= 1)
+/**
+  @Summary
+    Reads the value of the GPIO pin, RA2.
+
+  @Description
+    Reads the value of the GPIO pin, RA2.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    uint16_t portValue;
+
+    // Read RA2
+    postValue = CS_LO_GetValue();
+    </code>
+
+*/
+#define CS_LO_GetValue()         _RA2
+/**
+  @Summary
+    Configures the GPIO pin, RA2, as an input.
+
+  @Description
+    Configures the GPIO pin, RA2, as an input.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RA2 as an input
+    CS_LO_SetDigitalInput();
+    </code>
+
+*/
+#define CS_LO_SetDigitalInput()  (_TRISA2 = 1)
+/**
+  @Summary
+    Configures the GPIO pin, RA2, as an output.
+
+  @Description
+    Configures the GPIO pin, RA2, as an output.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RA2 as an output
+    CS_LO_SetDigitalOutput();
+    </code>
+
+*/
+#define CS_LO_SetDigitalOutput() (_TRISA2 = 0)
+/**
+  @Summary
+    Sets the GPIO pin, RB0, high using LATB0.
+
+  @Description
+    Sets the GPIO pin, RB0, high using LATB0.
+
+  @Preconditions
+    The RB0 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RB0 high (1)
+    CS_HI_SetHigh();
+    </code>
+
+*/
+#define CS_HI_SetHigh()          (_LATB0 = 1)
+/**
+  @Summary
+    Sets the GPIO pin, RB0, low using LATB0.
+
+  @Description
+    Sets the GPIO pin, RB0, low using LATB0.
+
+  @Preconditions
+    The RB0 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RB0 low (0)
+    CS_HI_SetLow();
+    </code>
+
+*/
+#define CS_HI_SetLow()           (_LATB0 = 0)
+/**
+  @Summary
+    Toggles the GPIO pin, RB0, using LATB0.
+
+  @Description
+    Toggles the GPIO pin, RB0, using LATB0.
+
+  @Preconditions
+    The RB0 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Toggle RB0
+    CS_HI_Toggle();
+    </code>
+
+*/
+#define CS_HI_Toggle()           (_LATB0 ^= 1)
+/**
+  @Summary
+    Reads the value of the GPIO pin, RB0.
+
+  @Description
+    Reads the value of the GPIO pin, RB0.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    uint16_t portValue;
+
+    // Read RB0
+    postValue = CS_HI_GetValue();
+    </code>
+
+*/
+#define CS_HI_GetValue()         _RB0
+/**
+  @Summary
+    Configures the GPIO pin, RB0, as an input.
+
+  @Description
+    Configures the GPIO pin, RB0, as an input.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RB0 as an input
+    CS_HI_SetDigitalInput();
+    </code>
+
+*/
+#define CS_HI_SetDigitalInput()  (_TRISB0 = 1)
+/**
+  @Summary
+    Configures the GPIO pin, RB0, as an output.
+
+  @Description
+    Configures the GPIO pin, RB0, as an output.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RB0 as an output
+    CS_HI_SetDigitalOutput();
+    </code>
+
+*/
+#define CS_HI_SetDigitalOutput() (_TRISB0 = 0)
+/**
+  @Summary
     Sets the GPIO pin, RB11, high using LATB11.
 
   @Description
@@ -73,11 +365,11 @@
   @Example
     <code>
     // Set RB11 high (1)
-    LED3_SetHigh();
+    LED3_TMR1_SetHigh();
     </code>
 
 */
-#define LED3_SetHigh()          (_LATB11 = 1)
+#define LED3_TMR1_SetHigh()          (_LATB11 = 1)
 /**
   @Summary
     Sets the GPIO pin, RB11, low using LATB11.
@@ -97,11 +389,11 @@
   @Example
     <code>
     // Set RB11 low (0)
-    LED3_SetLow();
+    LED3_TMR1_SetLow();
     </code>
 
 */
-#define LED3_SetLow()           (_LATB11 = 0)
+#define LED3_TMR1_SetLow()           (_LATB11 = 0)
 /**
   @Summary
     Toggles the GPIO pin, RB11, using LATB11.
@@ -121,11 +413,11 @@
   @Example
     <code>
     // Toggle RB11
-    LED3_Toggle();
+    LED3_TMR1_Toggle();
     </code>
 
 */
-#define LED3_Toggle()           (_LATB11 ^= 1)
+#define LED3_TMR1_Toggle()           (_LATB11 ^= 1)
 /**
   @Summary
     Reads the value of the GPIO pin, RB11.
@@ -147,11 +439,11 @@
     uint16_t portValue;
 
     // Read RB11
-    postValue = LED3_GetValue();
+    postValue = LED3_TMR1_GetValue();
     </code>
 
 */
-#define LED3_GetValue()         _RB11
+#define LED3_TMR1_GetValue()         _RB11
 /**
   @Summary
     Configures the GPIO pin, RB11, as an input.
@@ -171,11 +463,11 @@
   @Example
     <code>
     // Sets the RB11 as an input
-    LED3_SetDigitalInput();
+    LED3_TMR1_SetDigitalInput();
     </code>
 
 */
-#define LED3_SetDigitalInput()  (_TRISB11 = 1)
+#define LED3_TMR1_SetDigitalInput()  (_TRISB11 = 1)
 /**
   @Summary
     Configures the GPIO pin, RB11, as an output.
@@ -195,11 +487,11 @@
   @Example
     <code>
     // Sets the RB11 as an output
-    LED3_SetDigitalOutput();
+    LED3_TMR1_SetDigitalOutput();
     </code>
 
 */
-#define LED3_SetDigitalOutput() (_TRISB11 = 0)
+#define LED3_TMR1_SetDigitalOutput() (_TRISB11 = 0)
 /**
   @Summary
     Sets the GPIO pin, RB12, high using LATB12.
@@ -949,11 +1241,11 @@
   @Example
     <code>
     // Set RC3 high (1)
-    LED4_SetHigh();
+    LED4_ADC_SetHigh();
     </code>
 
 */
-#define LED4_SetHigh()          (_LATC3 = 1)
+#define LED4_ADC_SetHigh()          (_LATC3 = 1)
 /**
   @Summary
     Sets the GPIO pin, RC3, low using LATC3.
@@ -973,11 +1265,11 @@
   @Example
     <code>
     // Set RC3 low (0)
-    LED4_SetLow();
+    LED4_ADC_SetLow();
     </code>
 
 */
-#define LED4_SetLow()           (_LATC3 = 0)
+#define LED4_ADC_SetLow()           (_LATC3 = 0)
 /**
   @Summary
     Toggles the GPIO pin, RC3, using LATC3.
@@ -997,11 +1289,11 @@
   @Example
     <code>
     // Toggle RC3
-    LED4_Toggle();
+    LED4_ADC_Toggle();
     </code>
 
 */
-#define LED4_Toggle()           (_LATC3 ^= 1)
+#define LED4_ADC_Toggle()           (_LATC3 ^= 1)
 /**
   @Summary
     Reads the value of the GPIO pin, RC3.
@@ -1023,11 +1315,11 @@
     uint16_t portValue;
 
     // Read RC3
-    postValue = LED4_GetValue();
+    postValue = LED4_ADC_GetValue();
     </code>
 
 */
-#define LED4_GetValue()         _RC3
+#define LED4_ADC_GetValue()         _RC3
 /**
   @Summary
     Configures the GPIO pin, RC3, as an input.
@@ -1047,11 +1339,11 @@
   @Example
     <code>
     // Sets the RC3 as an input
-    LED4_SetDigitalInput();
+    LED4_ADC_SetDigitalInput();
     </code>
 
 */
-#define LED4_SetDigitalInput()  (_TRISC3 = 1)
+#define LED4_ADC_SetDigitalInput()  (_TRISC3 = 1)
 /**
   @Summary
     Configures the GPIO pin, RC3, as an output.
@@ -1071,11 +1363,11 @@
   @Example
     <code>
     // Sets the RC3 as an output
-    LED4_SetDigitalOutput();
+    LED4_ADC_SetDigitalOutput();
     </code>
 
 */
-#define LED4_SetDigitalOutput() (_TRISC3 = 0)
+#define LED4_ADC_SetDigitalOutput() (_TRISC3 = 0)
 /**
   @Summary
     Sets the GPIO pin, RC4, high using LATC4.
