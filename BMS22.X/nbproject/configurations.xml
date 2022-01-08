@@ -22,8 +22,12 @@
         <itemPath>mcc_generated_files/can1.h</itemPath>
         <itemPath>mcc_generated_files/dma.h</itemPath>
         <itemPath>mcc_generated_files/can2.h</itemPath>
+        <itemPath>mcc_generated_files/adc1.h</itemPath>
+        <itemPath>mcc_generated_files/adc_module_features.h</itemPath>
+        <itemPath>mcc_generated_files/tmr1.h</itemPath>
       </logicalFolder>
       <itemPath>can_driver.h</itemPath>
+      <itemPath>soc_fns.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -45,9 +49,12 @@
         <itemPath>mcc_generated_files/can1.c</itemPath>
         <itemPath>mcc_generated_files/dma.c</itemPath>
         <itemPath>mcc_generated_files/can2.c</itemPath>
+        <itemPath>mcc_generated_files/adc1.c</itemPath>
+        <itemPath>mcc_generated_files/tmr1.c</itemPath>
       </logicalFolder>
       <itemPath>main.c</itemPath>
       <itemPath>can_driver.c</itemPath>
+      <itemPath>soc_fns.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -56,6 +63,9 @@
       <itemPath>BMS22.mc3</itemPath>
     </logicalFolder>
   </logicalFolder>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="default" type="2">
