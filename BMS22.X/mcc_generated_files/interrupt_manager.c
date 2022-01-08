@@ -52,18 +52,6 @@
 */
 void INTERRUPT_Initialize (void)
 {
-    //    DMA1I: DMA Channel 1
-    //    Priority: 1
-        IPC3bits.DMA1IP = 1;
-    //    DMA0I: DMA Channel 0
-    //    Priority: 1
-        IPC1bits.DMA0IP = 1;
-    //    DMA3I: DMA Channel 3
-    //    Priority: 1
-        IPC9bits.DMA3IP = 1;
-    //    DMA2I: DMA Channel 2
-    //    Priority: 1
-        IPC6bits.DMA2IP = 1;
     //    CI: CAN 2 combined sources
     //    Priority: 1
         IPC14bits.C2IP = 1;
@@ -82,4 +70,25 @@ void INTERRUPT_Initialize (void)
     //    CRXI: CAN 1 Rx Data Ready
     //    Priority: 1
         IPC8bits.C1RXIP = 1;
+    //    ADCAN2: ADC AN2 Convert Done
+    //    Priority: 1
+        IPC28bits.ADCAN2IP = 1;
+    //    ADCAN3: ADC AN3 Convert Done
+    //    Priority: 1
+        IPC28bits.ADCAN3IP = 1;
+    //    DMA1I: DMA Channel 1
+    //    Priority: 1
+        IPC3bits.DMA1IP = 1;
+    //    DMA0I: DMA Channel 0
+    //    Priority: 1
+        IPC1bits.DMA0IP = 1;
+    //    DMA3I: DMA Channel 3
+    //    Priority: 1
+        IPC9bits.DMA3IP = 1;
+    //    DMA2I: DMA Channel 2
+    //    Priority: 1
+        IPC6bits.DMA2IP = 1;
+    //    TI: Timer 1
+    //    Priority: 1
+        IPC0bits.T1IP = 1;
 }
