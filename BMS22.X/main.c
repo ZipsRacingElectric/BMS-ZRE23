@@ -51,9 +51,13 @@
 #include "mcc_generated_files/pin_manager.h"
 #include "can_driver.h"
 #include "soc_fns.h"
+#include "mcc_generated_files/spi1.h"
 
 #define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
 #include <libpic30.h>        // __delayXXX() functions macros defined here
+
+void init_PEC15_Table();
+uint16_t pec15_calc(char *data , int len);
 
 /*
                          Main application
@@ -66,45 +70,106 @@ int main(void)
     soc_initialize();
     can_initialize();
 
+    init_PEC15_Table();
+    
     while (1)
     {
         send_status_msg();
         calc_soc();
         
-//        int16_t cs_lo = get_cs_lo_xten();
-//        int16_t cs_hi = get_cs_hi_xten();
-//        uint16_t soc = get_soc_xten();
-//        uint8_t cs_data[6] = {cs_lo & 0xFF, cs_lo >> 8, cs_hi & 0xFF, cs_hi >> 8, soc & 0xFF, soc >> 8};
-//
-//        //send CAN msg
-//        CAN_MSG_FIELD overhead = {
-//            .idType = CAN_FRAME_STD,
-//            .frameType = CAN_FRAME_DATA,
-//            .dlc = CAN_DLC_6,
-//        };
-//
-//        CAN_MSG_OBJ cs_msg = {
-//            .msgId = 0x100,
-//            .field = overhead,
-//            .data = cs_data,
-//        };
-//        CAN_TX_MSG_REQUEST_STATUS status = CAN2_Transmit(CAN_PRIORITY_MEDIUM, &cs_msg);
-//        if(status == CAN_TX_MSG_REQUEST_SUCCESS)
-//        {
-//            LED7_SetHigh();
-//        }
-//        else
-//        {
-//            LED7_SetLow();
-//        }
+        uint8_t cmd[4];
+        uint8_t dummy_buf[4];
+        uint16_t cmd_pec;
+
+        //ADCV cmd
+        cmd[0] = 0x03;
+        cmd[1] = 0x60;
+        cmd_pec = pec15_calc(cmd, 2);
+        cmd[2] = (uint8_t)(cmd_pec >> 8);
+        cmd[3] = (uint8_t)(cmd_pec);
+
+        CS_6820_SetLow();
+        uint16_t dataSent = SPI1_Exchange8bitBuffer(cmd, 4, dummy_buf);
+        CS_6820_SetHigh();
+        
+        //PLADC cmd
+        cmd[0] = 0x07;
+        cmd[1] = 0x14;
+        cmd_pec = pec15_calc(cmd, 2);
+        cmd[2] = (uint8_t)(cmd_pec >> 8);
+        cmd[3] = (uint8_t)(cmd_pec);
+
+        CS_6820_SetLow();
+        dataSent = SPI1_Exchange8bitBuffer(cmd, 4, dummy_buf);
+        CS_6820_SetHigh();
+        
+        uint8_t dummy = 0xFF;
+        uint8_t dummy_adc = 0;
+        CS_6820_SetLow();
+        SPI1_Exchange8bitBuffer(&dummy, 1, dummy_adc);
+        while(dummy_adc <= 0)
+        {
+            LED6_Toggle();
+            SPI1_Exchange8bitBuffer(&dummy, 1, dummy_adc);
+        }
+        CS_6820_SetHigh();
         
         LED1_HEARTBEAT_SetHigh();
-        __delay_ms(200);
+        __delay_ms(500);
         LED1_HEARTBEAT_SetLow();
 
-        __delay_ms(200);
+        __delay_ms(500);
     }
     return 1; 
+}
+
+/************************************
+Copyright 2012 Analog Devices, Inc. (ADI)
+Permission to freely use, copy, modify, and distribute this software for any purpose with or
+without fee is hereby granted, provided that the above copyright notice and this permission
+notice appear in all copies: THIS SOFTWARE IS PROVIDED ?AS IS? AND ADI DISCLAIMS ALL WARRANTIES
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL ADI BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM ANY
+USE OF SAME, INCLUDING ANY LOSS OF USE OR DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
+OR OTHER TORTUOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+***************************************/
+int16_t pec15Table[256];
+int16_t CRC15_POLY = 0x4599;
+void init_PEC15_Table()
+{
+    int16_t remainder;
+    int i;
+    for (i = 0; i < 256; i++)
+    {
+        remainder = i << 7;
+        int bit;
+        for (bit = 8; bit > 0; --bit)
+        {
+            if (remainder & 0x4000)
+            {
+                remainder = ((remainder << 1));
+                remainder = (remainder ^ CRC15_POLY);
+            }
+            else
+            {
+                remainder = ((remainder << 1));
+            }
+        }
+        pec15Table[i] = remainder&0xFFFF;
+    }
+}
+
+uint16_t pec15_calc(char *data , int len)
+{
+    int16_t remainder,address;
+    remainder = 16;//PEC seed
+    int i;
+    for (i = 0; i < len; i++)
+    {
+        address = ((remainder >> 7) ^ data[i]) & 0xff;//calculate PEC table address
+        remainder = (remainder << 8 ) ^ pec15Table[address];
+    }
+    return (remainder*2);//The CRC15 has a 0 in the LSB so the final value must be multiplied by 2
 }
 /**
  End of File
