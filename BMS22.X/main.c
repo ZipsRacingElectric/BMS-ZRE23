@@ -58,6 +58,11 @@
 
 void init_PEC15_Table();
 uint16_t pec15_calc(char *data , int len);
+void wakeup_sleep(uint8_t total_ic);
+
+uint16_t cell_one_v_x_tenthou = 0;
+uint16_t cell_two_v_x_tenthou = 0;
+uint16_t cell_three_v_x_tenthou = 0;
 
 /*
                          Main application
@@ -66,6 +71,7 @@ int main(void)
 {
     // initialize the device
     SYSTEM_Initialize();
+    CS_6820_SetHigh();
 
     soc_initialize();
     can_initialize();
@@ -77,9 +83,23 @@ int main(void)
         send_status_msg();
         calc_soc();
         
+        
+//        CS_EEPROM_SetLow();
+//        
+//        CS_EEPROM_SetHigh();
+        uint8_t buffer_iterator = 0;
+        
         uint8_t cmd[4];
         uint8_t dummy_buf[4];
         uint16_t cmd_pec;
+        
+        // wakeup sleep
+        wakeup_sleep(1);
+        uint8_t dummy = 0xFF;
+        uint8_t dummy_return = 0;
+        CS_6820_SetLow();
+        dummy_return = SPI1_Exchange8bit(dummy);
+        CS_6820_SetHigh();
 
         //ADCV cmd
         cmd[0] = 0x03;
@@ -87,11 +107,15 @@ int main(void)
         cmd_pec = pec15_calc(cmd, 2);
         cmd[2] = (uint8_t)(cmd_pec >> 8);
         cmd[3] = (uint8_t)(cmd_pec);
-
-        CS_6820_SetLow();
-        uint16_t dataSent = SPI1_Exchange8bitBuffer(cmd, 4, dummy_buf);
-        CS_6820_SetHigh();
         
+        CS_6820_SetLow(); 
+        for(buffer_iterator = 0; buffer_iterator < 4; ++buffer_iterator)
+        {
+            dummy_buf[buffer_iterator] = SPI1_Exchange8bit(cmd[buffer_iterator]);
+        }
+//        uint16_t dataSent = SPI1_Exchange8bitBuffer(cmd, 4, dummy_buf);
+        CS_6820_SetHigh();
+        __delay_us(2);
         //PLADC cmd
         cmd[0] = 0x07;
         cmd[1] = 0x14;
@@ -100,25 +124,63 @@ int main(void)
         cmd[3] = (uint8_t)(cmd_pec);
 
         CS_6820_SetLow();
-        dataSent = SPI1_Exchange8bitBuffer(cmd, 4, dummy_buf);
-        CS_6820_SetHigh();
+        for(buffer_iterator = 0; buffer_iterator < 4; ++buffer_iterator)
+        {
+            dummy_buf[buffer_iterator] = SPI1_Exchange8bit(cmd[buffer_iterator]);
+        }
+//        dataSent = SPI1_Exchange8bitBuffer(cmd, 4, dummy_buf);
+//        CS_6820_SetHigh();
         
-        uint8_t dummy = 0xFF;
         uint8_t dummy_adc = 0;
-        CS_6820_SetLow();
-        SPI1_Exchange8bitBuffer(&dummy, 1, dummy_adc);
+//        CS_6820_SetLow();
+        dummy_adc = SPI1_Exchange8bit(dummy);
+
         while(dummy_adc <= 0)
         {
             LED6_Toggle();
-            SPI1_Exchange8bitBuffer(&dummy, 1, dummy_adc);
+            dummy_adc = SPI1_Exchange8bit(dummy);
         }
+        CS_6820_SetHigh();
+        __delay_ms(10);
+        
+        // wakeup sleep
+        wakeup_sleep(1);
+        dummy = 0xFF;
+        dummy_return = 0;
+        CS_6820_SetLow();
+        dummy_return = SPI1_Exchange8bit(dummy);
+        CS_6820_SetHigh();
+        
+        //RDCVA command
+        cmd[0] = 0x00;
+        cmd[1] = 0x04;
+        cmd_pec = pec15_calc(cmd, 2);
+        cmd[2] = (uint8_t)(cmd_pec >> 8);
+        cmd[3] = (uint8_t)(cmd_pec);
+        \
+        CS_6820_SetLow();
+        for(buffer_iterator = 0; buffer_iterator < 4; ++buffer_iterator)
+        {
+            dummy_buf[buffer_iterator] = SPI1_Exchange8bit(cmd[buffer_iterator]);
+        }
+
+        uint8_t adcva_buf[8];
+        for(buffer_iterator = 0; buffer_iterator < 8; ++buffer_iterator)
+        {
+            adcva_buf[buffer_iterator] = SPI1_Exchange8bit(dummy);
+        }
+        
+        cell_one_v_x_tenthou= (adcva_buf[1] << 8) + adcva_buf[0];
+        cell_two_v_x_tenthou= (adcva_buf[3] << 8) + adcva_buf[2];
+        cell_three_v_x_tenthou= (adcva_buf[5] << 8) + adcva_buf[4];
+
         CS_6820_SetHigh();
         
         LED1_HEARTBEAT_SetHigh();
-        __delay_ms(500);
+        __delay_ms(250);
         LED1_HEARTBEAT_SetLow();
 
-        __delay_ms(500);
+        __delay_ms(250);
     }
     return 1; 
 }
@@ -175,3 +237,16 @@ uint16_t pec15_calc(char *data , int len)
  End of File
 */
 
+// but what if i'm using a 6820? Will this wake up the 6820?
+/* Generic wakeup command to wake the LTC681x from sleep state */
+void wakeup_sleep(uint8_t total_ic) //Number of ICs in the system
+{
+    int i = 0;
+	for (i =0; i<total_ic; i++)
+	{
+	   CS_6820_SetLow();
+	   __delay_us(300); // Guarantees the LTC681x will be in standby
+	   CS_6820_SetHigh();
+	   __delay_us(10);
+	}
+}
