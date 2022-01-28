@@ -9,6 +9,7 @@
           <itemPath>LTC/LTC_cmds/LTC_cmds.h</itemPath>
         </logicalFolder>
         <itemPath>LTC/LTC_utilities.h</itemPath>
+        <itemPath>LTC/LTC_driver.h</itemPath>
       </logicalFolder>
       <logicalFolder name="MCC Generated Files"
                      displayName="MCC Generated Files"
@@ -48,6 +49,7 @@
           <itemPath>LTC/LTC_cmds/LTC_cmds.c</itemPath>
         </logicalFolder>
         <itemPath>LTC/LTC_utilities.c</itemPath>
+        <itemPath>LTC/LTC_driver.c</itemPath>
       </logicalFolder>
       <logicalFolder name="MCC Generated Files"
                      displayName="MCC Generated Files"

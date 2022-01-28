@@ -47,18 +47,14 @@
 */
 #include "mcc_generated_files/system.h"
 #include <stdint.h>
-
 #include "mcc_generated_files/pin_manager.h"
 #include "can_driver.h"
 #include "soc_fns.h"
 #include "mcc_generated_files/spi1.h"
-#include "LTC/LTC_utilities.h"
-#include "LTC/LTC_cmds/LTC_cmds.h"
+#include "LTC/LTC_driver.h"
 
 #define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
 #include <libpic30.h>        // __delayXXX() functions macros defined here
-
-void wakeup_sleep(uint8_t total_ic);
 
 /*
                          Main application
@@ -71,19 +67,15 @@ int main(void)
 
     soc_initialize();
     can_initialize();
-
-    init_PEC15_Table();
+    LTC_initialize();
     
     while (1)
     {
         send_status_msg();
         calc_soc();
-        start_cell_voltage_adc_conversion();
-        poll_adc_status();
-        
-        __delay_ms(10);
-        rdcva_register();
 
+        read_cell_voltages();
+        
         LED1_HEARTBEAT_SetHigh();
         __delay_ms(250);
         LED1_HEARTBEAT_SetLow();

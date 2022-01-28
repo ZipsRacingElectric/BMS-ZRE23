@@ -17,13 +17,9 @@ uint8_t cmd[4];
 uint8_t dummy_buf[4];
 uint16_t cmd_pec = 0;
 
-uint16_t cell_one_v_x_tenthou = 0;
-uint16_t cell_two_v_x_tenthou = 0;
-uint16_t cell_three_v_x_tenthou = 0;
-
 void start_cell_voltage_adc_conversion(void)
 {        
-    wakeup_sleep(1);
+    wakeup_sleep(NUM_ICS);
     
     //ADCV cmd
     cmd[0] = 0x03;
@@ -57,7 +53,6 @@ void poll_adc_status(void)
     }
     
     uint8_t dummy_adc = 0;
-    dummy_adc = SPI1_Exchange8bit(DUMMY);
 
     //when ADC conversion is complete, MISO will be pulled high
     while(dummy_adc <= 0)
@@ -69,34 +64,69 @@ void poll_adc_status(void)
     
 }
 
-void rdcva_register(void)
+void rdcv_register(uint8_t which_reg, uint16_t* buf)
 {
-    wakeup_sleep(1);
+    wakeup_sleep(NUM_ICS);
         
-    //RDCVA command
-    cmd[0] = 0x00;
-    cmd[1] = 0x04;
+    switch(which_reg)
+    {
+        case ADCVA:            
+            //RDCVA command
+            cmd[0] = 0x00;
+            cmd[1] = 0x04;
+        break;
+        case ADCVB:
+            //RDCVB command
+            cmd[0] = 0x00;
+            cmd[1] = 0x06;
+            break;
+        case ADCVC:
+            //RDCVC command
+            cmd[0] = 0x00;
+            cmd[1] = 0x08;
+            break;
+        case ADCVD:
+            //RDCVD command
+            cmd[0] = 0x00;
+            cmd[1] = 0x0A;
+            break;
+        case ADCVE:
+            //RDCVE command
+            cmd[0] = 0x00;
+            cmd[1] = 0x09;
+            break;
+        case ADCVF:
+            //RDCVF command
+            cmd[0] = 0x00;
+            cmd[1] = 0x0B;
+            break;
+        default:
+            cmd[0] = 0x00;
+            cmd[1] = 0x00;
+            break;
+    }
+
     cmd_pec = pec15_calc(cmd, 2);
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
-    \
     CS_6820_SetLow();
     for(buffer_iterator = 0; buffer_iterator < 4; ++buffer_iterator)
     {
         dummy_buf[buffer_iterator] = SPI1_Exchange8bit(cmd[buffer_iterator]);
     }
 
-    uint8_t adcva_buf[8];
+    uint8_t adcv_buf[8];
     for(buffer_iterator = 0; buffer_iterator < 8; ++buffer_iterator)
     {
-        adcva_buf[buffer_iterator] = SPI1_Exchange8bit(DUMMY);
+        adcv_buf[buffer_iterator] = SPI1_Exchange8bit(DUMMY);
     }
 
-    uint8_t pec_success = verify_pec(adcva_buf, 6, &adcva_buf[6]);
-
-    cell_one_v_x_tenthou = (adcva_buf[1] << 8) + adcva_buf[0];
-    cell_two_v_x_tenthou = (adcva_buf[3] << 8) + adcva_buf[2];
-    cell_three_v_x_tenthou = (adcva_buf[5] << 8) + adcva_buf[4];
+    if(verify_pec(adcv_buf, 6, &adcv_buf[6]) == SUCCESS)
+    {
+        buf[0] = (adcv_buf[1] << 8) + adcv_buf[0];
+        buf[1] = (adcv_buf[3] << 8) + adcv_buf[2];
+        buf[2] = (adcv_buf[5] << 8) + adcv_buf[4];
+    }
 
     CS_6820_SetHigh();
 }

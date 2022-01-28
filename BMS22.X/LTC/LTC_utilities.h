@@ -15,6 +15,16 @@ extern "C" {
 #include <stdint.h>
 
 #define DUMMY       0xFF
+#define NUM_ICS     1 //TODO: change to 5
+#define SUCCESS     0
+#define FAILURE     1
+    
+#define ADCVA       0
+#define ADCVB       1
+#define ADCVC       2
+#define ADCVD       3
+#define ADCVE       4
+#define ADCVF       5
     
 void wakeup_sleep(uint8_t total_ic);
 uint8_t verify_pec(char* data, uint8_t size, char* transmitted_pec);

@@ -31,12 +31,13 @@ uint8_t verify_pec(char* data, uint8_t size, char* received_pec)
     if(calculated_pec == transmitted_pec)
     {
         LED5_SetHigh();
+        return SUCCESS;
     }
     else
     {
+        return FAILURE;
         LED5_SetLow();
     }
-    return 0;
 }
 
 /************************************
