@@ -60,10 +60,6 @@
 
 void wakeup_sleep(uint8_t total_ic);
 
-uint16_t cell_one_v_x_tenthou = 0;
-uint16_t cell_two_v_x_tenthou = 0;
-uint16_t cell_three_v_x_tenthou = 0;
-
 /*
                          Main application
  */
@@ -85,43 +81,9 @@ int main(void)
         start_cell_voltage_adc_conversion();
         poll_adc_status();
         
-        uint8_t buffer_iterator = 0;
-        
-        uint8_t cmd[4];
-        uint8_t dummy_buf[4];
-        uint16_t cmd_pec;
-      
         __delay_ms(10);
-        
-        wakeup_sleep(1);
-        
-        //RDCVA command
-        cmd[0] = 0x00;
-        cmd[1] = 0x04;
-        cmd_pec = pec15_calc(cmd, 2);
-        cmd[2] = (uint8_t)(cmd_pec >> 8);
-        cmd[3] = (uint8_t)(cmd_pec);
-        \
-        CS_6820_SetLow();
-        for(buffer_iterator = 0; buffer_iterator < 4; ++buffer_iterator)
-        {
-            dummy_buf[buffer_iterator] = SPI1_Exchange8bit(cmd[buffer_iterator]);
-        }
+        rdcva_register();
 
-        uint8_t adcva_buf[8];
-        for(buffer_iterator = 0; buffer_iterator < 8; ++buffer_iterator)
-        {
-            adcva_buf[buffer_iterator] = SPI1_Exchange8bit(DUMMY);
-        }
-        
-        uint8_t pec_success = verify_pec(adcva_buf, 6, &adcva_buf[6]);
-        
-        cell_one_v_x_tenthou = (adcva_buf[1] << 8) + adcva_buf[0];
-        cell_two_v_x_tenthou = (adcva_buf[3] << 8) + adcva_buf[2];
-        cell_three_v_x_tenthou = (adcva_buf[5] << 8) + adcva_buf[4];
-
-        CS_6820_SetHigh();
-        
         LED1_HEARTBEAT_SetHigh();
         __delay_ms(250);
         LED1_HEARTBEAT_SetLow();

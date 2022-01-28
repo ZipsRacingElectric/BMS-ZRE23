@@ -16,7 +16,7 @@ extern "C" {
     
 void start_cell_voltage_adc_conversion(void);
 void poll_adc_status(void);
-
+void rdcva_register(void);
 
 #ifdef	__cplusplus
 }
