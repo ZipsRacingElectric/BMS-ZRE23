@@ -10,7 +10,6 @@
 ////////////////defines////////////////////////////////////////////////////////
 
 ////////////////globals////////////////////////////////////////////////////////
-uint8_t can_data[2] = {0, 1}; //FIXME used for debugging
 
 ////////////////functions//////////////////////////////////////////////////////
 void can_initialize(void)
@@ -27,14 +26,14 @@ void can_initialize(void)
     CAN2_STDBY_SetLow();
 }
 
-void send_status_msg(void) //FIXME used for debugging
+void send_status_msg(uint16_t* cell_voltages) //FIXME used for debugging
 {
-    can_data[0]++;
-    can_data[1]++;
+    uint8_t can_data[8] = {(uint8_t)(cell_voltages[0] >> 8), (uint8_t)(cell_voltages[0] & 0xFF), (uint8_t)(cell_voltages[1] >> 8), (uint8_t)(cell_voltages[1] & 0xFF), (uint8_t)(cell_voltages[2] >> 8), (uint8_t)(cell_voltages[2] & 0xFF), (uint8_t)(cell_voltages[3] >> 8), (uint8_t)(cell_voltages[3] & 0xFF)};
+
     CAN_MSG_FIELD overhead = {
         .idType = CAN_FRAME_STD,
         .frameType = CAN_FRAME_DATA,
-        .dlc = CAN_DLC_2,
+        .dlc = CAN_DLC_8,
     };
 
     CAN_MSG_OBJ msg = {
@@ -43,7 +42,7 @@ void send_status_msg(void) //FIXME used for debugging
         .data = can_data,
     };
 
-    CAN_TX_MSG_REQUEST_STATUS status = CAN2_Transmit(CAN_PRIORITY_MEDIUM, &msg);
+    CAN_TX_MSG_REQUEST_STATUS status = CAN1_Transmit(CAN_PRIORITY_MEDIUM, &msg);
     if(status == CAN_TX_MSG_REQUEST_SUCCESS)
     {
         LED2_CAN_STATUS_SetHigh();

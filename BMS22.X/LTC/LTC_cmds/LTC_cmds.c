@@ -9,8 +9,15 @@
 #include "../LTC_utilities.h"
 #include "../../mcc_generated_files/pin_manager.h"
 #include "../../mcc_generated_files/spi1.h"
+#include <stdint.h>
 #define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
 #include <libpic30.h>        // __delayXXX() functions macros defined here
+
+#define MD          0b10
+#define DCP         0b0
+#define CH          0b000
+#define PUP         0b1
+#define PDN         0b0
 
 uint8_t buffer_iterator = 0;
 uint8_t cmd[4];
@@ -22,8 +29,8 @@ void start_cell_voltage_adc_conversion(void)
     wakeup_sleep(NUM_ICS);
     
     //ADCV cmd
-    cmd[0] = 0x03;
-    cmd[1] = 0x60;
+    cmd[0] = 0x02 | ((MD >> 1) & 0b01);
+    cmd[1] = ((MD&0b01) << 7) | 0x60 | (DCP << 4) | CH;
     cmd_pec = pec15_calc(cmd, 2);
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
@@ -128,5 +135,24 @@ void rdcv_register(uint8_t which_reg, uint16_t* buf)
         buf[2] = (adcv_buf[5] << 8) + adcv_buf[4];
     }
 
+    CS_6820_SetHigh();
+}
+
+
+void open_wire_check(uint8_t pull_dir)
+{
+    wakeup_sleep(NUM_ICS);
+    
+    //ADOW cmd
+    cmd[0] = 0x02 | (MD&0b10);
+    cmd[1] = ((MD&0b01) << 7) | 0x28 | (pull_dir << 6) | (DCP << 4) | CH;
+    cmd_pec = pec15_calc(cmd, 2);
+    cmd[2] = (uint8_t)(cmd_pec >> 8);
+    cmd[3] = (uint8_t)(cmd_pec);
+    CS_6820_SetLow(); 
+    for(buffer_iterator = 0; buffer_iterator < 4; ++buffer_iterator)
+    {
+        dummy_buf[buffer_iterator] = SPI1_Exchange8bit(cmd[buffer_iterator]);
+    }
     CS_6820_SetHigh();
 }

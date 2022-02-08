@@ -14584,7 +14584,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="ECAN2" name="Receive Buffer"/>
-         <value>Receive Buffer RB1</value>
+         <value>Receive Buffer RB2</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="ECAN2" name="RxDMAChannel"/>
@@ -14628,7 +14628,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="ECAN2" name="transmit buffer size"/>
-         <value>1</value>
+         <value>2</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="ECAN2" registerAlias="CCFG1" settingAlias="BRP" alias="TQ = (2 x 1)/FCAN"/>
@@ -17168,7 +17168,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="ECAN2" registerAlias="CTR01CON"/>
-         <value>128</value>
+         <value>32896</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="ECAN2" registerAlias="CTR23CON"/>
@@ -18160,7 +18160,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="ECAN2" registerAlias="CTR01CON" settingAlias="TXEN1"/>
-         <value>disabled</value>
+         <value>enabled</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="ECAN2" registerAlias="CTR01CON" settingAlias="TXERR0"/>
@@ -22904,7 +22904,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="Pin Module" registerAlias="ANSELA"/>
-         <value>5</value>
+         <value>4</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="Pin Module" registerAlias="ANSELB"/>
@@ -23072,7 +23072,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="Pin Module" registerAlias="RPOR0"/>
-         <value>0</value>
+         <value>14</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="Pin Module" registerAlias="RPOR1"/>
@@ -23120,7 +23120,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="Pin Module" registerAlias="RPOR2"/>
-         <value>0</value>
+         <value>15</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="Pin Module" registerAlias="RPOR20"/>
@@ -23168,7 +23168,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="Pin Module" registerAlias="TRISA"/>
-         <value>31</value>
+         <value>14</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="Pin Module" registerAlias="TRISB"/>
@@ -23180,7 +23180,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="ANSELA" settingAlias="ANSA0"/>
-         <value>analog</value>
+         <value>digital</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="ANSELA" settingAlias="ANSA1"/>
@@ -24080,7 +24080,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="RPOR0" settingAlias="RP16R"/>
-         <value>0</value>
+         <value>14</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="RPOR0" settingAlias="RP17R"/>
@@ -24176,7 +24176,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="RPOR2" settingAlias="RP20R"/>
-         <value>0</value>
+         <value>15</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="RPOR2" settingAlias="RP32R"/>
@@ -24272,7 +24272,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="TRISA" settingAlias="TRISA0"/>
-         <value>input</value>
+         <value>output</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="TRISA" settingAlias="TRISA1"/>
@@ -24288,7 +24288,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="TRISA" settingAlias="TRISA4"/>
-         <value>input</value>
+         <value>output</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="TRISB" settingAlias="TRISB0"/>
@@ -26161,12 +26161,12 @@
          <hash>f3be23ca0d2b138f6db8ae2697bca9be81aefd76788f8a65d8aacb93d602c520</hash>
       </entry>
       <entry>
-         <file>mcc_generated_files\dma.h</file>
-         <hash>e73a00fe6e98de08b45c8ec237d04866ce9f996ea84bcc0dc0ecc15b0079aa00</hash>
-      </entry>
-      <entry>
          <file>mcc_generated_files\adc_module_features.h</file>
          <hash>01b8917d367f41dc4de03238e6125803807cfe63b42bee90979069e87fdb8de9</hash>
+      </entry>
+      <entry>
+         <file>mcc_generated_files\dma.h</file>
+         <hash>e73a00fe6e98de08b45c8ec237d04866ce9f996ea84bcc0dc0ecc15b0079aa00</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\can1.h</file>
@@ -26177,12 +26177,12 @@
          <hash>a1e6f8b33185f9a5ff5681d82699182d88e33316d54ff942327a0675e084e856</hash>
       </entry>
       <entry>
-         <file>mcc_generated_files\spi1.c</file>
-         <hash>eb8c40d9699a3115e9c1a7d5e8f7b168f8d08a643ab9d62fd52f08bc6979359b</hash>
-      </entry>
-      <entry>
          <file>mcc_generated_files\system.h</file>
          <hash>16d7074eb2b8b57ddc765584c348172ba57e44093a09e8395a17b27eb3fe0143</hash>
+      </entry>
+      <entry>
+         <file>mcc_generated_files\spi1.c</file>
+         <hash>eb8c40d9699a3115e9c1a7d5e8f7b168f8d08a643ab9d62fd52f08bc6979359b</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\can_module_features.h</file>
@@ -26190,7 +26190,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\system.c</file>
-         <hash>5665af0c1f2cac6cef1af28a5493b914d374378e7925b4de75cfc6f3dce6f60e</hash>
+         <hash>2218fb17640d51c5fef8cd432448773b3c5358d0604a52da1e01851993ccc064</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\clock.h</file>
@@ -26206,7 +26206,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\mcc.h</file>
-         <hash>f86f82019150ad54baa52aa072bd0cc87c4453fd25da1f4f75b31043cf6dfaa2</hash>
+         <hash>f5484833ff53bf9699bd5fbf51d6f3b9298e1c6ae3266bb9dc3e2c838d3e3f4a</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\reset.c</file>
@@ -26221,12 +26221,12 @@
          <hash>4a3def2b4faf78c0c80e8985298b05772eeae0ae992a62f54682153256ab8a27</hash>
       </entry>
       <entry>
-         <file>main.c</file>
-         <hash>9e11dab396ad62a8e86f86a339b0b033ccc4d71622300b7d73c8a06c7c34ca5e</hash>
-      </entry>
-      <entry>
          <file>mcc_generated_files\adc1.c</file>
          <hash>1c527af10e4870644162e11eac37735bd9aa629bcda81cad2b9a98a27900a6e1</hash>
+      </entry>
+      <entry>
+         <file>main.c</file>
+         <hash>9e11dab396ad62a8e86f86a339b0b033ccc4d71622300b7d73c8a06c7c34ca5e</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\can_types.h</file>
@@ -26242,11 +26242,11 @@
       </entry>
       <entry>
          <file>mcc_generated_files\pin_manager.c</file>
-         <hash>87c2b35448b7ae5ed3c421f296a8c395f6faab7ed6d5fa5ac8286d75a82a261b</hash>
+         <hash>8b96c70234afab24d27606d5281b68f0aaee8d90a79e993a982d52affa1b3f40</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\can2.c</file>
-         <hash>e9eec437b5c0470037338a7eb018b73e3225f679173584838a8329a5c824e206</hash>
+         <hash>59685d4bf2a448ae34f1b42a398e3a4a9d6ddf9d2613f7ad7c736ca1d0bf2476</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\can1.c</file>

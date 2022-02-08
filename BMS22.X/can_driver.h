@@ -12,8 +12,10 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+
 void can_initialize(void);
-void send_status_msg(void); //FIXME used for debugging
+void send_status_msg(uint16_t* cell_voltages); //FIXME used for debugging
 
 #ifdef	__cplusplus
 }

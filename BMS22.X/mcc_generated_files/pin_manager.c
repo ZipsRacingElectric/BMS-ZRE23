@@ -68,7 +68,7 @@ void PIN_MANAGER_Initialize (void)
     /****************************************************************************
      * Setting the GPIO Direction SFR(s)
      ***************************************************************************/
-    TRISA = 0x001F;
+    TRISA = 0x000E;
     TRISB = 0x033B;
     TRISC = 0x2607;
 
@@ -92,7 +92,7 @@ void PIN_MANAGER_Initialize (void)
     /****************************************************************************
      * Setting the Analog/Digital Configuration SFR(s)
      ***************************************************************************/
-    ANSELA = 0x0005;
+    ANSELA = 0x0004;
     ANSELB = 0x0201;
     ANSELC = 0x0606;
     
@@ -101,13 +101,15 @@ void PIN_MANAGER_Initialize (void)
      ***************************************************************************/
     __builtin_write_OSCCONL(OSCCON & 0xbf); // unlock PPS
 
-    RPOR13bits.RP55R = 0x0007;    //RC7->SPI1:SS1
-    RPOR9bits.RP47R = 0x0006;    //RB15->SPI1:SCK1
-    RPINR26bits.C1RXR = 0x0011;    //RA1->ECAN1:C1RXR
     RPINR20bits.SDI1R = 0x0025;    //RB5->SPI1:SDI1
-    RPINR20bits.SCK1INR = 0x002F;    //RB15->SPI1:SCK1
-    RPINR26bits.C2RXR = 0x0013;    //RA3->ECAN2:C2RXR
+    RPOR2bits.RP20R = 0x000F;    //RA4->ECAN2:C2TX
     RPOR5bits.RP38R = 0x0005;    //RB6->SPI1:SDO1
+    RPINR20bits.SCK1INR = 0x002F;    //RB15->SPI1:SCK1
+    RPINR26bits.C1RXR = 0x0011;    //RA1->ECAN1:C1RXR
+    RPOR13bits.RP55R = 0x0007;    //RC7->SPI1:SS1
+    RPOR0bits.RP16R = 0x000E;    //RA0->ECAN1:C1TX
+    RPINR26bits.C2RXR = 0x0013;    //RA3->ECAN2:C2RXR
+    RPOR9bits.RP47R = 0x0006;    //RB15->SPI1:SCK1
 
     __builtin_write_OSCCONL(OSCCON | 0x40); // lock PPS
 }
