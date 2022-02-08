@@ -1,5 +1,5 @@
 /* 
- * File:   pec_calc.h
+ * File:   LTC_utilities.h
  * Author: Elena
  *
  * Created on January 27, 2022, 4:43 PM
@@ -16,8 +16,12 @@ extern "C" {
 
 #define DUMMY       0xFF
 #define NUM_ICS     1 //TODO: change to 5
+#define NUM_CELLS   18
 #define SUCCESS     0
 #define FAILURE     1
+    
+#define CELL_VOLTAGE_MAX    4.2 //TODO: research what these values should be
+#define CELL_VOLTAGE_MIN    2.5
     
 #define ADCVA       0
 #define ADCVB       1

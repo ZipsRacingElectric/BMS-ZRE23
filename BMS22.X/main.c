@@ -52,6 +52,7 @@
 #include "soc_fns.h"
 #include "mcc_generated_files/spi1.h"
 #include "LTC/LTC_driver.h"
+#include "LTC/LTC_utilities.h"
 
 #define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
 #include <libpic30.h>        // __delayXXX() functions macros defined here
@@ -71,15 +72,14 @@ int main(void)
     
     while (1)
     {
-        send_status_msg();
         calc_soc();
-
-        read_cell_voltages();
+        uint16_t cell_voltages[NUM_CELLS];
+        read_cell_voltages(cell_voltages);
+        send_status_msg(cell_voltages);
         
         LED1_HEARTBEAT_SetHigh();
         __delay_ms(250);
         LED1_HEARTBEAT_SetLow();
-
         __delay_ms(250);
     }
     return 1; 

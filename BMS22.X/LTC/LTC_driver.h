@@ -15,7 +15,7 @@ extern "C" {
 #include <stdint.h>
 
 void LTC_initialize(void);
-uint8_t read_cell_voltages(void);
+uint8_t read_cell_voltages(uint16_t* cell_voltages);
 
 #ifdef	__cplusplus
 }
