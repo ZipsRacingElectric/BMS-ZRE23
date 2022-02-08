@@ -42,10 +42,10 @@ BO_ 256 SoC: 6 BMS
  SG_ soc : 32|16@1+ (0.1,0) [0|0] "%" Vector__XXX
 
 BO_ 512 cell_voltage: 8 BMS
- SG_ cell1 : -1|16@0+ (1,0) [0|0] "" Vector__XXX
- SG_ cell2 : 15|16@0+ (1,0) [0|0] "" Vector__XXX
- SG_ cell3 : 32|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ cell4 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ cell1 : 7|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ cell2 : 23|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ cell3 : 39|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ cell4 : 55|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
 
 
 
