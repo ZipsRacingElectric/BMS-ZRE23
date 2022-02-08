@@ -14,11 +14,12 @@ extern "C" {
 
 #include <stdint.h>
 
-#define DUMMY       0xFF
-#define NUM_ICS     2 //TODO: change to 5
-#define NUM_CELLS   (18 * NUM_ICS)
-#define SUCCESS     0
-#define FAILURE     1
+#define DUMMY           0xFF
+#define CMD_SIZE_BYTES  4
+#define NUM_ICS         2 //TODO: change to 5
+#define NUM_CELLS       (18 * NUM_ICS)
+#define SUCCESS         0
+#define FAILURE         1
     
 #define CELL_VOLTAGE_MAX    4.2 //TODO: research what these values should be
 #define CELL_VOLTAGE_MIN    2.5

@@ -35,10 +35,7 @@ void start_cell_voltage_adc_conversion(void)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow(); 
-    for(buffer_iterator = 0; buffer_iterator < 4; ++buffer_iterator)
-    {
-        dummy_buf[buffer_iterator] = SPI1_Exchange8bit(cmd[buffer_iterator]);
-    }
+    SPI1_ExchangeBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
     CS_6820_SetHigh();
     __delay_us(2); //TODO is this necessary?
 }
@@ -54,10 +51,7 @@ void poll_adc_status(void)
 
     CS_6820_SetLow();
     //send PLADC command
-    for(buffer_iterator = 0; buffer_iterator < 4; ++buffer_iterator)
-    {
-        dummy_buf[buffer_iterator] = SPI1_Exchange8bit(cmd[buffer_iterator]);
-    }
+    SPI1_ExchangeBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
     
     uint8_t dummy_adc = 0;
 
@@ -117,17 +111,11 @@ void rdcv_register(uint8_t which_reg, uint16_t* buf)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow();
-    for(buffer_iterator = 0; buffer_iterator < 4; ++buffer_iterator)
-    {
-        dummy_buf[buffer_iterator] = SPI1_Exchange8bit(cmd[buffer_iterator]);
-    }
+    SPI1_ExchangeBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
 
     // 8 data bytes = 2 * 3 cell voltages + 2 PEC bytes
     uint8_t adcv_buf[8 * NUM_ICS];
-    for(buffer_iterator = 0; buffer_iterator < 8*NUM_ICS; ++buffer_iterator)
-    {
-        adcv_buf[buffer_iterator] = SPI1_Exchange8bit(DUMMY);
-    }
+    SPI1_ExchangeBuffer(dummy_buf, 8 * NUM_ICS, adcv_buf); //TODO use uint16_t return value for something?
 
     //TODO write as for loop
     int i = 0;
@@ -158,9 +146,7 @@ void open_wire_check(uint8_t pull_dir)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow(); 
-    for(buffer_iterator = 0; buffer_iterator < 4; ++buffer_iterator)
-    {
-        dummy_buf[buffer_iterator] = SPI1_Exchange8bit(cmd[buffer_iterator]);
-    }
+    SPI1_ExchangeBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+
     CS_6820_SetHigh();
 }
