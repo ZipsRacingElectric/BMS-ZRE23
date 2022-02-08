@@ -122,18 +122,26 @@ void rdcv_register(uint8_t which_reg, uint16_t* buf)
         dummy_buf[buffer_iterator] = SPI1_Exchange8bit(cmd[buffer_iterator]);
     }
 
-    uint8_t adcv_buf[8];
-    for(buffer_iterator = 0; buffer_iterator < 8; ++buffer_iterator)
+    // 8 data bytes = 2 * 3 cell voltages + 2 PEC bytes
+    uint8_t adcv_buf[8 * NUM_ICS];
+    for(buffer_iterator = 0; buffer_iterator < 8*NUM_ICS; ++buffer_iterator)
     {
         adcv_buf[buffer_iterator] = SPI1_Exchange8bit(DUMMY);
     }
 
-    if(verify_pec(adcv_buf, 6, &adcv_buf[6]) == SUCCESS)
+    //TODO write as for loop
+    int i = 0;
+    for(i = 0; i < NUM_ICS; ++i)
     {
-        buf[0] = (adcv_buf[1] << 8) + adcv_buf[0];
-        buf[1] = (adcv_buf[3] << 8) + adcv_buf[2];
-        buf[2] = (adcv_buf[5] << 8) + adcv_buf[4];
+        if(verify_pec(&adcv_buf[8*i], 6, &adcv_buf[8 * i + 6]) == SUCCESS)
+        {
+            buf[18*i] = (adcv_buf[8*i + 1] << 8) + adcv_buf[8*i];
+            buf[18*i + 1] = (adcv_buf[8*i + 3] << 8) + adcv_buf[8*i + 2];
+            buf[18*i + 2] = (adcv_buf[8*i + 5] << 8) + adcv_buf[8*i + 4];
+            // adcv_buf 6 and 7 are PEC bytes
+        }
     }
+    // TODO add else statements to set the cell voltages to 0 if the PEC is incorrect
 
     CS_6820_SetHigh();
 }

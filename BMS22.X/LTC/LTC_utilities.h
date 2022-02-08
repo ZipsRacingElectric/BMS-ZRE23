@@ -15,8 +15,8 @@ extern "C" {
 #include <stdint.h>
 
 #define DUMMY       0xFF
-#define NUM_ICS     1 //TODO: change to 5
-#define NUM_CELLS   18
+#define NUM_ICS     2 //TODO: change to 5
+#define NUM_CELLS   (18 * NUM_ICS)
 #define SUCCESS     0
 #define FAILURE     1
     
