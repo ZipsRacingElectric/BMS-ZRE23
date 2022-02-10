@@ -69,6 +69,7 @@ int main(void)
     soc_initialize();
     can_initialize();
     LTC_initialize();
+    fault_handler_initialize();
     
     while (1)
     {
