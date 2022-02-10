@@ -39,7 +39,6 @@ void report_cell_voltages(uint16_t* cell_voltages)
         uint16_t msg_id = i + CAN_ID_CELL_VOLTAGES;
         send_cell_voltage_message(&cell_voltages[4*i], msg_id); 
     }
-
 }
 
 void report_status(void)

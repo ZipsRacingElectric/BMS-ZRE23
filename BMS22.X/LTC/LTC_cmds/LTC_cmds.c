@@ -13,20 +13,24 @@
 #define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
 #include <libpic30.h>        // __delayXXX() functions macros defined here
 
-#define MD          0b10
-#define DCP         0b0
-#define CH          0b000
-#define PUP         0b1
-#define PDN         0b0
+// see LTC6813 datasheet page 59 table 37 Command Bit Descriptions
+#define MD          0b10    // ADC mode
+#define DCP         0b0     // discharge permitted
+#define CH          0b000   // cell selection for ADC conversion
+#define PUP         0b1     // pull up for open wire conversions
+#define PDN         0b0     // pull down for open wire conversions
 
 uint8_t buffer_iterator = 0;
 uint8_t cmd[4];
 uint8_t dummy_buf[4];
 uint16_t cmd_pec = 0;
 
+/* send command to start ADC conversion for cell voltages
+ * command: ADCV starts conversion
+ */
 void start_cell_voltage_adc_conversion(void)
 {        
-    wakeup_sleep(NUM_ICS);
+    wakeup_sleep();
     
     //ADCV cmd
     cmd[0] = 0x02 | ((MD >> 1) & 0b01);
@@ -40,6 +44,9 @@ void start_cell_voltage_adc_conversion(void)
     __delay_us(2); //TODO is this necessary?
 }
 
+/* send command to poll ADC status
+ * command: PLADC polls ADC status until conversion is complete
+ */
 void poll_adc_status(void)
 {
     //PLADC cmd
@@ -62,12 +69,14 @@ void poll_adc_status(void)
         dummy_adc = SPI1_Exchange8bit(DUMMY);
     }
     CS_6820_SetHigh();  
-    
 }
 
+/* receive voltage register data
+ * command: RDCV
+ */
 void rdcv_register(uint8_t which_reg, uint16_t* buf)
 {
-    wakeup_sleep(NUM_ICS);
+    wakeup_sleep();
         
     switch(which_reg)
     {
@@ -75,7 +84,7 @@ void rdcv_register(uint8_t which_reg, uint16_t* buf)
             //RDCVA command
             cmd[0] = 0x00;
             cmd[1] = 0x04;
-        break;
+            break;
         case ADCVB:
             //RDCVB command
             cmd[0] = 0x00;
@@ -117,15 +126,16 @@ void rdcv_register(uint8_t which_reg, uint16_t* buf)
     uint8_t adcv_buf[8 * NUM_ICS];
     SPI1_ExchangeBuffer(dummy_buf, 8 * NUM_ICS, adcv_buf); //TODO use uint16_t return value for something?
 
-    //TODO write as for loop
-    int i = 0;
+    // verify PEC for each of the 6 cell voltage messages received from each of the ICs in the daisy chain
+    // if PEC is valid, write cell voltages to buf to be shared over CAN bus
+    uint8_t i = 0;
     for(i = 0; i < NUM_ICS; ++i)
     {
         if(verify_pec(&adcv_buf[8*i], 6, &adcv_buf[8 * i + 6]) == SUCCESS)
         {
-            buf[18*i] = (adcv_buf[8*i + 1] << 8) + adcv_buf[8*i];
-            buf[18*i + 1] = (adcv_buf[8*i + 3] << 8) + adcv_buf[8*i + 2];
-            buf[18*i + 2] = (adcv_buf[8*i + 5] << 8) + adcv_buf[8*i + 4];
+            buf[CELLS_PER_IC*i] = (adcv_buf[8*i + 1] << 8) + adcv_buf[8*i];
+            buf[CELLS_PER_IC*i + 1] = (adcv_buf[8*i + 3] << 8) + adcv_buf[8*i + 2];
+            buf[CELLS_PER_IC*i + 2] = (adcv_buf[8*i + 5] << 8) + adcv_buf[8*i + 4];
             // adcv_buf 6 and 7 are PEC bytes
         }
     }
@@ -134,10 +144,12 @@ void rdcv_register(uint8_t which_reg, uint16_t* buf)
     CS_6820_SetHigh();
 }
 
-
+/* run open sense line check
+ * command: ADOW
+ */
 void open_wire_check(uint8_t pull_dir)
 {
-    wakeup_sleep(NUM_ICS);
+    wakeup_sleep();
     
     //ADOW cmd
     cmd[0] = 0x02 | ((MD >> 1) & 0b01);

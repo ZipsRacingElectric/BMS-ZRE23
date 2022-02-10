@@ -8,8 +8,8 @@
         <logicalFolder name="LTC_cmds" displayName="LTC_cmds" projectFiles="true">
           <itemPath>LTC/LTC_cmds/LTC_cmds.h</itemPath>
         </logicalFolder>
-        <itemPath>LTC/LTC_utilities.h</itemPath>
         <itemPath>LTC/LTC_driver.h</itemPath>
+        <itemPath>LTC/LTC_utilities.h</itemPath>
       </logicalFolder>
       <logicalFolder name="MCC Generated Files"
                      displayName="MCC Generated Files"
@@ -17,7 +17,6 @@
         <itemPath>mcc_generated_files/mcc.h</itemPath>
         <itemPath>mcc_generated_files/watchdog.h</itemPath>
         <itemPath>mcc_generated_files/reset.h</itemPath>
-        <itemPath>mcc_generated_files/system.h</itemPath>
         <itemPath>mcc_generated_files/reset_types.h</itemPath>
         <itemPath>mcc_generated_files/clock.h</itemPath>
         <itemPath>mcc_generated_files/traps.h</itemPath>
@@ -48,12 +47,14 @@
         <logicalFolder name="LTC_cmds" displayName="LTC_cmds" projectFiles="true">
           <itemPath>LTC/LTC_cmds/LTC_cmds.c</itemPath>
         </logicalFolder>
-        <itemPath>LTC/LTC_utilities.c</itemPath>
         <itemPath>LTC/LTC_driver.c</itemPath>
+        <itemPath>LTC/LTC_utilities.c</itemPath>
       </logicalFolder>
       <logicalFolder name="MCC Generated Files"
                      displayName="MCC Generated Files"
                      projectFiles="true">
+        <logicalFolder name="f1" displayName="New Folder 1" projectFiles="true">
+        </logicalFolder>
         <itemPath>mcc_generated_files/interrupt_manager.c</itemPath>
         <itemPath>mcc_generated_files/reset.c</itemPath>
         <itemPath>mcc_generated_files/pin_manager.c</itemPath>

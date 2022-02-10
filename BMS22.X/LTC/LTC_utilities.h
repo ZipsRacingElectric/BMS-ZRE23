@@ -17,7 +17,8 @@ extern "C" {
 #define DUMMY           0xFF
 #define CMD_SIZE_BYTES  4
 #define NUM_ICS         2 //TODO: change to 5
-#define NUM_CELLS       (18 * NUM_ICS)
+#define CELLS_PER_IC    18
+#define NUM_CELLS       (CELLS_PER_IC * NUM_ICS)
 #define SUCCESS         0
 #define FAILURE         1
     
@@ -31,10 +32,10 @@ extern "C" {
 #define ADCVE       4
 #define ADCVF       5
     
-void wakeup_sleep(uint8_t total_ic);
+void wakeup_sleep(void);
 uint8_t verify_pec(char* data, uint8_t size, char* transmitted_pec);
 void init_PEC15_Table();
-uint16_t pec15_calc(char *data , int len);
+uint16_t pec15_calc(char *data , uint8_t len);
 
 #ifdef	__cplusplus
 }

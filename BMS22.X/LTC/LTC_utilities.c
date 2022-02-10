@@ -12,10 +12,10 @@
 #include <libpic30.h>        // __delayXXX() functions macros defined here
 
 /* Generic wakeup command to wake the LTC681x from sleep state */
-void wakeup_sleep(uint8_t total_ic) //Number of ICs in the system
+void wakeup_sleep(void) //Number of ICs in the system
 {
-    int i = 0;
-	for (i =0; i<total_ic; i++)
+    uint8_t i = 0;
+	for (i = 0; i < NUM_ICS; ++i)
 	{
 	   CS_6820_SetLow();
 	   __delay_us(300); // Guarantees the LTC681x will be in standby (rather than sleep)
@@ -35,8 +35,8 @@ uint8_t verify_pec(char* data, uint8_t size, char* received_pec)
     }
     else
     {
-        return FAILURE;
         LED5_SetLow();
+        return FAILURE;
     }
 }
 
@@ -55,11 +55,11 @@ int16_t CRC15_POLY = 0x4599;
 void init_PEC15_Table()
 {
     int16_t remainder;
-    int i;
+    uint16_t i;
     for (i = 0; i < 256; i++)
     {
         remainder = i << 7;
-        int bit;
+        uint8_t bit;
         for (bit = 8; bit > 0; --bit)
         {
             if (remainder & 0x4000)
@@ -76,11 +76,11 @@ void init_PEC15_Table()
     }
 }
 
-uint16_t pec15_calc(char *data , int len)
+uint16_t pec15_calc(char *data , uint8_t len)
 {
     int16_t remainder,address;
     remainder = 16;//PEC seed
-    int i;
+    uint8_t i;
     for (i = 0; i < len; i++)
     {
         address = ((remainder >> 7) ^ data[i]) & 0xff;//calculate PEC table address
