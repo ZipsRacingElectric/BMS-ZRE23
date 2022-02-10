@@ -39,7 +39,7 @@ BU_: BMS
 BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
  SG_ NewSignal_0001 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 1088 SoC: 7 BMS
+BO_ 1088 status: 7 BMS
  SG_ cs_lo : 32|16@1- (0.1,0) [0|0] "A" Vector__XXX
  SG_ cs_hi : 16|16@1- (0.1,0) [0|0] "A" Vector__XXX
  SG_ soc : 0|16@1+ (0.1,0) [0|0] "%" Vector__XXX
