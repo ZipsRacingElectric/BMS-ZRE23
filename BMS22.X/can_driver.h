@@ -13,9 +13,13 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+    
+#define CAN_ID_CELL_VOLTAGES     0x401
+#define CAN_ID_STATUS            0x440
 
 void can_initialize(void);
-void send_status_msg(uint16_t* cell_voltages); //FIXME used for debugging
+void report_cell_voltages(uint16_t* cell_voltages);
+void report_status(void);
 
 #ifdef	__cplusplus
 }

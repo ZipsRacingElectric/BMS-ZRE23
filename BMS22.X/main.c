@@ -73,9 +73,12 @@ int main(void)
     while (1)
     {
         calc_soc();
-        uint16_t cell_voltages[NUM_CELLS] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // TODO do this in a for loop or something
+        // TODO do this in a for loop or something
+        uint16_t cell_voltages[NUM_CELLS] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
         read_cell_voltages(cell_voltages);
-        send_status_msg(cell_voltages);
+        report_cell_voltages(cell_voltages);
+        //open_sense_line_check();
+        report_status();
         
         LED1_HEARTBEAT_SetHigh();
         __delay_ms(250);

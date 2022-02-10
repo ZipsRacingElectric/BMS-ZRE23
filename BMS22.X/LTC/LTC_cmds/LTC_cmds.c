@@ -140,7 +140,7 @@ void open_wire_check(uint8_t pull_dir)
     wakeup_sleep(NUM_ICS);
     
     //ADOW cmd
-    cmd[0] = 0x02 | (MD&0b10);
+    cmd[0] = 0x02 | ((MD >> 1) & 0b01);
     cmd[1] = ((MD&0b01) << 7) | 0x28 | (pull_dir << 6) | (DCP << 4) | CH;
     cmd_pec = pec15_calc(cmd, 2);
     cmd[2] = (uint8_t)(cmd_pec >> 8);
