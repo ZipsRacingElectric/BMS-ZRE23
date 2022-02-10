@@ -32,6 +32,7 @@
         <itemPath>mcc_generated_files/adc_module_features.h</itemPath>
         <itemPath>mcc_generated_files/tmr1.h</itemPath>
         <itemPath>mcc_generated_files/spi1.h</itemPath>
+        <itemPath>mcc_generated_files/system.h</itemPath>
       </logicalFolder>
       <itemPath>can_driver.h</itemPath>
       <itemPath>soc_fns.h</itemPath>

@@ -34,7 +34,8 @@ void can_initialize(void)
 void report_cell_voltages(uint16_t* cell_voltages)
 {
     uint8_t i = 0;
-    for(i = 0; i < (NUM_CELLS + (NUM_CELLS % 4)) / 4; ++i)
+    uint8_t upper_bound = (NUM_CELLS + (NUM_CELLS % 4)) / 4;
+    for(i = 0; i < upper_bound; ++i)
     {
         uint16_t msg_id = i + CAN_ID_CELL_VOLTAGES;
         send_cell_voltage_message(&cell_voltages[4*i], msg_id); 

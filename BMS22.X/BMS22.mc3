@@ -10764,7 +10764,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="ECAN1" name="Receive Buffer"/>
-         <value>Receive Buffer RB4</value>
+         <value>Receive Buffer RB8</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="ECAN1" name="RxDMAChannel"/>
@@ -10808,7 +10808,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="ECAN1" name="transmit buffer size"/>
-         <value>4</value>
+         <value>8</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="ECAN1" registerAlias="CCFG1" settingAlias="BRP" alias="TQ = (2 x 1)/FCAN"/>
@@ -13356,11 +13356,11 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="ECAN1" registerAlias="CTR45CON"/>
-         <value>0</value>
+         <value>32896</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="ECAN1" registerAlias="CTR67CON"/>
-         <value>0</value>
+         <value>32896</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="ECAN1" registerAlias="CTXD"/>
@@ -14448,11 +14448,11 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="ECAN1" registerAlias="CTR45CON" settingAlias="TXEN4"/>
-         <value>disabled</value>
+         <value>enabled</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="ECAN1" registerAlias="CTR45CON" settingAlias="TXEN5"/>
-         <value>disabled</value>
+         <value>enabled</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="ECAN1" registerAlias="CTR45CON" settingAlias="TXERR4"/>
@@ -14504,11 +14504,11 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="ECAN1" registerAlias="CTR67CON" settingAlias="TXEN6"/>
-         <value>disabled</value>
+         <value>enabled</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="ECAN1" registerAlias="CTR67CON" settingAlias="TXEN7"/>
-         <value>disabled</value>
+         <value>enabled</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="ECAN1" registerAlias="CTR67CON" settingAlias="TXERR6"/>
@@ -24516,7 +24516,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="SPI1" name="ClockFrequency"/>
-         <value>481481.48</value>
+         <value>481481.48148148148148148148148148148148148148148148148148148148148148148148148148148148148148148148148148148148148148148148148148148149</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="SPI1" name="DataModeSelect"/>
@@ -26145,12 +26145,12 @@
    </tokenMap>
    <generatedFileHashHistoryMap class="java.util.HashMap">
       <entry>
-         <file>mcc_generated_files\dma.c</file>
-         <hash>ef23db5301ec9d4c3c4942fc63789df1785cc2ca44ece55430a792b4937f3b7a</hash>
-      </entry>
-      <entry>
          <file>mcc_generated_files\interrupt_manager.h</file>
          <hash>fe9c23fcb9a8954e6baac917c6d46fdf706603be81e36d7d823f77c14b84a949</hash>
+      </entry>
+      <entry>
+         <file>mcc_generated_files\dma.c</file>
+         <hash>ef23db5301ec9d4c3c4942fc63789df1785cc2ca44ece55430a792b4937f3b7a</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\spi1.h</file>
@@ -26161,16 +26161,16 @@
          <hash>f3be23ca0d2b138f6db8ae2697bca9be81aefd76788f8a65d8aacb93d602c520</hash>
       </entry>
       <entry>
-         <file>mcc_generated_files\adc_module_features.h</file>
-         <hash>01b8917d367f41dc4de03238e6125803807cfe63b42bee90979069e87fdb8de9</hash>
+         <file>mcc_generated_files\can1.h</file>
+         <hash>e001330c5151d019e51d9886862788bc15add7431cd1f5a150ce62ccc2b426be</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\dma.h</file>
          <hash>e73a00fe6e98de08b45c8ec237d04866ce9f996ea84bcc0dc0ecc15b0079aa00</hash>
       </entry>
       <entry>
-         <file>mcc_generated_files\can1.h</file>
-         <hash>e001330c5151d019e51d9886862788bc15add7431cd1f5a150ce62ccc2b426be</hash>
+         <file>mcc_generated_files\adc_module_features.h</file>
+         <hash>01b8917d367f41dc4de03238e6125803807cfe63b42bee90979069e87fdb8de9</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\system_types.h</file>
@@ -26190,7 +26190,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\system.c</file>
-         <hash>2218fb17640d51c5fef8cd432448773b3c5358d0604a52da1e01851993ccc064</hash>
+         <hash>bf9dea093f6fdda619a1cdc6c46cf5a18b3f63d4534626078479c2331e4cba1d</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\clock.h</file>
@@ -26206,7 +26206,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\mcc.h</file>
-         <hash>f5484833ff53bf9699bd5fbf51d6f3b9298e1c6ae3266bb9dc3e2c838d3e3f4a</hash>
+         <hash>6b339258bc4e2ca99095ad4c1f3a67c66ccdd6c71f88accfaae36ca8a0aae828</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\reset.c</file>
@@ -26221,16 +26221,16 @@
          <hash>4a3def2b4faf78c0c80e8985298b05772eeae0ae992a62f54682153256ab8a27</hash>
       </entry>
       <entry>
-         <file>mcc_generated_files\adc1.c</file>
-         <hash>1c527af10e4870644162e11eac37735bd9aa629bcda81cad2b9a98a27900a6e1</hash>
-      </entry>
-      <entry>
          <file>main.c</file>
          <hash>9e11dab396ad62a8e86f86a339b0b033ccc4d71622300b7d73c8a06c7c34ca5e</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\can_types.h</file>
          <hash>313b0f88ebe4e19bf422ee20747d72fcd5f239a05428c9997d612e5f93ca31a3</hash>
+      </entry>
+      <entry>
+         <file>mcc_generated_files\adc1.c</file>
+         <hash>1c527af10e4870644162e11eac37735bd9aa629bcda81cad2b9a98a27900a6e1</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\pin_manager.h</file>
@@ -26242,7 +26242,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\pin_manager.c</file>
-         <hash>8b96c70234afab24d27606d5281b68f0aaee8d90a79e993a982d52affa1b3f40</hash>
+         <hash>d8bd92a1e866d46ace199e27b467042c9a728d89772af1e3ff20a79817b3fc7d</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\can2.c</file>
@@ -26250,7 +26250,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\can1.c</file>
-         <hash>4662e6735c21a8c68dc3f0f4c5f9fc43fcfc90b8b24a8a8b6e4b601ac99bfc8f</hash>
+         <hash>cc06fe56e3beed76aec8f4f8ed8d6a8e072143bd7e970a771cdebbf1a5adc241</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\traps.c</file>

@@ -55,7 +55,7 @@
 /* Valid options are 4, 6, 8, 12, 16, 24, or 32. */
 #define CAN1_MESSAGE_BUFFERS         32
 
-#define CAN1_TX_BUFFER_COUNT 4
+#define CAN1_TX_BUFFER_COUNT 8
 
 #define CAN1_RX_BUFFER_MSG_DATA_SIZE    8U   // CAN RX Buffer Message object data field size
 
@@ -271,10 +271,10 @@ void CAN1_Initialize(void)
     C1TR01CONbits.TXEN1 = 0x1; // Buffer 1 is a Transmit Buffer 
     C1TR23CONbits.TXEN2 = 0x1; // Buffer 2 is a Transmit Buffer 
     C1TR23CONbits.TXEN3 = 0x1; // Buffer 3 is a Transmit Buffer 
-    C1TR45CONbits.TXEN4 = 0x0; // Buffer 4 is a Receive Buffer 
-    C1TR45CONbits.TXEN5 = 0x0; // Buffer 5 is a Receive Buffer 
-    C1TR67CONbits.TXEN6 = 0x0; // Buffer 6 is a Receive Buffer 
-    C1TR67CONbits.TXEN7 = 0x0; // Buffer 7 is a Receive Buffer 
+    C1TR45CONbits.TXEN4 = 0x1; // Buffer 4 is a Transmit Buffer 
+    C1TR45CONbits.TXEN5 = 0x1; // Buffer 5 is a Transmit Buffer 
+    C1TR67CONbits.TXEN6 = 0x1; // Buffer 6 is a Transmit Buffer 
+    C1TR67CONbits.TXEN7 = 0x1; // Buffer 7 is a Transmit Buffer 
 
     C1TR01CONbits.TX0PRI = 0x0; // Message Buffer 0 Priority Level
     C1TR01CONbits.TX1PRI = 0x0; // Message Buffer 1 Priority Level

@@ -73,8 +73,8 @@ int main(void)
     while (1)
     {
         calc_soc();
-        // TODO do this in a for loop or something
-        uint16_t cell_voltages[NUM_CELLS] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
+        // TODO do this in a for loop or something, change size?
+        uint16_t cell_voltages[NUM_CELLS+2] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
         read_cell_voltages(cell_voltages);
         report_cell_voltages(cell_voltages);
         //open_sense_line_check();
