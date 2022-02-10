@@ -39,7 +39,7 @@ void start_cell_voltage_adc_conversion(void)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow(); 
-    SPI1_ExchangeBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
     CS_6820_SetHigh();
     __delay_us(2); //TODO is this necessary?
 }
@@ -58,7 +58,7 @@ void poll_adc_status(void)
 
     CS_6820_SetLow();
     //send PLADC command
-    SPI1_ExchangeBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
     
     uint8_t dummy_adc = 0;
 
@@ -120,11 +120,11 @@ void rdcv_register(uint8_t which_reg, uint16_t* buf)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow();
-    SPI1_ExchangeBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
 
     // 8 data bytes = 2 * 3 cell voltages + 2 PEC bytes
     uint8_t adcv_buf[8 * NUM_ICS];
-    SPI1_ExchangeBuffer(dummy_buf, 8 * NUM_ICS, adcv_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adcv_buf); //TODO use uint16_t return value for something?
 
     // verify PEC for each of the 6 cell voltage messages received from each of the ICs in the daisy chain
     // if PEC is valid, write cell voltages to buf to be shared over CAN bus
@@ -158,7 +158,7 @@ void open_wire_check(uint8_t pull_dir)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow(); 
-    SPI1_ExchangeBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
 
     CS_6820_SetHigh();
 }

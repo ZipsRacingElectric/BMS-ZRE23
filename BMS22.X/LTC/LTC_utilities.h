@@ -16,7 +16,7 @@ extern "C" {
 
 #define DUMMY           0xFF
 #define CMD_SIZE_BYTES  4
-#define NUM_ICS         2 //TODO: change to 5
+#define NUM_ICS         1 //TODO: change to 5
 #define CELLS_PER_IC    18
 #define NUM_CELLS       (CELLS_PER_IC * NUM_ICS)
 #define SUCCESS         0
