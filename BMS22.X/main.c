@@ -47,10 +47,12 @@
 */
 #include "mcc_generated_files/system.h"
 #include <stdint.h>
-
 #include "mcc_generated_files/pin_manager.h"
 #include "can_driver.h"
 #include "soc_fns.h"
+#include "mcc_generated_files/spi1.h"
+#include "LTC/LTC_driver.h"
+#include "LTC/LTC_utilities.h"
 
 #define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
 #include <libpic30.h>        // __delayXXX() functions macros defined here
@@ -62,51 +64,26 @@ int main(void)
 {
     // initialize the device
     SYSTEM_Initialize();
+    CS_6820_SetHigh();
 
     soc_initialize();
     can_initialize();
-
+    LTC_initialize();
+    
     while (1)
     {
-        send_status_msg();
         calc_soc();
-        
-//        int16_t cs_lo = get_cs_lo_xten();
-//        int16_t cs_hi = get_cs_hi_xten();
-//        uint16_t soc = get_soc_xten();
-//        uint8_t cs_data[6] = {cs_lo & 0xFF, cs_lo >> 8, cs_hi & 0xFF, cs_hi >> 8, soc & 0xFF, soc >> 8};
-//
-//        //send CAN msg
-//        CAN_MSG_FIELD overhead = {
-//            .idType = CAN_FRAME_STD,
-//            .frameType = CAN_FRAME_DATA,
-//            .dlc = CAN_DLC_6,
-//        };
-//
-//        CAN_MSG_OBJ cs_msg = {
-//            .msgId = 0x100,
-//            .field = overhead,
-//            .data = cs_data,
-//        };
-//        CAN_TX_MSG_REQUEST_STATUS status = CAN2_Transmit(CAN_PRIORITY_MEDIUM, &cs_msg);
-//        if(status == CAN_TX_MSG_REQUEST_SUCCESS)
-//        {
-//            LED7_SetHigh();
-//        }
-//        else
-//        {
-//            LED7_SetLow();
-//        }
+        // TODO do this in a for loop or something, change size?
+        uint16_t cell_voltages[NUM_CELLS+2] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
+        read_cell_voltages(cell_voltages);
+        report_cell_voltages(cell_voltages);
+        //open_sense_line_check();
+        report_status();
         
         LED1_HEARTBEAT_SetHigh();
-        __delay_ms(200);
+        __delay_ms(250);
         LED1_HEARTBEAT_SetLow();
-
-        __delay_ms(200);
+        __delay_ms(250);
     }
     return 1; 
 }
-/**
- End of File
-*/
-

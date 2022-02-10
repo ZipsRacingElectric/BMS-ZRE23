@@ -55,7 +55,7 @@
 /* Valid options are 4, 6, 8, 12, 16, 24, or 32. */
 #define CAN2_MESSAGE_BUFFERS         32
 
-#define CAN2_TX_BUFFER_COUNT 1
+#define CAN2_TX_BUFFER_COUNT 2
 
 #define CAN2_RX_BUFFER_MSG_DATA_SIZE    8U   // CAN RX Buffer Message object data field size
 
@@ -268,7 +268,7 @@ void CAN2_Initialize(void)
 
     /*configure CAN2 Transmit/Receive buffer settings*/
     C2TR01CONbits.TXEN0 = 0x1; // Buffer 0 is a Transmit Buffer 
-    C2TR01CONbits.TXEN1 = 0x0; // Buffer 1 is a Receive Buffer 
+    C2TR01CONbits.TXEN1 = 0x1; // Buffer 1 is a Transmit Buffer 
     C2TR23CONbits.TXEN2 = 0x0; // Buffer 2 is a Receive Buffer 
     C2TR23CONbits.TXEN3 = 0x0; // Buffer 3 is a Receive Buffer 
     C2TR45CONbits.TXEN4 = 0x0; // Buffer 4 is a Receive Buffer 
