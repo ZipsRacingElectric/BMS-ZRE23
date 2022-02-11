@@ -37,3 +37,13 @@ void fault_handler_initialize(void)
         self_test_faults[i] = 0;
     }
 }
+
+void increment_cell_voltage_fault(uint8_t cell_id)
+{
+    ++cell_voltage_faults[cell_id - 1]; // -1 since array index starts at 0
+}
+
+void reset_cell_voltage_fault(uint8_t cell_id)
+{
+    cell_voltage_faults[cell_id - 1] = 0;
+}

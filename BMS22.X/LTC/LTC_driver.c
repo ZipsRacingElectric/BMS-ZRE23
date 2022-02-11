@@ -9,6 +9,7 @@
 #include "LTC_driver.h"
 #include "LTC_utilities.h"
 #include "LTC_cmds/LTC_cmds.h"
+#include "../fault_handler.h"
 #include <stdint.h>
 #define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
 #include <libpic30.h>        // __delayXXX() functions macros defined here
@@ -71,11 +72,16 @@ uint8_t open_sense_line_check(void)
 uint8_t cell_voltage_check(uint16_t* cell_voltages) //TODO: implement timeout, or consecutive count of out-of-range samples
 {
     uint8_t i = 0;
-    for(i = 0; i < 18; ++i)
+    for(i = 0; i < NUM_CELLS; ++i)
     {
         if((cell_voltages[i] > CELL_VOLTAGE_MAX) | (cell_voltages[i] < CELL_VOLTAGE_MIN))
         {
+            increment_cell_voltage_fault(i);
             return FAILURE;
+        }
+        else
+        {
+            reset_cell_voltage_fault(i);
         }
     }
     return SUCCESS;
