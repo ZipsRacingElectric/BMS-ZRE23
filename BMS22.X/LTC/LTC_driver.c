@@ -72,17 +72,18 @@ uint8_t open_sense_line_check(void)
 uint8_t cell_voltage_check(uint16_t* cell_voltages) //TODO: implement timeout, or consecutive count of out-of-range samples
 {
     uint8_t i = 0;
+    uint8_t ret_val = SUCCESS;
     for(i = 0; i < NUM_CELLS; ++i)
     {
         if((cell_voltages[i] > CELL_VOLTAGE_MAX) | (cell_voltages[i] < CELL_VOLTAGE_MIN))
         {
             increment_cell_voltage_fault(i);
-            return FAILURE;
+            ret_val = FAILURE;
         }
         else
         {
             reset_cell_voltage_fault(i);
         }
     }
-    return SUCCESS;
+    return ret_val;
 }

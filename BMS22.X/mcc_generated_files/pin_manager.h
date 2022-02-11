@@ -1516,6 +1516,152 @@
 #define LED8_SetDigitalOutput() (_TRISB7 = 0)
 /**
   @Summary
+    Sets the GPIO pin, RB8, high using LATB8.
+
+  @Description
+    Sets the GPIO pin, RB8, high using LATB8.
+
+  @Preconditions
+    The RB8 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RB8 high (1)
+    BMS_RELAY_EN_SetHigh();
+    </code>
+
+*/
+#define BMS_RELAY_EN_SetHigh()          (_LATB8 = 1)
+/**
+  @Summary
+    Sets the GPIO pin, RB8, low using LATB8.
+
+  @Description
+    Sets the GPIO pin, RB8, low using LATB8.
+
+  @Preconditions
+    The RB8 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RB8 low (0)
+    BMS_RELAY_EN_SetLow();
+    </code>
+
+*/
+#define BMS_RELAY_EN_SetLow()           (_LATB8 = 0)
+/**
+  @Summary
+    Toggles the GPIO pin, RB8, using LATB8.
+
+  @Description
+    Toggles the GPIO pin, RB8, using LATB8.
+
+  @Preconditions
+    The RB8 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Toggle RB8
+    BMS_RELAY_EN_Toggle();
+    </code>
+
+*/
+#define BMS_RELAY_EN_Toggle()           (_LATB8 ^= 1)
+/**
+  @Summary
+    Reads the value of the GPIO pin, RB8.
+
+  @Description
+    Reads the value of the GPIO pin, RB8.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    uint16_t portValue;
+
+    // Read RB8
+    postValue = BMS_RELAY_EN_GetValue();
+    </code>
+
+*/
+#define BMS_RELAY_EN_GetValue()         _RB8
+/**
+  @Summary
+    Configures the GPIO pin, RB8, as an input.
+
+  @Description
+    Configures the GPIO pin, RB8, as an input.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RB8 as an input
+    BMS_RELAY_EN_SetDigitalInput();
+    </code>
+
+*/
+#define BMS_RELAY_EN_SetDigitalInput()  (_TRISB8 = 1)
+/**
+  @Summary
+    Configures the GPIO pin, RB8, as an output.
+
+  @Description
+    Configures the GPIO pin, RB8, as an output.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RB8 as an output
+    BMS_RELAY_EN_SetDigitalOutput();
+    </code>
+
+*/
+#define BMS_RELAY_EN_SetDigitalOutput() (_TRISB8 = 0)
+/**
+  @Summary
     Sets the GPIO pin, RC12, high using LATC12.
 
   @Description

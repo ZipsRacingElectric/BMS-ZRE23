@@ -53,6 +53,7 @@
 #include "mcc_generated_files/spi1.h"
 #include "LTC/LTC_driver.h"
 #include "LTC/LTC_utilities.h"
+#include "fault_handler.h"
 
 #define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
 #include <libpic30.h>        // __delayXXX() functions macros defined here
@@ -75,8 +76,10 @@ int main(void)
     {
         calc_soc();
         // TODO do this in a for loop or something, change size?
-        uint16_t cell_voltages[NUM_CELLS+2] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
+        uint16_t cell_voltages[NUM_CELLS+2] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
         read_cell_voltages(cell_voltages);
+        check_for_fault();
+        //TODO maybe don't put all the CAN output back to back to back here, transmit buffers overflow
         report_cell_voltages(cell_voltages);
         //open_sense_line_check();
         report_status();

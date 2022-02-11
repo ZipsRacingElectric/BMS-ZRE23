@@ -17,6 +17,7 @@ extern "C" {
 void fault_handler_initialize(void);
 void increment_cell_voltage_fault(uint8_t cell_id);
 void reset_cell_voltage_fault(uint8_t cell_id);
+uint8_t get_fault_codes(void);
 
 #ifdef	__cplusplus
 }

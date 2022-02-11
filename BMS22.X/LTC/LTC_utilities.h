@@ -22,8 +22,8 @@ extern "C" {
 #define SUCCESS         0
 #define FAILURE         1
     
-#define CELL_VOLTAGE_MAX    4.2 //TODO: research what these values should be
-#define CELL_VOLTAGE_MIN    2.5
+#define CELL_VOLTAGE_MAX    (4.2 * 10000) //TODO: research what these values should be
+#define CELL_VOLTAGE_MIN    (3.0 * 10000)
     
 #define ADCVA       0
 #define ADCVB       1
