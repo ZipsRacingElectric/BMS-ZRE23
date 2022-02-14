@@ -22,8 +22,9 @@ extern "C" {
 #define SUCCESS         0
 #define FAILURE         1
     
-#define CELL_VOLTAGE_MAX    4.2 //TODO: research what these values should be
-#define CELL_VOLTAGE_MIN    2.5
+// cell voltage x 10000 comes from LTC6813 chip
+#define CELL_VOLTAGE_MAX    (42000) //TODO: research what these values should be
+#define CELL_VOLTAGE_MIN    (30000)
     
 #define ADCVA       0
 #define ADCVB       1

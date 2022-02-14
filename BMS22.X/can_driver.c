@@ -5,6 +5,7 @@
 #include "can_driver.h"
 #include "LTC/LTC_utilities.h"
 #include "soc_fns.h"
+#include "fault_handler.h"
 #include "mcc_generated_files/can1.h"
 #include "mcc_generated_files/can2.h"
 #include "mcc_generated_files/can_types.h"
@@ -47,7 +48,7 @@ void report_status(void)
     int16_t cs_lo = get_cs_lo_xten();
     int16_t cs_hi = get_cs_hi_xten();
     uint16_t soc = get_soc_xten();
-    uint8_t fault_codes = 0; //TODO fixme when fault codes are implemented get_fault_codes();
+    uint8_t fault_codes = get_fault_codes();
 
     uint8_t can_data[7] = {(uint8_t)(soc & 0xFF), (uint8_t)(soc >> 8),
                            (uint8_t)(cs_hi & 0xFF), (uint8_t)(cs_hi >> 8),
