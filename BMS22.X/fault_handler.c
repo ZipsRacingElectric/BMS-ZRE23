@@ -22,6 +22,7 @@ uint8_t fault_codes = 0;
 
 //////////////// prototypes ///////////////////////////////////////////////////
 static void set_voltage_fault_bit(void);
+static void shutdown_car(void);
 
 //////////////// public functions /////////////////////////////////////////////
 
@@ -50,11 +51,6 @@ void fault_handler_initialize(void)
     BMS_RELAY_EN_SetHigh();
 }
 
-void shutdown_car(void)
-{
-    BMS_RELAY_EN_SetLow();
-}
-
 uint8_t get_fault_codes(void)
 {
     return fault_codes;
@@ -74,7 +70,7 @@ void check_for_fault(void)
         }
         if(voltage_fault > 0)
         {
-            set_voltage_fault_bit();;
+            set_voltage_fault_bit();
         }
         
         uint8_t sense_line_fault = 0;
@@ -117,7 +113,14 @@ void reset_cell_voltage_fault(uint8_t cell_id)
     cell_voltage_faults[cell_id - 1] = 0;
 }
 
+//////////////// private functions ////////////////////////////////////////////
+
 static void set_voltage_fault_bit(void)
 {
     fault_codes |= (1 << 1); //TODO magic numbers?
+}
+
+static void shutdown_car(void)
+{
+    BMS_RELAY_EN_SetLow();
 }

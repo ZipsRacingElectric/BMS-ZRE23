@@ -51,7 +51,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "system_types.h"
-#include "reset.h"
 
 #include "interrupt_manager.h"
 #include "traps.h"
