@@ -62,26 +62,16 @@ void check_for_fault(void)
     
     for(i = 0; i < NUM_CELLS; ++i)
     {
-        uint8_t voltage_fault = 0;
         if(cell_voltage_faults[i] > CELL_VOLTAGE_MAX_FAULTS)
         {
             shutdown_car();
-            ++voltage_fault;
-        }
-        if(voltage_fault > 0)
-        {
             set_voltage_fault_bit();
         }
-        
-        uint8_t sense_line_fault = 0;
+   
         if(sense_line_faults[i] > OPEN_SENSE_LINE_MAX_FAULTS)
         {
             shutdown_car();
-            ++sense_line_fault;
-        }
-        if(sense_line_fault > 0)
-        {
-            //TODO CHANGE_SENSE_LINE_FAULT_BIT(1);
+            //TODO SET_SENSE_LINE_FAULT_BIT(1);
         }
     }
     
@@ -110,7 +100,7 @@ void increment_cell_voltage_fault(uint8_t cell_id)
 
 void reset_cell_voltage_fault(uint8_t cell_id)
 {
-    cell_voltage_faults[cell_id - 1] = 0;
+    cell_voltage_faults[cell_id] = 0;
 }
 
 //////////////// private functions ////////////////////////////////////////////

@@ -36,6 +36,7 @@
       </logicalFolder>
       <itemPath>can_driver.h</itemPath>
       <itemPath>soc_fns.h</itemPath>
+      <itemPath>fault_handler.c</itemPath>
       <itemPath>fault_handler.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -72,7 +73,6 @@
       <itemPath>main.c</itemPath>
       <itemPath>can_driver.c</itemPath>
       <itemPath>soc_fns.c</itemPath>
-      <itemPath>fault_handler.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
