@@ -15,7 +15,8 @@
 ////////////////globals////////////////////////////////////////////////////////
 
 ////////////////prototypes/////////////////////////////////////////////////////
-void send_cell_voltage_message(uint16_t* cell_voltages, uint16_t id);
+static void send_cell_voltage_message(uint16_t* cell_voltages, uint16_t id);
+static void send_pack_temperature_message(uint16_t* cell_voltages, uint16_t id);
 
 ////////////////functions//////////////////////////////////////////////////////
 void can_initialize(void)
@@ -40,6 +41,17 @@ void report_cell_voltages(uint16_t* cell_voltages)
     {
         uint16_t msg_id = i + CAN_ID_CELL_VOLTAGES;
         send_cell_voltage_message(&cell_voltages[4*i], msg_id); 
+    }
+}
+
+void report_pack_temperatures(uint16_t* pack_temperatures)
+{
+    uint8_t i = 0;
+    uint8_t upper_bound = (NUM_TEMP_SENSORS + (NUM_TEMP_SENSORS % 4)) / 4;
+    for(i = 0; i < upper_bound; ++i)
+    {
+        uint16_t msg_id = i + CAN_ID_PACK_TEMPERATURE;
+        send_pack_temperature_message(&pack_temperatures[4*i], msg_id); 
     }
 }
 
@@ -78,7 +90,7 @@ void report_status(void)
     }
 }
 
-void send_cell_voltage_message(uint16_t* cell_voltages, uint16_t id)
+static void send_cell_voltage_message(uint16_t* cell_voltages, uint16_t id)
 {
     uint8_t can_data[8] = {(uint8_t)(cell_voltages[0] >> 8), (uint8_t)(cell_voltages[0] & 0xFF), 
                            (uint8_t)(cell_voltages[1] >> 8), (uint8_t)(cell_voltages[1] & 0xFF), 
@@ -108,4 +120,33 @@ void send_cell_voltage_message(uint16_t* cell_voltages, uint16_t id)
     }
 }
 
+static void send_pack_temperature_message(uint16_t* pack_temperatures, uint16_t id)
+{
+    uint8_t can_data[8] = {(uint8_t)(pack_temperatures[0] >> 8), (uint8_t)(pack_temperatures[0] & 0xFF), 
+                           (uint8_t)(pack_temperatures[1] >> 8), (uint8_t)(pack_temperatures[1] & 0xFF), 
+                           (uint8_t)(pack_temperatures[2] >> 8), (uint8_t)(pack_temperatures[2] & 0xFF), 
+                           (uint8_t)(pack_temperatures[3] >> 8), (uint8_t)(pack_temperatures[3] & 0xFF)};
+
+    CAN_MSG_FIELD overhead = {
+        .idType = CAN_FRAME_STD,
+        .frameType = CAN_FRAME_DATA,
+        .dlc = CAN_DLC_8,
+    };
+
+    CAN_MSG_OBJ msg = {
+        .msgId = id,
+        .field = overhead,
+        .data = can_data,
+    };
+
+    CAN_TX_MSG_REQUEST_STATUS status = CAN1_Transmit(CAN_PRIORITY_MEDIUM, &msg);
+    if(status == CAN_TX_MSG_REQUEST_SUCCESS)
+    {
+        LED2_CAN_STATUS_SetHigh();
+    }
+    else
+    {
+        LED2_CAN_STATUS_SetLow();
+    }
+}
 //add functions here to interact with CAN peripheral from other tasks
