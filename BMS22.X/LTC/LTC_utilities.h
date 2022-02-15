@@ -14,17 +14,21 @@ extern "C" {
 
 #include <stdint.h>
 
-#define DUMMY           0xFF
-#define CMD_SIZE_BYTES  4
-#define NUM_ICS         1 //TODO: change to 5
-#define CELLS_PER_IC    18
-#define NUM_CELLS       (CELLS_PER_IC * NUM_ICS)
-#define SUCCESS         0
-#define FAILURE         1
+#define DUMMY               0xFF
+#define CMD_SIZE_BYTES      4
+#define NUM_ICS             1 //TODO: change to 5
+#define CELLS_PER_IC        18
+#define NUM_CELLS           (CELLS_PER_IC * NUM_ICS)
+#define NUM_TEMP_SENSORS    (9 * NUM_ICS)
+#define SUCCESS             0
+#define FAILURE             1
     
 // cell voltage x 10000 comes from LTC6813 chip
-#define CELL_VOLTAGE_MAX    (42000) //TODO: research what these values should be
-#define CELL_VOLTAGE_MIN    (30000)
+#define CELL_VOLTAGE_MAX        (42000) //TODO: research what these values should be
+#define CELL_VOLTAGE_MIN        (30000)
+// GPIO voltage x 10000 comes from LTC6813 chip
+#define CELL_TEMPERATURE_MAX    18536 // 15 C
+#define CELL_TEMPERATURE_MIN    5825  // 60 C
     
 #define ADCVA       0
 #define ADCVB       1
@@ -32,6 +36,11 @@ extern "C" {
 #define ADCVD       3
 #define ADCVE       4
 #define ADCVF       5
+    
+#define AUXA        0
+#define AUXB        1
+#define AUXC        2
+#define AUXD        3
     
 void wakeup_sleep(void);
 uint8_t verify_pec(char* data, uint8_t size, char* transmitted_pec);

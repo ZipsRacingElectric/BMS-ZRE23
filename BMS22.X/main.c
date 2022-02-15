@@ -77,8 +77,12 @@ int main(void)
         calc_soc();
         // TODO do this in a for loop or something, change size?
         uint16_t cell_voltages[NUM_CELLS+2] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
-        read_cell_voltages(cell_voltages);
+        //read_cell_voltages(cell_voltages); TODO uncomment
+        // TODO do this in a for loop or something so size is dynamic depending on num temp sensors
+        uint16_t pack_temperatures[NUM_TEMP_SENSORS] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+        read_temperatures(pack_temperatures);
         check_for_fault();
+        uint8_t breakpoint = 0;
         //TODO maybe don't put all the CAN output back to back to back here, transmit buffers overflow
         report_cell_voltages(cell_voltages);
         //open_sense_line_check();
