@@ -15,10 +15,13 @@ extern "C" {
 #include <stdint.h>
     
 void fault_handler_initialize(void);
-void increment_cell_voltage_fault(uint8_t cell_id);
-void reset_cell_voltage_fault(uint8_t cell_id);
 uint8_t get_fault_codes(void);
 void check_for_fault(void);
+
+void increment_cell_voltage_fault(uint8_t cell_id);
+void reset_cell_voltage_fault(uint8_t cell_id);
+void increment_temperature_fault(uint8_t temp_sensor_id);
+void reset_temperature_fault(uint8_t temp_sensor_id);
 
 #ifdef	__cplusplus
 }

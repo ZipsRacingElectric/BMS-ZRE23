@@ -14,7 +14,8 @@
 #define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
 #include <libpic30.h>        // __delayXXX() functions macros defined here
 
-uint8_t cell_voltage_check();
+static uint8_t cell_voltage_check(uint16_t* cell_voltages);
+static uint8_t pack_temperature_check(uint16_t* pack_temperatures);
 
 void LTC_initialize()
 {
@@ -34,6 +35,19 @@ uint8_t read_cell_voltages(uint16_t* cell_voltages)
     rdcv_register(ADCVF, &cell_voltages[15]);
     
     return cell_voltage_check(cell_voltages);
+}
+
+uint8_t read_temperatures(uint16_t* pack_temperatures)
+{
+    start_temperature_adc_conversion();
+    poll_adc_status();
+    __delay_ms(10); //TODO: is this delay necessary?
+    rdaux_register(AUXA, &pack_temperatures[0]);
+    rdaux_register(AUXB, &pack_temperatures[3]);
+    rdaux_register(AUXC, &pack_temperatures[6]);
+    rdaux_register(AUXD, &pack_temperatures[9]);
+    
+    return pack_temperature_check(pack_temperatures);
 }
 
 uint8_t open_sense_line_check(void)
@@ -69,7 +83,7 @@ uint8_t open_sense_line_check(void)
     
 }
 
-uint8_t cell_voltage_check(uint16_t* cell_voltages) //TODO: implement timeout, or consecutive count of out-of-range samples
+static uint8_t cell_voltage_check(uint16_t* cell_voltages) //TODO: implement timeout, or consecutive count of out-of-range samples
 {
     uint8_t i = 0;
     uint8_t ret_val = SUCCESS;
@@ -83,6 +97,25 @@ uint8_t cell_voltage_check(uint16_t* cell_voltages) //TODO: implement timeout, o
         else
         {
             reset_cell_voltage_fault(i);
+        }
+    }
+    return ret_val;
+}
+
+static uint8_t pack_temperature_check(uint16_t* pack_temperatures)
+{
+    uint8_t i = 0;
+    uint8_t ret_val = SUCCESS;
+    for(i = 0; i < NUM_TEMP_SENSORS; ++i)
+    {
+        if((pack_temperatures[i] > CELL_TEMPERATURE_MAX) | (pack_temperatures[i] < CELL_TEMPERATURE_MIN))
+        {
+            increment_temperature_fault(i);
+            ret_val = FAILURE;
+        }
+        else
+        {
+            reset_temperature_fault(i);
         }
     }
     return ret_val;

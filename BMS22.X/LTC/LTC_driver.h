@@ -16,6 +16,7 @@ extern "C" {
 
 void LTC_initialize(void);
 uint8_t read_cell_voltages(uint16_t* cell_voltages);
+uint8_t read_temperatures(uint16_t* pack_temperatures);
 uint8_t open_sense_line_check(void);
 
 #ifdef	__cplusplus

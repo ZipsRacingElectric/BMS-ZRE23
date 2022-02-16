@@ -7,7 +7,7 @@
 #include "mcc_generated_files/pin_manager.h"
 #include <stdint.h>
 ////////////////defines////////////////////////////////////////////////////////
-#define CELL_VOLTAGE_MAX_FAULTS     10
+#define CELL_VOLTAGE_MAX_FAULTS     20 //TODO make this 10 (50 ms measurement period, 500 ms fault period)
 #define OPEN_SENSE_LINE_MAX_FAULTS  10
 #define TEMP_FAULTS_MAX             10
 #define SELF_TEST_FAULTS_MAX        10
@@ -22,6 +22,7 @@ uint8_t fault_codes = 0;
 
 //////////////// prototypes ///////////////////////////////////////////////////
 static void set_voltage_fault_bit(void);
+static void set_temperature_fault_bit(void);
 static void shutdown_car(void);
 
 //////////////// public functions /////////////////////////////////////////////
@@ -38,7 +39,7 @@ void fault_handler_initialize(void)
         sense_line_faults[i] = 0;
     }
     
-    for(i = 0; i < 9*NUM_ICS; ++i)
+    for(i = 0; i < NUM_TEMP_SENSORS; ++i)
     {
         temp_faults[i] = 0;
     }
@@ -75,12 +76,12 @@ void check_for_fault(void)
         }
     }
     
-    //TODO add set fault bit macros for temp and self test faults
     for(i = 0; i < 9*NUM_ICS; ++i)
     {
         if(temp_faults[i] > TEMP_FAULTS_MAX)
         {
             shutdown_car();
+            set_temperature_fault_bit();
         }
     }
     
@@ -89,6 +90,7 @@ void check_for_fault(void)
         if(self_test_faults[i]> SELF_TEST_FAULTS_MAX)
         {
             shutdown_car();
+            //TODO set_self_test_fault_bit();)
         }
     }
 }
@@ -103,11 +105,26 @@ void reset_cell_voltage_fault(uint8_t cell_id)
     cell_voltage_faults[cell_id] = 0;
 }
 
+void increment_temperature_fault(uint8_t temp_sensor_id)
+{
+    temp_faults[temp_sensor_id] += 1;
+}
+
+void reset_temperature_fault(uint8_t temp_sensor_id)
+{
+    temp_faults[temp_sensor_id] = 0;
+}
+
 //////////////// private functions ////////////////////////////////////////////
 
 static void set_voltage_fault_bit(void)
 {
     fault_codes |= (1 << 1); //TODO magic numbers?
+}
+
+static void set_temperature_fault_bit(void)
+{
+    fault_codes |= (1 << 0); //TODO magic numbers?
 }
 
 static void shutdown_car(void)

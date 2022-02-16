@@ -15,8 +15,10 @@ extern "C" {
 #include <stdint.h>
     
 void start_cell_voltage_adc_conversion(void);
+void start_temperature_adc_conversion(void);
 void poll_adc_status(void);
-void rdcv_register(uint8_t which_buf, uint16_t* buf);
+void rdcv_register(uint8_t which_reg, uint16_t* buf);
+void rdaux_register(uint8_t which_reg, uint16_t* buf);
 void open_wire_check(uint8_t pull_dir);
 
 #ifdef	__cplusplus
