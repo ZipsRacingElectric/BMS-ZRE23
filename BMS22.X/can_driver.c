@@ -19,6 +19,7 @@ static void send_cell_voltage_message(uint16_t* cell_voltages, uint16_t id);
 static void send_pack_temperature_message(uint16_t* cell_voltages, uint16_t id);
 
 ////////////////functions//////////////////////////////////////////////////////
+// initialize 2 CAN peripherals, set standby pins low
 void can_initialize(void)
 {
     CAN1_TransmitEnable();
@@ -33,6 +34,7 @@ void can_initialize(void)
     CAN2_STDBY_SetLow();
 }
 
+// put cell voltages on BMS CAN bus
 void report_cell_voltages(uint16_t* cell_voltages)
 {
     uint8_t i = 0;
@@ -44,6 +46,7 @@ void report_cell_voltages(uint16_t* cell_voltages)
     }
 }
 
+// put pack temperatures on the CAN bus
 void report_pack_temperatures(uint16_t* pack_temperatures)
 {
     uint8_t i = 0;
@@ -55,6 +58,7 @@ void report_pack_temperatures(uint16_t* pack_temperatures)
     }
 }
 
+// put status message on main vehicle CAN bus
 void report_status(void)
 {
     int16_t cs_lo = get_cs_lo_xten();
@@ -149,4 +153,3 @@ static void send_pack_temperature_message(uint16_t* pack_temperatures, uint16_t 
         LED2_CAN_STATUS_SetLow();
     }
 }
-//add functions here to interact with CAN peripheral from other tasks
