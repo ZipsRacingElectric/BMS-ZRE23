@@ -48,6 +48,7 @@ void timer1_interrupt(void);
 void adc1_cs_lo_interrupt(uint16_t valCS_LO);
 
 ////////////////functions//////////////////////////////////////////////////////
+// initialize peripherals necessary for SoC calculation
 void soc_initialize(void)
 {
     TMR1_SetInterruptHandler(timer1_interrupt); //my function to handle timer1 interrupts
@@ -57,6 +58,7 @@ void soc_initialize(void)
     TMR1_Start();
 }
 
+// calculate SoC based on most recently collected current data
 void calc_soc(void)
 {
     //contribution from low channel + contribution from high channel

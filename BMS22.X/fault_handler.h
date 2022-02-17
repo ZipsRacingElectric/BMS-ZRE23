@@ -14,8 +14,10 @@ extern "C" {
 
 #include <stdint.h>
     
+// initialize fault tracking arrays, enable BMS shutdown loop relay
 void fault_handler_initialize(void);
 uint8_t get_fault_codes(void);
+// iterate through fault arrays to determine whether actionable fault has occurred
 void check_for_fault(void);
 
 void increment_cell_voltage_fault(uint8_t cell_id);

@@ -18,9 +18,13 @@ extern "C" {
 #define CAN_ID_PACK_TEMPERATURE  0x41B
 #define CAN_ID_STATUS            0x440
 
+// initialize 2 CAN peripherals, set standby pins low
 void can_initialize(void);
+// put cell voltages on BMS CAN bus
 void report_cell_voltages(uint16_t* cell_voltages);
+// put pack temperatures on BMS CAN bus
 void report_pack_temperatures(uint16_t* pack_temperatures);
+// put status message on main vehicle CAN bus
 void report_status(void);
 
 #ifdef	__cplusplus
