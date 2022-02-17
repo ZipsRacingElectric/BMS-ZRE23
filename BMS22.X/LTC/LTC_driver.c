@@ -30,11 +30,11 @@ uint8_t read_cell_voltages(uint16_t* cell_voltages)
     poll_adc_status();
     __delay_ms(10); //TODO: is this delay necessary?
     rdcv_register(ADCVA, &cell_voltages[0]);
-    rdcv_register(ADCVB, &cell_voltages[3]);
-    rdcv_register(ADCVC, &cell_voltages[6]);
-    rdcv_register(ADCVD, &cell_voltages[9]);
-    rdcv_register(ADCVE, &cell_voltages[12]);
-    rdcv_register(ADCVF, &cell_voltages[15]);
+    rdcv_register(ADCVB, &cell_voltages[3*NUM_ICS]);
+    rdcv_register(ADCVC, &cell_voltages[6*NUM_ICS]);
+    rdcv_register(ADCVD, &cell_voltages[9*NUM_ICS]);
+    rdcv_register(ADCVE, &cell_voltages[12*NUM_ICS]);
+    rdcv_register(ADCVF, &cell_voltages[15*NUM_ICS]);
     
     return cell_voltage_check(cell_voltages);
 }
@@ -45,10 +45,28 @@ uint8_t read_temperatures(uint16_t* pack_temperatures)
     start_temperature_adc_conversion();
     poll_adc_status();
     __delay_ms(10); //TODO: is this delay necessary?
-    rdaux_register(AUXA, &pack_temperatures[0]);
-    rdaux_register(AUXB, &pack_temperatures[3]);
-    rdaux_register(AUXC, &pack_temperatures[6]);
-    rdaux_register(AUXD, &pack_temperatures[9]);
+    
+    // store aux register values in intermediate array since not all data
+    // is temperature sensor data. See LTC6813 datasheet pg 62
+    uint16_t aux_reg[12*NUM_ICS];
+    rdaux_register(AUXA, &aux_reg[0*NUM_ICS]);
+    rdaux_register(AUXB, &aux_reg[3*NUM_ICS]);
+    rdaux_register(AUXC, &aux_reg[6*NUM_ICS]);
+    rdaux_register(AUXD, &aux_reg[9*NUM_ICS]);
+    // copy over temperature data to temperature array
+    uint8_t i = 0;
+    for(i = 0; i < NUM_ICS; ++i)
+    {
+        pack_temperatures[i*NUM_ICS] = aux_reg[3*i];
+        pack_temperatures[i*NUM_ICS + 1] = aux_reg[(3*i) + 1];
+        pack_temperatures[i*NUM_ICS + 2] = aux_reg[(3*i) + 2];
+        pack_temperatures[i*NUM_ICS + 3] = aux_reg[(3*i) + (3*NUM_ICS)];
+        pack_temperatures[i*NUM_ICS + 4] = aux_reg[(3*i) + (3*NUM_ICS) + 1];
+        pack_temperatures[i*NUM_ICS + 5] = aux_reg[(3*i) + (6*NUM_ICS)];
+        pack_temperatures[i*NUM_ICS + 6] = aux_reg[(3*i) + (6*NUM_ICS) + 1];
+        pack_temperatures[i*NUM_ICS + 7] = aux_reg[(3*i) + (6*NUM_ICS) + 2];
+        pack_temperatures[i*NUM_ICS + 8] = aux_reg[(3*i) + (9*NUM_ICS)];
+    }
     
     return pack_temperature_check(pack_temperatures);
 }
