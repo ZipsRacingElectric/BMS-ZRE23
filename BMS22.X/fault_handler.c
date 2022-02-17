@@ -27,6 +27,7 @@ static void shutdown_car(void);
 
 //////////////// public functions /////////////////////////////////////////////
 
+// initialize fault tracking arrays, enable BMS shutdown loop relay
 void fault_handler_initialize(void)
 {
     BMS_RELAY_EN_SetLow();
@@ -57,6 +58,7 @@ uint8_t get_fault_codes(void)
     return fault_codes;
 }
 
+// iterate through fault arrays to determine whether actionable fault has occurred
 void check_for_fault(void)
 {
     uint8_t i = 0;

@@ -11,8 +11,9 @@
 #define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
 #include <libpic30.h>        // __delayXXX() functions macros defined here
 
-/* Generic wakeup command to wake the LTC681x from sleep state */
-void wakeup_sleep(void) //Number of ICs in the system
+// Generic wakeup command to wake the LTC681x from sleep state
+// wakeup time depends on number of chips in daisy chain
+void wakeup_daisychain(void) 
 {
     uint8_t i = 0;
 	for (i = 0; i < NUM_ICS; ++i)
@@ -24,6 +25,7 @@ void wakeup_sleep(void) //Number of ICs in the system
 	}
 }
 
+// verify that received packet error code matches calculated packet error code
 uint8_t verify_pec(char* data, uint8_t size, char* received_pec)
 {
     uint16_t calculated_pec = pec15_calc(data, size);
@@ -76,6 +78,7 @@ void init_PEC15_Table()
     }
 }
 
+// calculated packet error code based on received data and PEC table
 uint16_t pec15_calc(char *data , uint8_t len)
 {
     int16_t remainder,address;

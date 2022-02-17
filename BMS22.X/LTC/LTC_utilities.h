@@ -42,11 +42,23 @@ extern "C" {
 #define AUXC        2
 #define AUXD        3
     
-void wakeup_sleep(void);
+// Generic wakeup command to wake the LTC681x from sleep state
+void wakeup_daisychain(void);
+// verify that received packet error code matches calculated packet error code
 uint8_t verify_pec(char* data, uint8_t size, char* transmitted_pec);
+/************************************
+Copyright 2012 Analog Devices, Inc. (ADI)
+Permission to freely use, copy, modify, and distribute this software for any purpose with or
+without fee is hereby granted, provided that the above copyright notice and this permission
+notice appear in all copies: THIS SOFTWARE IS PROVIDED ?AS IS? AND ADI DISCLAIMS ALL WARRANTIES
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL ADI BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM ANY
+USE OF SAME, INCLUDING ANY LOSS OF USE OR DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
+OR OTHER TORTUOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+***************************************/
 void init_PEC15_Table();
+// calculated packet error code based on received data and PEC table
 uint16_t pec15_calc(char *data , uint8_t len);
-
 #ifdef	__cplusplus
 }
 #endif
