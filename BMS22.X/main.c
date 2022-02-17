@@ -71,17 +71,13 @@ int main(void)
     can_initialize();
     LTC_initialize();
     fault_handler_initialize();
+//    balance_timer_initialize();
     
     while (1)
     {
         calc_soc();
-        
         read_config_reg_a();
         
-        turn_on_balance_switch(1); //TODO make this based on voltage differential
-        __delay_ms(500);
-        turn_off_all_balancing();
-        //TODO limit max number of cells which can discharge at once?
         //TODO balance for 20 s, check cell voltages, balance for 20 more s...
         
         // TODO do this in a for loop or something, change size?

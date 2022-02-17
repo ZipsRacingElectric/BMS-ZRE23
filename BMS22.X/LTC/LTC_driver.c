@@ -31,6 +31,7 @@ uint8_t read_config_reg_a()
     return SUCCESS;
 }
 
+// activate a balance switch for a particular cell
 uint8_t turn_on_balance_switch(uint8_t cell_id)
 {
     uint8_t data_to_write[6*NUM_ICS];
@@ -46,9 +47,10 @@ uint8_t turn_on_balance_switch(uint8_t cell_id)
     return SUCCESS;
 }
 
+// turn off all cell balance switches
 uint8_t turn_off_all_balancing(void)
 {
-        uint8_t data_to_write[6*NUM_ICS];
+    uint8_t data_to_write[6*NUM_ICS];
     uint8_t i = 0;
     for(i = 0; i < 6*NUM_ICS; ++i)
     {
