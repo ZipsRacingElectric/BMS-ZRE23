@@ -31,7 +31,7 @@ uint16_t cmd_pec = 0;
  */
 void start_cell_voltage_adc_conversion(void)
 {        
-    wakeup_sleep();
+    wakeup_daisychain();
     
     //ADCV cmd
     cmd[0] = 0x02 | ((MD >> 1) & 0b01);
@@ -50,7 +50,7 @@ void start_cell_voltage_adc_conversion(void)
  */
 void start_temperature_adc_conversion(void)
 {        
-    wakeup_sleep();
+    wakeup_daisychain();
     
     //ADAX cmd
     cmd[0] = 0x04 | ((MD >> 1) & 0b01);
@@ -96,7 +96,7 @@ void poll_adc_status(void)
  */
 void rdcv_register(uint8_t which_reg, uint16_t* buf)
 {
-    wakeup_sleep();
+    wakeup_daisychain();
         
     switch(which_reg)
     {
@@ -169,7 +169,7 @@ void rdcv_register(uint8_t which_reg, uint16_t* buf)
  */
 void rdaux_register(uint8_t which_reg, uint16_t* buf)
 {
-    wakeup_sleep();
+    wakeup_daisychain();
         
     switch(which_reg)
     {
@@ -232,7 +232,7 @@ void rdaux_register(uint8_t which_reg, uint16_t* buf)
  */
 void open_wire_check(uint8_t pull_dir)
 {
-    wakeup_sleep();
+    wakeup_daisychain();
     
     //ADOW cmd
     cmd[0] = 0x02 | ((MD >> 1) & 0b01);
@@ -248,7 +248,7 @@ void open_wire_check(uint8_t pull_dir)
 
 void rdcfga(uint8_t* buffer)
 {
-    wakeup_sleep();
+    wakeup_daisychain();
     
     //RDCFGA cmd
     cmd[0] = 0x00;
@@ -264,7 +264,7 @@ void rdcfga(uint8_t* buffer)
 
 void wrcfga(uint8_t* data_to_write)
 {
-    wakeup_sleep();
+    wakeup_daisychain();
     
     //WRCFGA cmd
     cmd[0] = 0x00;

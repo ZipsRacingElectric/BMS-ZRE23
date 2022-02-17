@@ -12,16 +12,15 @@
 extern "C" {
 #endif
 #include "mcc_generated_files/can_types.h"
-    
+
+// initialize peripherals necessary for SoC calculation    
 void soc_initialize(void);
+// calculate SoC based on most recently collected current data
 void calc_soc(void);
 
 uint16_t get_soc_xten(void);
 int16_t get_cs_lo_xten(void);
 int16_t get_cs_hi_xten(void);
-
-void adc1_cs_lo_interrupt(uint16_t valCS_LO);
-void timer1_interrupt(void);
 
 #ifdef	__cplusplus
 }

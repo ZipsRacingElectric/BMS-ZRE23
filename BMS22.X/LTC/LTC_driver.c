@@ -17,11 +17,13 @@
 static uint8_t cell_voltage_check(uint16_t* cell_voltages);
 static uint8_t pack_temperature_check(uint16_t* pack_temperatures);
 
+// initialize PEC table necessary for LTC68xx interface
 void LTC_initialize()
 {
     init_PEC15_Table();
 }
 
+// read configuration register A
 uint8_t read_config_reg_a()
 {
     uint8_t buffer[6*NUM_ICS];
@@ -40,6 +42,8 @@ uint8_t turn_on_balance_switch(uint8_t cell_id)
     //TODO make this work for more cells, for multiple ICs
     data_to_write[4] |= (0x01 << (cell_id - 1)); // turn on cell balance switch for one cell
     wrcfga(data_to_write);
+    
+    return SUCCESS;
 }
 
 uint8_t turn_off_all_balancing(void)
@@ -51,8 +55,11 @@ uint8_t turn_off_all_balancing(void)
         data_to_write[i] = 0;
     }
     wrcfga(data_to_write);
+    
+    return SUCCESS;
 }
 
+// send commands to get cell voltages
 uint8_t read_cell_voltages(uint16_t* cell_voltages)
 {
     start_cell_voltage_adc_conversion();
@@ -68,6 +75,7 @@ uint8_t read_cell_voltages(uint16_t* cell_voltages)
     return cell_voltage_check(cell_voltages);
 }
 
+// send commands to get pack temperatures
 uint8_t read_temperatures(uint16_t* pack_temperatures)
 {
     start_temperature_adc_conversion();
@@ -81,6 +89,7 @@ uint8_t read_temperatures(uint16_t* pack_temperatures)
     return pack_temperature_check(pack_temperatures);
 }
 
+// check whether sense line overcurrent protection has tripped
 uint8_t open_sense_line_check(void)
 {
     //see pg 32 of 6813 datasheet for info
