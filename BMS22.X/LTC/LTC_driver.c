@@ -22,6 +22,37 @@ void LTC_initialize()
     init_PEC15_Table();
 }
 
+uint8_t read_config_reg_a()
+{
+    uint8_t buffer[6*NUM_ICS];
+    rdcfga(buffer);
+    return SUCCESS;
+}
+
+uint8_t turn_on_balance_switch(uint8_t cell_id)
+{
+    uint8_t data_to_write[6*NUM_ICS];
+    uint8_t i = 0;
+    for(i = 0; i < 6*NUM_ICS; ++i)
+    {
+        data_to_write[i] = 0;
+    }
+    //TODO make this work for more cells, for multiple ICs
+    data_to_write[4] |= (0x01 << (cell_id - 1)); // turn on cell balance switch for one cell
+    wrcfga(data_to_write);
+}
+
+uint8_t turn_off_all_balancing(void)
+{
+        uint8_t data_to_write[6*NUM_ICS];
+    uint8_t i = 0;
+    for(i = 0; i < 6*NUM_ICS; ++i)
+    {
+        data_to_write[i] = 0;
+    }
+    wrcfga(data_to_write);
+}
+
 uint8_t read_cell_voltages(uint16_t* cell_voltages)
 {
     start_cell_voltage_adc_conversion();

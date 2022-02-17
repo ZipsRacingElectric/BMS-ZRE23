@@ -20,6 +20,8 @@ void poll_adc_status(void);
 void rdcv_register(uint8_t which_reg, uint16_t* buf);
 void rdaux_register(uint8_t which_reg, uint16_t* buf);
 void open_wire_check(uint8_t pull_dir);
+void rdcfga(uint8_t* buffer);
+void wrcfga(uint8_t* data_to_write);
 
 #ifdef	__cplusplus
 }

@@ -245,3 +245,37 @@ void open_wire_check(uint8_t pull_dir)
 
     CS_6820_SetHigh();
 }
+
+void rdcfga(uint8_t* buffer)
+{
+    wakeup_sleep();
+    
+    //RDCFGA cmd
+    cmd[0] = 0x00;
+    cmd[1] = 0x02;
+    cmd_pec = pec15_calc(cmd, 2);
+    cmd[2] = (uint8_t)(cmd_pec >> 8);
+    cmd[3] = (uint8_t)(cmd_pec);
+    CS_6820_SetLow(); 
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(dummy_buf, 6*NUM_ICS, buffer);
+    CS_6820_SetHigh();
+}
+
+void wrcfga(uint8_t* data_to_write)
+{
+    wakeup_sleep();
+    
+    //WRCFGA cmd
+    cmd[0] = 0x00;
+    cmd[1] = 0x01;
+    cmd_pec = pec15_calc(cmd, 2);
+    cmd[2] = (uint8_t)(cmd_pec >> 8);
+    cmd[3] = (uint8_t)(cmd_pec);
+    
+    CS_6820_SetLow(); 
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(data_to_write, 6*NUM_ICS, dummy_buf);
+    CS_6820_SetHigh();
+    
+}
