@@ -24,6 +24,8 @@ void increment_cell_voltage_fault(uint8_t cell_id);
 void reset_cell_voltage_fault(uint8_t cell_id);
 void increment_temperature_fault(uint8_t temp_sensor_id);
 void reset_temperature_fault(uint8_t temp_sensor_id);
+void increment_sense_line_fault(uint8_t cell_id);
+void reset_sense_line_fault(uint8_t cell_id);
 
 #ifdef	__cplusplus
 }

@@ -38,6 +38,13 @@ BU_: BMS
 
 BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
  SG_ NewSignal_0001 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ id1 : 8|8@1+ (1,0) [0|0] "cell ID number" Vector__XXX
+ SG_ id5 : 40|8@1+ (1,0) [0|0] "cell ID number" Vector__XXX
+ SG_ id4 : 32|8@1+ (1,0) [0|0] "cell ID number" Vector__XXX
+ SG_ id3 : 24|8@1+ (1,0) [0|0] "cell ID number" Vector__XXX
+ SG_ id2 : 16|8@1+ (1,0) [0|0] "cell ID number" Vector__XXX
+ SG_ id7 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ id6 : 48|8@1+ (1,0) [0|0] "cell ID number" Vector__XXX
 
 BO_ 1088 status: 7 BMS
  SG_ cs_lo : 32|16@1- (0.1,0) [0|0] "A" Vector__XXX
@@ -247,7 +254,7 @@ BO_ 1061 pack_temperatures10: 8 BMS
  SG_ therm42 : 39|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
  SG_ therm43 : 55|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
 
-BO_ 1062 pack_temperatures11: 42 BMS
+BO_ 1062 pack_temperatures11: 2 BMS
  SG_ therm44 : 7|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
 
 BO_ 1049 balancing0: 8 BMS
@@ -344,15 +351,16 @@ BO_ 1050 balancing1: 8 BMS
  SG_ cell89_balancing : 24|1@1+ (1,0) [0|0] "bitfield" Vector__XXX
  SG_ cell90_balancing : 25|1@1+ (1,0) [0|0] "bitfield" Vector__XXX
 
-BO_ 1048 fuse_blown: 8 BMS
- SG_ id0 : 0|8@1+ (1,0) [0|0] "cell ID number" Vector__XXX
- SG_ id1 : 8|8@1+ (1,0) [0|0] "cell ID number" Vector__XXX
- SG_ id2 : 16|8@1+ (1,0) [0|0] "cell ID number" Vector__XXX
- SG_ id3 : 24|8@1+ (1,0) [0|0] "cell ID number" Vector__XXX
- SG_ id4 : 32|8@1+ (1,0) [0|0] "cell ID number" Vector__XXX
- SG_ id5 : 40|8@1+ (1,0) [0|0] "cell ID number" Vector__XXX
- SG_ id6 : 48|8@1+ (1,0) [0|0] "cell ID number" Vector__XXX
- SG_ id7 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+BO_ 1085 fuse_blown0: 6 BMS
+ SG_ segment1 : 0|24@1+ (1,0) [0|0] "bitfield" Vector__XXX
+ SG_ segment2 : 24|24@1+ (1,0) [0|0] "bitfield" Vector__XXX
+
+BO_ 1086 fuse_blown1: 6 BMS
+ SG_ segment3 : 0|24@1+ (1,0) [0|0] "bitfield" Vector__XXX
+ SG_ segment4 : 24|24@1+ (1,0) [0|0] "bitfield" Vector__XXX
+
+BO_ 1087 fuse_blown2: 3 BMS
+ SG_ segment5 : 0|24@1+ (1,0) [0|0] "bitfield" Vector__XXX
 
 
 

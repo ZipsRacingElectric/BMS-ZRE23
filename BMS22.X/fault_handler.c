@@ -8,14 +8,14 @@
 #include <stdint.h>
 ////////////////defines////////////////////////////////////////////////////////
 #define CELL_VOLTAGE_MAX_FAULTS     20 //TODO make this 10 (50 ms measurement period, 500 ms fault period)
-#define OPEN_SENSE_LINE_MAX_FAULTS  10
+#define OPEN_SENSE_LINE_MAX_FAULTS  20 //TODO make this 10 (50 ms measurement period, 500 ms fault period)
 #define TEMP_FAULTS_MAX             10
 #define SELF_TEST_FAULTS_MAX        10
 
 ////////////////globals////////////////////////////////////////////////////////
 uint8_t cell_voltage_faults[NUM_CELLS];
 uint8_t temp_faults[9*NUM_ICS];
-uint8_t sense_line_faults[NUM_CELLS];
+uint8_t sense_line_faults[NUM_CELLS + NUM_ICS]; // num cells (sense line for each cell) + num ics (0th sense line on each segment)
 uint8_t self_test_faults[NUM_ICS];
 
 uint8_t fault_codes = 0;
@@ -23,6 +23,7 @@ uint8_t fault_codes = 0;
 //////////////// prototypes ///////////////////////////////////////////////////
 static void set_voltage_fault_bit(void);
 static void set_temperature_fault_bit(void);
+static void set_sense_line_fault_bit(void);
 static void shutdown_car(void);
 
 //////////////// public functions /////////////////////////////////////////////
@@ -70,11 +71,14 @@ void check_for_fault(void)
             shutdown_car();
             set_voltage_fault_bit();
         }
-   
+    }
+    
+    for(i = 0; i < (NUM_CELLS + NUM_ICS); ++i)
+    {
         if(sense_line_faults[i] > OPEN_SENSE_LINE_MAX_FAULTS)
         {
             shutdown_car();
-            //TODO SET_SENSE_LINE_FAULT_BIT(1);
+            set_sense_line_fault_bit();
         }
     }
     
@@ -117,6 +121,16 @@ void reset_temperature_fault(uint8_t temp_sensor_id)
     temp_faults[temp_sensor_id] = 0;
 }
 
+void increment_sense_line_fault(uint8_t cell_id)
+{
+    sense_line_faults[cell_id] += 1;
+}
+
+void reset_sense_line_fault(uint8_t cell_id)
+{
+    sense_line_faults[cell_id] = 0;
+}
+
 //////////////// private functions ////////////////////////////////////////////
 
 static void set_voltage_fault_bit(void)
@@ -127,6 +141,11 @@ static void set_voltage_fault_bit(void)
 static void set_temperature_fault_bit(void)
 {
     fault_codes |= (1 << 0); //TODO magic numbers?
+}
+
+static void set_sense_line_fault_bit(void)
+{
+    fault_codes |= (1 << 4); //TODO magic numbers?
 }
 
 static void shutdown_car(void)

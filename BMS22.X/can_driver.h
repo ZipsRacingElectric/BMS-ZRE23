@@ -24,6 +24,8 @@ void can_initialize(void);
 void report_cell_voltages(uint16_t* cell_voltages);
 // put pack temperatures on BMS CAN bus
 void report_pack_temperatures(uint16_t* pack_temperatures);
+// put sense line status on BMS CAN bus
+void report_sense_line_status(uint32_t* sense_line_status);
 // put status message on main vehicle CAN bus
 void report_status(void);
 

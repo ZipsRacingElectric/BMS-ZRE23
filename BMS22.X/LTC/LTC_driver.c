@@ -72,12 +72,17 @@ uint8_t read_temperatures(uint16_t* pack_temperatures)
 }
 
 // check whether sense line overcurrent protection has tripped
-uint8_t open_sense_line_check(void)
+void open_sense_line_check(uint32_t* sense_line_status)
 {
     //see pg 32 of 6813 datasheet for info
     open_wire_check(1); // param: pull dir 0 for down 1 for up
+    __delay_us(10);
     open_wire_check(1); // param: pull dir 0 for down 1 for up
-    uint16_t cell_pu[8*NUM_ICS];
+    __delay_us(10);
+    open_wire_check(1); // param: pull dir 0 for down 1 for up
+    __delay_us(10);
+    open_wire_check(1); // param: pull dir 0 for down 1 for up
+    uint16_t cell_pu[NUM_CELLS]; //TODO make sure valid PEC is received when getting voltage reg values
     rdcv_register(ADCVA, &cell_pu[0]);
     rdcv_register(ADCVB, &cell_pu[3]);
     rdcv_register(ADCVC, &cell_pu[6]);
@@ -85,9 +90,14 @@ uint8_t open_sense_line_check(void)
     rdcv_register(ADCVE, &cell_pu[12]);
     rdcv_register(ADCVF, &cell_pu[15]);
     open_wire_check(0); // param: pull dir 0 for down 1 for up
+    __delay_us(10);
     open_wire_check(0); // param: pull dir 0 for down 1 for up
-    uint16_t cell_pd[8*NUM_ICS];
-    rdcv_register(ADCVA, &cell_pd[0]);
+    __delay_us(10);
+    open_wire_check(0); // param: pull dir 0 for down 1 for up
+    __delay_us(10);
+    open_wire_check(0); // param: pull dir 0 for down 1 for up
+    uint16_t cell_pd[NUM_CELLS];
+    rdcv_register(ADCVA, &cell_pd[0]); //TODO make sure valid PEC is received when getting voltage reg values
     rdcv_register(ADCVB, &cell_pd[3]);
     rdcv_register(ADCVC, &cell_pd[6]);
     rdcv_register(ADCVD, &cell_pd[9]);
@@ -95,13 +105,50 @@ uint8_t open_sense_line_check(void)
     rdcv_register(ADCVF, &cell_pd[15]);
     
     //TODO: finish this
-//    uint8_t i = 0;
-//    for(i = 0; i < NUM_CELLS; ++i) // for each ic - 0-35
-//    {
-//        if()
-//    }
-//    // edge cases - C0 and C18
-//    if()
+    uint8_t i = 0;
+    for(i = 0; i < NUM_CELLS; ++i) // for each ic - 0-5
+    {
+        if(i % 18 == 0) // sense line 0 in a segment
+        {
+            if(cell_pu[i] == 0) // TODO: exactly equal to zero or just close to zero?
+            {
+                sense_line_status[i / 18] |= (1 << i);
+                increment_sense_line_fault(i);
+            }
+            else
+            {
+                sense_line_status[i / 18] &= (uint32_t)(~(1 << i));
+                reset_sense_line_fault(i);
+            }
+        }
+        else if(i % 18 == 17) // cell 18 in a segment
+        {
+            if(cell_pd[i] == 0) // TODO: exactly equal to zero or just close to zero?
+            {
+                sense_line_status[i / 18] |= (1 << i);
+                increment_sense_line_fault(i);
+            }
+            else
+            {
+                sense_line_status[i / 18] &= (uint32_t)(~(1 << i));
+                reset_sense_line_fault(i);
+            }
+        }
+        else // cells 2-17 in a segment
+        {
+            int16_t delta = cell_pu[i+1] - cell_pd[i+1]; // V * 10000
+            if(delta < -4000) //TODO magic number
+            {
+                sense_line_status[i / 18] |= (1 << i);
+                increment_sense_line_fault(i);
+            }
+            else
+            {
+                sense_line_status[i / 18] &= (uint32_t)(~(1 << i));
+                reset_sense_line_fault(i);
+            }
+        }
+    }
     
 }
 

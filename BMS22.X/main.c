@@ -86,6 +86,10 @@ int main(void)
         read_temperatures(pack_temperatures);
         report_pack_temperatures(pack_temperatures);
         
+        uint32_t sense_line_status[NUM_ICS];
+        open_sense_line_check(sense_line_status);
+        report_sense_line_status(sense_line_status);
+        
         check_for_fault();
         //TODO maybe don't put all the CAN output back to back to back here, transmit buffers overflow
         //open_sense_line_check();
