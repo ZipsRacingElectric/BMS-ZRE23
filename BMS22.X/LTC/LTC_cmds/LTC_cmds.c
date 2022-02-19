@@ -273,9 +273,12 @@ void wrcfga(uint8_t* data_to_write)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     
+    uint16_t data_pec = pec15_calc(data_to_write, 6);
+    uint8_t data_pec_transmit[2] = {(uint8_t)(data_pec >> 8), (uint8_t)(data_pec & 0xFF)};    
     CS_6820_SetLow(); 
     SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
     SPI1_Exchange8bitBuffer(data_to_write, 6*NUM_ICS, dummy_buf);
+    SPI1_Exchange8bitBuffer(data_pec_transmit, 2, dummy_buf);
     CS_6820_SetHigh();
     
 }

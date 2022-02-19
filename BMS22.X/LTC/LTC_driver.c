@@ -9,6 +9,7 @@
 #include "LTC_driver.h"
 #include "LTC_utilities.h"
 #include "LTC_cmds/LTC_cmds.h"
+#include "../cell_balancing.h"
 #include "../fault_handler.h"
 #include <stdint.h>
 #define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
@@ -31,32 +32,15 @@ uint8_t read_config_reg_a()
     return SUCCESS;
 }
 
-// activate a balance switch for a particular cell
-uint8_t turn_on_balance_switch(uint8_t cell_id)
-{
-    uint8_t data_to_write[6*NUM_ICS];
-    uint8_t i = 0;
-    for(i = 0; i < 6*NUM_ICS; ++i)
-    {
-        data_to_write[i] = 0;
-    }
-    //TODO make this work for more cells, for multiple ICs
-    data_to_write[4] |= (0x01 << (cell_id - 1)); // turn on cell balance switch for one cell
-    wrcfga(data_to_write);
-    
-    return SUCCESS;
-}
-
 // turn off all cell balance switches
 uint8_t turn_off_all_balancing(void)
 {
-    uint8_t data_to_write[6*NUM_ICS];
-    uint8_t i = 0;
-    for(i = 0; i < 6*NUM_ICS; ++i)
-    {
-        data_to_write[i] = 0;
-    }
+    // TODO add cfgrb
+    uint8_t data_to_write[6*NUM_ICS] = {0xE4, 0x52, 0x27, 0xA0, 0x00, 0x50};
+
     wrcfga(data_to_write);
+    
+    // TODO make this work for multiple ICs
     
     return SUCCESS;
 }
@@ -73,6 +57,8 @@ uint8_t read_cell_voltages(uint16_t* cell_voltages)
     rdcv_register(ADCVD, &cell_voltages[9*NUM_ICS]);
     rdcv_register(ADCVE, &cell_voltages[12*NUM_ICS]);
     rdcv_register(ADCVF, &cell_voltages[15*NUM_ICS]);
+    
+    update_cell_balance_array(cell_voltages);
     
     return cell_voltage_check(cell_voltages);
 }

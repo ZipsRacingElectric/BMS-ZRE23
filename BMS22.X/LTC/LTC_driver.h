@@ -24,8 +24,6 @@ uint8_t read_cell_voltages(uint16_t* cell_voltages);
 uint8_t read_temperatures(uint16_t* pack_temperatures);
 // check whether sense line overcurrent protection has tripped
 uint8_t open_sense_line_check(void);
-// activate a balance switch for a particular cell
-uint8_t turn_on_balance_switch(uint8_t cell_id);
 // turn off all cell balance switches
 uint8_t turn_off_all_balancing(void);
 

@@ -54,6 +54,7 @@
 #include "LTC/LTC_driver.h"
 #include "LTC/LTC_utilities.h"
 #include "fault_handler.h"
+#include "cell_balancing.h"
 
 #define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
 #include <libpic30.h>        // __delayXXX() functions macros defined here
@@ -71,7 +72,7 @@ int main(void)
     can_initialize();
     LTC_initialize();
     fault_handler_initialize();
-//    balance_timer_initialize();
+    balance_timer_initialize();
     
     while (1)
     {
@@ -86,9 +87,9 @@ int main(void)
         report_cell_voltages(cell_voltages);
 
         // TODO do this in a for loop or something so size is dynamic depending on num temp sensors
-        uint16_t pack_temperatures[NUM_TEMP_SENSORS] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-        read_temperatures(pack_temperatures);
-        report_pack_temperatures(pack_temperatures);
+//        uint16_t pack_temperatures[NUM_TEMP_SENSORS] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+//        read_temperatures(pack_temperatures);
+//        report_pack_temperatures(pack_temperatures);
         
         check_for_fault();
         //TODO maybe don't put all the CAN output back to back to back here, transmit buffers overflow
