@@ -28,22 +28,12 @@ void balance_timer_initialize(void)
     TMR2_Start();
 }
 
-void set_cell_needs_balancing(uint8_t cell_id)
-{
-    cell_needs_balanced[cell_id] = true;
-}
-
-void reset_cell_needs_balancing(uint8_t cell_id)
-{
-    cell_needs_balanced[cell_id] = false;
-}
-
 void update_cell_balance_array(uint16_t* cell_voltages)
 {
     // find minimum cell voltage
     uint8_t i = 0; 
-    uint16_t minimum_voltage = cell_voltages[0];
-    for(i = 1; i < NUM_CELLS; ++i)
+    uint16_t minimum_voltage = 42000;
+    for(i = 0; i < NUM_CELLS; ++i)
     {
         if(cell_voltages[i] < minimum_voltage && cell_voltages[i] > 30000) //TODO can't use this 30000 check?
         {
@@ -51,15 +41,15 @@ void update_cell_balance_array(uint16_t* cell_voltages)
         }
     }
     
-    for(i = 0; i < NUM_CELLS; ++i)
+     for(i = 0; i < NUM_CELLS; ++i)
     {
         if(cell_voltages[i] > (minimum_voltage + CELL_BALANCE_THRESHOLD))
         {
-            set_cell_needs_balancing(i);
+            cell_needs_balanced[i] = true;
         }
         else
         {
-            reset_cell_needs_balancing(i);
+            cell_needs_balanced[i] = false;
         }
     }
 }
@@ -85,6 +75,7 @@ void timer2_interrupt(void)
             {                
                 switch(i)
                 {
+                    case 0:
                     case 1:
                     case 2:
                     case 3:
@@ -92,7 +83,6 @@ void timer2_interrupt(void)
                     case 5:
                     case 6:
                     case 7:
-                    case 8:
                         data_to_write[4] |= (1 << i);
                         break;
                     default:
