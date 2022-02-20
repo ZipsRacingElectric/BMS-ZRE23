@@ -117,6 +117,9 @@ void reset_temperature_fault(uint8_t temp_sensor_id)
     temp_faults[temp_sensor_id] = 0;
 }
 
+// TODO cell voltage fault check
+// possible faults: over voltage, under voltage, missing measurement
+
 //////////////// private functions ////////////////////////////////////////////
 
 static void set_voltage_fault_bit(void)

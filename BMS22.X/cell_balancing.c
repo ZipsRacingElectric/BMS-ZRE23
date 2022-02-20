@@ -75,7 +75,7 @@ void timer2_interrupt(void)
     {
         //TODO balance based on cell voltage
         
-        turn_off_balance_switches = 0;
+        turn_off_balance_switches += 1;
         uint8_t i = 0;
         uint8_t data_to_write[6*NUM_ICS] = {0xE4, 0x52, 0x27, 0xA0, 0x00, 0x50};
 
@@ -92,9 +92,9 @@ void timer2_interrupt(void)
         //TODO add cfgrb
         //TODO make this work for more cells, for multiple ICs
         
-//        if(turn_off_balance_switches >= 10)
-//        {
-//            turn_off_balance_switches = 0;
-//        }
+        if(turn_off_balance_switches >= 5)
+        {
+            turn_off_balance_switches = 0;
+        }
     }
 }
