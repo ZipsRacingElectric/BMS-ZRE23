@@ -10,6 +10,8 @@
 #include "mcc_generated_files/can2.h"
 #include "mcc_generated_files/can_types.h"
 #include "mcc_generated_files/pin_manager.h"
+#include "cell_balancing.h"
+#include <stdbool.h>
 ////////////////defines////////////////////////////////////////////////////////
 
 ////////////////globals////////////////////////////////////////////////////////
@@ -92,6 +94,43 @@ void report_status(void)
     {
         LED2_CAN_STATUS_SetLow();
     }
+}
+
+// put cell balance information on the CAN bus
+void report_balancing(void)
+{
+    uint32_t* cell_needs_balanced = get_cell_balance_array();
+    
+    // TODO make this work for multiple ICS
+    uint8_t can_data[8] = {(cell_needs_balanced[0] & 0xFF),
+                           (cell_needs_balanced[0] >> 8) & 0xFF,
+                           (cell_needs_balanced[0] >> 16) & 0xFF,
+                           0, 0, 0, 0, 0};
+//    uint8_t balance_data_two[4] = {};
+
+    CAN_MSG_FIELD overhead = {
+        .idType = CAN_FRAME_STD,
+        .frameType = CAN_FRAME_DATA,
+        .dlc = CAN_DLC_8,
+    };
+
+    CAN_MSG_OBJ msg = {
+        .msgId = CAN_ID_CELL_BALANCING,
+        .field = overhead,
+        .data = can_data,
+    };
+
+    CAN_TX_MSG_REQUEST_STATUS status = CAN1_Transmit(CAN_PRIORITY_MEDIUM, &msg);
+    if(status == CAN_TX_MSG_REQUEST_SUCCESS)
+    {
+        LED2_CAN_STATUS_SetHigh();
+    }
+    else
+    {
+        LED2_CAN_STATUS_SetLow();
+    }
+    
+    // TODO add code for rest of cells (2nd balancing status msg)
 }
 
 static void send_cell_voltage_message(uint16_t* cell_voltages, uint16_t id)

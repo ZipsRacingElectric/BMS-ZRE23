@@ -17,7 +17,8 @@ extern "C" {
 #define CAN_ID_CELL_VOLTAGES     0x401
 #define CAN_ID_PACK_TEMPERATURE  0x41B
 #define CAN_ID_STATUS            0x440
-
+#define CAN_ID_CELL_BALANCING    0x419
+    
 // initialize 2 CAN peripherals, set standby pins low
 void can_initialize(void);
 // put cell voltages on BMS CAN bus

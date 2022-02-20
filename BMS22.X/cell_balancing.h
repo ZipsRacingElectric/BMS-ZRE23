@@ -16,7 +16,7 @@ extern "C" {
     
 void balance_timer_initialize(void);
 void update_cell_balance_array(uint16_t* cell_voltages);
-
+uint32_t* get_cell_balance_array(void);
 
 #ifdef	__cplusplus
 }

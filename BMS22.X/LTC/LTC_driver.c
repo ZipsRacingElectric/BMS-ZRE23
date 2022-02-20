@@ -58,8 +58,6 @@ uint8_t read_cell_voltages(uint16_t* cell_voltages)
     rdcv_register(ADCVE, &cell_voltages[12*NUM_ICS]);
     rdcv_register(ADCVF, &cell_voltages[15*NUM_ICS]);
     
-    update_cell_balance_array(cell_voltages);
-    
     return cell_voltage_check(cell_voltages);
 }
 

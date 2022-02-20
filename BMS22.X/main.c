@@ -77,7 +77,7 @@ int main(void)
     while (1)
     {
         calc_soc();
-        read_config_reg_a();
+        read_config_reg_a(); //TODO get rid of this in production rev
         
         //TODO balance for 20 s, check cell voltages, balance for 20 more s...
         
@@ -85,6 +85,9 @@ int main(void)
         uint16_t cell_voltages[NUM_CELLS+2] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
         read_cell_voltages(cell_voltages);
         report_cell_voltages(cell_voltages);
+        
+        update_cell_balance_array(cell_voltages);
+        report_balancing();
 
         // TODO do this in a for loop or something so size is dynamic depending on num temp sensors
 //        uint16_t pack_temperatures[NUM_TEMP_SENSORS] = {0, 0, 0, 0, 0, 0, 0, 0, 0};

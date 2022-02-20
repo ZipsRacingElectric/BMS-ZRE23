@@ -13,8 +13,8 @@
 #define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
 #include <libpic30.h>        // __delayXXX() functions macros defined here
 
-uint8_t turn_off_balance_switches = 0;
-bool cell_needs_balanced[NUM_CELLS]; 
+volatile uint8_t turn_off_balance_switches = 0;
+uint32_t cell_needs_balanced[NUM_ICS]; 
 
 ////////////////interrupt prototypes///////////////////////////////////////////
 void timer2_interrupt(void);
@@ -35,63 +35,66 @@ void update_cell_balance_array(uint16_t* cell_voltages)
     uint16_t minimum_voltage = 42000;
     for(i = 0; i < NUM_CELLS; ++i)
     {
-        if(cell_voltages[i] < minimum_voltage && cell_voltages[i] > 30000) //TODO can't use this 30000 check?
+        if(cell_voltages[i] < minimum_voltage && cell_voltages[i] > CELL_VOLTAGE_MIN) //TODO can't use this > check?
         {
             minimum_voltage = cell_voltages[i];
         }
     }
     
-     for(i = 0; i < NUM_CELLS; ++i)
+     for(i = 0; i < NUM_ICS; ++i)
     {
-        if(cell_voltages[i] > (minimum_voltage + CELL_BALANCE_THRESHOLD))
+        uint8_t k = 0;
+        for(k = 0; k < CELLS_PER_IC; ++k)
         {
-            cell_needs_balanced[i] = true;
-        }
-        else
-        {
-            cell_needs_balanced[i] = false;
+            if(cell_voltages[k + i*CELLS_PER_IC] > (minimum_voltage + CELL_BALANCE_THRESHOLD))
+            {
+                cell_needs_balanced[i] |= (1 << k);
+            }
+            else
+            {
+                cell_needs_balanced[i] &= (uint32_t)(~(1 << k));
+            }
         }
     }
+}
+
+uint32_t* get_cell_balance_array(void)
+{
+    return cell_needs_balanced;
 }
 
 ////////////////interrupts/////////////////////////////////////////////////////
 void timer2_interrupt(void)
 {
-    if(turn_off_balance_switches == 1)
+    if(turn_off_balance_switches == 0)
     {
-        turn_off_balance_switches = 0;
+        turn_off_balance_switches = 1;
         turn_off_all_balancing();
     }
     else
     {
         //TODO balance based on cell voltage
         
-        turn_off_balance_switches = 1;
+        turn_off_balance_switches = 0;
         uint8_t i = 0;
         uint8_t data_to_write[6*NUM_ICS] = {0xE4, 0x52, 0x27, 0xA0, 0x00, 0x50};
-        for(i = 0; i < NUM_CELLS; ++i)
+
+        // TODO wrap this in a num ics for loop
+        for(i = 0; i < 8; ++i)
         {
-            if(cell_needs_balanced[i])
-            {                
-                switch(i)
-                {
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                    case 6:
-                    case 7:
-                        data_to_write[4] |= (1 << i);
-                        break;
-                    default:
-                        break;   
-                }
+            if(cell_needs_balanced[0] >> i == 1)
+            {
+                data_to_write[4] |= (1 << i);
             }
-        }
+        } 
+
         wrcfga(data_to_write);
         //TODO add cfgrb
         //TODO make this work for more cells, for multiple ICs
+        
+//        if(turn_off_balance_switches >= 10)
+//        {
+//            turn_off_balance_switches = 0;
+//        }
     }
 }
