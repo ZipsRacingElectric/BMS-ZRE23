@@ -39,6 +39,7 @@
       <itemPath>soc_fns.h</itemPath>
       <itemPath>fault_handler.h</itemPath>
       <itemPath>cell_balancing.h</itemPath>
+      <itemPath>global_constants.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"

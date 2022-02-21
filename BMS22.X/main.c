@@ -55,13 +55,11 @@
 #include "LTC/LTC_utilities.h"
 #include "fault_handler.h"
 #include "cell_balancing.h"
-
-#define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
-#include <libpic30.h>        // __delayXXX() functions macros defined here
+#include "global_constants.h"
 
 // TODO do this in a for loop or something, change size?
 uint16_t cell_voltages[NUM_CELLS+2] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
-uint8_t cell_voltages_valid[6*NUM_ICS] = {0, 0, 0, 0, 0, 0};
+uint8_t cell_voltage_invalid_counter[6*NUM_ICS] = {0, 0, 0, 0, 0, 0};
 
 //TODO move pack temp stuff up here, temp valid array
 
@@ -87,7 +85,7 @@ int main(void)
         
         //TODO balance for 20 s, check cell voltages, balance for 20 more s...
         
-        read_cell_voltages(cell_voltages, cell_voltages_valid);
+        read_cell_voltages(cell_voltages, cell_voltage_invalid_counter);
         report_cell_voltages(cell_voltages);
         
         update_cell_balance_array(cell_voltages);

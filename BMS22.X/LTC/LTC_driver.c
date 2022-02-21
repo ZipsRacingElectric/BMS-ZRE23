@@ -12,8 +12,7 @@
 #include "../cell_balancing.h"
 #include "../fault_handler.h"
 #include <stdint.h>
-#define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
-#include <libpic30.h>        // __delayXXX() functions macros defined here
+#include "../global_constants.h"
 
 static uint8_t cell_voltage_check(uint16_t* cell_voltages);
 static uint8_t pack_temperature_check(uint16_t* pack_temperatures);
@@ -28,8 +27,7 @@ void LTC_initialize()
 uint8_t read_config_reg_a()
 {
     uint8_t buffer[6*NUM_ICS];
-    rdcfga(buffer);
-    return SUCCESS;
+    return rdcfga(buffer);
 }
 
 // turn off all cell balance switches
@@ -41,22 +39,22 @@ uint8_t turn_off_all_balancing(void)
     wrcfga(data_to_write);
     
     // TODO make this work for multiple ICs
-    
+    // TODO read back register values and make sure values were correctly written, then return success or failure
     return SUCCESS;
 }
 
 // send commands to get cell voltages
-uint8_t read_cell_voltages(uint16_t* cell_voltages, uint8_t* cell_voltages_valid)
+uint8_t read_cell_voltages(uint16_t* cell_voltages, uint8_t* cell_voltage_invalid_counter)
 {
     start_cell_voltage_adc_conversion();
     poll_adc_status();
     __delay_ms(10); //TODO: is this delay necessary?
-    rdcv_register(ADCVA, &cell_voltages[0], &cell_voltages_valid[0]);
-    rdcv_register(ADCVB, &cell_voltages[3], &cell_voltages_valid[3]);
-    rdcv_register(ADCVC, &cell_voltages[6], &cell_voltages_valid[6]);
-    rdcv_register(ADCVD, &cell_voltages[9], &cell_voltages_valid[9]);
-    rdcv_register(ADCVE, &cell_voltages[12], &cell_voltages_valid[12]);
-    rdcv_register(ADCVF, &cell_voltages[15], &cell_voltages_valid[15]);
+    rdcv_register(ADCVA, &cell_voltages[0], &cell_voltage_invalid_counter[0]);
+    rdcv_register(ADCVB, &cell_voltages[3], &cell_voltage_invalid_counter[3]);
+    rdcv_register(ADCVC, &cell_voltages[6], &cell_voltage_invalid_counter[6]);
+    rdcv_register(ADCVD, &cell_voltages[9], &cell_voltage_invalid_counter[9]);
+    rdcv_register(ADCVE, &cell_voltages[12], &cell_voltage_invalid_counter[12]);
+    rdcv_register(ADCVF, &cell_voltages[15], &cell_voltage_invalid_counter[15]);
     
     return cell_voltage_check(cell_voltages);
 }

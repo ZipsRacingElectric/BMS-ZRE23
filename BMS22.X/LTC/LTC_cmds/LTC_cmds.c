@@ -9,9 +9,9 @@
 #include "../LTC_utilities.h"
 #include "../../mcc_generated_files/pin_manager.h"
 #include "../../mcc_generated_files/spi1.h"
+#include "../../fault_handler.h"
 #include <stdint.h>
-#define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
-#include <libpic30.h>        // __delayXXX() functions macros defined here
+#include "../../global_constants.h"
 
 // see LTC6813 datasheet page 59 table 37 Command Bit Descriptions
 #define MD          0b10    // ADC mode
@@ -94,7 +94,7 @@ void poll_adc_status(void)
 /* receive voltage register data
  * command: RDCV
  */
-void rdcv_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_voltages_valid)
+void rdcv_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_voltage_invalid_counter)
 {
     wakeup_daisychain();
         
@@ -156,22 +156,22 @@ void rdcv_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_voltages_vali
             buf[CELLS_PER_IC*i] = (adcv_buf[8*i + 1] << 8) + adcv_buf[8*i];
             buf[CELLS_PER_IC*i + 1] = (adcv_buf[8*i + 3] << 8) + adcv_buf[8*i + 2];
             buf[CELLS_PER_IC*i + 2] = (adcv_buf[8*i + 5] << 8) + adcv_buf[8*i + 4];
-            cell_voltages_valid[i*6] = 0;
+            cell_voltage_invalid_counter[i*6] = 0;
             reset_missing_voltage_measurement_fault(which_reg + i*6);
             // adcv_buf 6 and 7 are PEC bytes
         }
         else
         {
-            ++cell_voltages_valid[i*6];
+            ++cell_voltage_invalid_counter[i*6];
             increment_missing_voltage_measurement_fault(which_reg + i*6);
         }
         
-        if(cell_voltages_valid[i*6] >= 5) // TODO magic number
+        if(cell_voltage_invalid_counter[i*6] >= 5) // TODO magic number
         {
             buf[CELLS_PER_IC*i] = 0;
             buf[CELLS_PER_IC*i + 1] = 0;
             buf[CELLS_PER_IC*i + 2] = 0;
-            cell_voltages_valid[i*6] = 0;
+            cell_voltage_invalid_counter[i*6] = 0;
         }
     }
     // TODO add else statements to set the cell voltages to 0 if the PEC is incorrect
@@ -262,7 +262,10 @@ void open_wire_check(uint8_t pull_dir)
     CS_6820_SetHigh();
 }
 
-void rdcfga(uint8_t* buffer)
+/*
+ * read config register A
+ */
+uint8_t rdcfga(uint8_t* buffer)
 {
     wakeup_daisychain();
     
@@ -276,8 +279,17 @@ void rdcfga(uint8_t* buffer)
     SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
     SPI1_Exchange8bitBuffer(dummy_buf, 6*NUM_ICS, buffer);
     CS_6820_SetHigh();
+    
+    if(verify_pec(buffer, 6, &buffer[6]) == SUCCESS)
+    {
+        return SUCCESS;
+    }
+    return FAILURE;
 }
 
+/*
+ * write configuration register A
+ */
 void wrcfga(uint8_t* data_to_write)
 {
     wakeup_daisychain();
