@@ -10,13 +10,14 @@
 #include "mcc_generated_files/can2.h"
 #include "mcc_generated_files/can_types.h"
 #include "mcc_generated_files/pin_manager.h"
+#include "cell_balancing.h"
+#include <stdbool.h>
 ////////////////defines////////////////////////////////////////////////////////
 
 ////////////////globals////////////////////////////////////////////////////////
 
 ////////////////prototypes/////////////////////////////////////////////////////
-static void send_cell_voltage_message(uint16_t* cell_voltages, uint16_t id);
-static void send_pack_temperature_message(uint16_t* cell_voltages, uint16_t id);
+static void CAN_Msg_Send(uint16_t id, CAN_DLC dlc, uint8_t *tx_data);
 
 ////////////////functions//////////////////////////////////////////////////////
 // initialize 2 CAN peripherals, set standby pins low
@@ -41,8 +42,12 @@ void report_cell_voltages(uint16_t* cell_voltages)
     uint8_t upper_bound = (NUM_CELLS + 4 - (NUM_CELLS % 4)) / 4;
     for(i = 0; i < upper_bound; ++i)
     {
-        uint16_t msg_id = i + CAN_ID_CELL_VOLTAGES;
-        send_cell_voltage_message(&cell_voltages[4*i], msg_id); 
+        uint8_t can_data[8] = {(uint8_t)(cell_voltages[4*i] >> 8), (uint8_t)(cell_voltages[4*i] & 0xFF), 
+                               (uint8_t)(cell_voltages[4*i + 1] >> 8), (uint8_t)(cell_voltages[4*i + 1] & 0xFF), 
+                               (uint8_t)(cell_voltages[4*i + 2] >> 8), (uint8_t)(cell_voltages[4*i + 2] & 0xFF), 
+                               (uint8_t)(cell_voltages[4*i + 3] >> 8), (uint8_t)(cell_voltages[4*i + 3] & 0xFF)};
+
+        CAN_Msg_Send(CAN_ID_CELL_VOLTAGES + i, CAN_DLC_8, can_data);
     }
 }
 
@@ -53,8 +58,12 @@ void report_pack_temperatures(uint16_t* pack_temperatures)
     uint8_t upper_bound = (NUM_TEMP_SENSORS + 4 - (NUM_TEMP_SENSORS % 4)) / 4;
     for(i = 0; i < upper_bound; ++i)
     {
-        uint16_t msg_id = i + CAN_ID_PACK_TEMPERATURE;
-        send_pack_temperature_message(&pack_temperatures[4*i], msg_id); 
+        uint8_t can_data[8] = {(uint8_t)(pack_temperatures[4*i] >> 8), (uint8_t)(pack_temperatures[4*i] & 0xFF), 
+                       (uint8_t)(pack_temperatures[4*i + 1] >> 8), (uint8_t)(pack_temperatures[4*i + 1] & 0xFF), 
+                       (uint8_t)(pack_temperatures[4*i + 2] >> 8), (uint8_t)(pack_temperatures[4*i + 2] & 0xFF), 
+                       (uint8_t)(pack_temperatures[4*i + 3] >> 8), (uint8_t)(pack_temperatures[4*i + 3] & 0xFF)};
+
+        CAN_Msg_Send(CAN_ID_PACK_TEMPERATURE + i, CAN_DLC_8, can_data);
     }
 }
 
@@ -71,76 +80,38 @@ void report_status(void)
                            (uint8_t)(cs_lo & 0xFF), (uint8_t)(cs_lo >> 8),
                            fault_codes};
 
-    CAN_MSG_FIELD overhead = {
-        .idType = CAN_FRAME_STD,
-        .frameType = CAN_FRAME_DATA,
-        .dlc = CAN_DLC_7,
-    };
-
-    CAN_MSG_OBJ msg = {
-        .msgId = CAN_ID_STATUS,
-        .field = overhead,
-        .data = can_data,
-    };
-
-    CAN_TX_MSG_REQUEST_STATUS status = CAN1_Transmit(CAN_PRIORITY_MEDIUM, &msg);
-    if(status == CAN_TX_MSG_REQUEST_SUCCESS)
-    {
-        LED2_CAN_STATUS_SetHigh();
-    }
-    else
-    {
-        LED2_CAN_STATUS_SetLow();
-    }
+    CAN_Msg_Send(CAN_ID_STATUS, CAN_DLC_7, can_data);
 }
 
-static void send_cell_voltage_message(uint16_t* cell_voltages, uint16_t id)
+// put cell balance information on the CAN bus
+void report_balancing(void)
 {
-    uint8_t can_data[8] = {(uint8_t)(cell_voltages[0] >> 8), (uint8_t)(cell_voltages[0] & 0xFF), 
-                           (uint8_t)(cell_voltages[1] >> 8), (uint8_t)(cell_voltages[1] & 0xFF), 
-                           (uint8_t)(cell_voltages[2] >> 8), (uint8_t)(cell_voltages[2] & 0xFF), 
-                           (uint8_t)(cell_voltages[3] >> 8), (uint8_t)(cell_voltages[3] & 0xFF)};
+    uint32_t* cell_needs_balanced = get_cell_balance_array();
+    
+    // TODO make this work for multiple ICS
+    uint8_t can_data[8] = {(cell_needs_balanced[0] & 0xFF),
+                           (cell_needs_balanced[0] >> 8) & 0xFF,
+                           (cell_needs_balanced[0] >> 16) & 0xFF,
+                           0, 0, 0, 0, 0};
+//    uint8_t balance_data_two[4] = {};
 
+    CAN_Msg_Send(CAN_ID_CELL_BALANCING, CAN_DLC_8, can_data);
+    
+    // TODO add code for rest of cells (2nd balancing status msg)
+}
+
+static void CAN_Msg_Send(uint16_t id, CAN_DLC dlc, uint8_t *tx_data)
+{
     CAN_MSG_FIELD overhead = {
         .idType = CAN_FRAME_STD,
         .frameType = CAN_FRAME_DATA,
-        .dlc = CAN_DLC_8,
+        .dlc = dlc,
     };
 
     CAN_MSG_OBJ msg = {
         .msgId = id,
         .field = overhead,
-        .data = can_data,
-    };
-
-    CAN_TX_MSG_REQUEST_STATUS status = CAN1_Transmit(CAN_PRIORITY_MEDIUM, &msg);
-    if(status == CAN_TX_MSG_REQUEST_SUCCESS)
-    {
-        LED2_CAN_STATUS_SetHigh();
-    }
-    else
-    {
-        LED2_CAN_STATUS_SetLow();
-    }
-}
-
-static void send_pack_temperature_message(uint16_t* pack_temperatures, uint16_t id)
-{
-    uint8_t can_data[8] = {(uint8_t)(pack_temperatures[0] >> 8), (uint8_t)(pack_temperatures[0] & 0xFF), 
-                           (uint8_t)(pack_temperatures[1] >> 8), (uint8_t)(pack_temperatures[1] & 0xFF), 
-                           (uint8_t)(pack_temperatures[2] >> 8), (uint8_t)(pack_temperatures[2] & 0xFF), 
-                           (uint8_t)(pack_temperatures[3] >> 8), (uint8_t)(pack_temperatures[3] & 0xFF)};
-
-    CAN_MSG_FIELD overhead = {
-        .idType = CAN_FRAME_STD,
-        .frameType = CAN_FRAME_DATA,
-        .dlc = CAN_DLC_8,
-    };
-
-    CAN_MSG_OBJ msg = {
-        .msgId = id,
-        .field = overhead,
-        .data = can_data,
+        .data = tx_data,
     };
 
     CAN_TX_MSG_REQUEST_STATUS status = CAN1_Transmit(CAN_PRIORITY_MEDIUM, &msg);
