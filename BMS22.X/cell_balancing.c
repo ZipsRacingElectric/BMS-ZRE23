@@ -10,21 +10,20 @@
 #include "mcc_generated_files/tmr2.h"
 #include <stdint.h>
 #include <stdbool.h>
-#define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
-#include <libpic30.h>        // __delayXXX() functions macros defined here
+#include "global_constants.h"
 
 volatile uint8_t turn_off_balance_switches = 0;
 uint32_t cell_needs_balanced[NUM_ICS]; 
 
 ////////////////interrupt prototypes///////////////////////////////////////////
-void timer2_interrupt(void);
+void write_balance_switches(void);
 
 ///////////////functions///////////////////////////////////////////////////////
 // initialize peripherals necessary for cell balancing
 void balance_timer_initialize(void)
 {
     // TODO initialize cell needs balanced values to false
-    TMR2_SetInterruptHandler(timer2_interrupt); //my function to handle timer2 interrupts   
+    TMR2_SetInterruptHandler(write_balance_switches); //my function to handle timer2 interrupts   
     TMR2_Start();
 }
 
@@ -64,7 +63,7 @@ uint32_t* get_cell_balance_array(void)
 }
 
 ////////////////interrupts/////////////////////////////////////////////////////
-void timer2_interrupt(void)
+void write_balance_switches(void)
 {
     if(turn_off_balance_switches == 0)
     {
@@ -82,7 +81,7 @@ void timer2_interrupt(void)
         // TODO wrap this in a num ics for loop
         for(i = 0; i < 8; ++i)
         {
-            if((cell_needs_balanced[0] >> i) & 0x01 == 1)
+            if(((cell_needs_balanced[0] >> i) & 0x01) == 1)
             {
                 data_to_write[4] |= (1 << i);
             }

@@ -21,12 +21,14 @@ void start_temperature_adc_conversion(void);
 // send command to poll ADC status
 void poll_adc_status(void);
 // receive cell voltage register data
-void rdcv_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_voltages_valid);
+void rdcv_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_voltage_invalid_counter);
 // receive GPIO voltage register data
 void rdaux_register(uint8_t which_reg, uint16_t* buf);
 // send command to start open sense line check
 void open_wire_check(uint8_t pull_dir);
-void rdcfga(uint8_t* buffer);
+// read configuration register A
+uint8_t rdcfga(uint8_t* buffer);
+// write configuration register A
 void wrcfga(uint8_t* data_to_write);
 
 #ifdef	__cplusplus
