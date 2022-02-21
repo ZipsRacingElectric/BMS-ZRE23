@@ -70,6 +70,7 @@ uint8_t read_temperatures(uint16_t* pack_temperatures)
     
     // store aux register values in intermediate array since not all data
     // is temperature sensor data. See LTC6813 datasheet pg 62
+    //TODO read aux reg until get valid PEC back
     uint16_t aux_reg[12*NUM_ICS];
     rdaux_register(AUXA, &aux_reg[0*NUM_ICS]);
     rdaux_register(AUXB, &aux_reg[3*NUM_ICS]);
@@ -77,17 +78,18 @@ uint8_t read_temperatures(uint16_t* pack_temperatures)
     rdaux_register(AUXD, &aux_reg[9*NUM_ICS]);
     // copy over temperature data to temperature array
     uint8_t i = 0;
+    // TODO RHS indices seem wrong
     for(i = 0; i < NUM_ICS; ++i)
     {
-        pack_temperatures[i*NUM_ICS] = aux_reg[3*i];
-        pack_temperatures[i*NUM_ICS + 1] = aux_reg[(3*i) + 1];
-        pack_temperatures[i*NUM_ICS + 2] = aux_reg[(3*i) + 2];
-        pack_temperatures[i*NUM_ICS + 3] = aux_reg[(3*i) + (3*NUM_ICS)];
-        pack_temperatures[i*NUM_ICS + 4] = aux_reg[(3*i) + (3*NUM_ICS) + 1];
-        pack_temperatures[i*NUM_ICS + 5] = aux_reg[(3*i) + (6*NUM_ICS)];
-        pack_temperatures[i*NUM_ICS + 6] = aux_reg[(3*i) + (6*NUM_ICS) + 1];
-        pack_temperatures[i*NUM_ICS + 7] = aux_reg[(3*i) + (6*NUM_ICS) + 2];
-        pack_temperatures[i*NUM_ICS + 8] = aux_reg[(3*i) + (9*NUM_ICS)];
+        pack_temperatures[i*TEMP_SENSORS_PER_IC] = aux_reg[3*i];
+        pack_temperatures[i*TEMP_SENSORS_PER_IC + 1] = aux_reg[(3*i) + 1];
+        pack_temperatures[i*TEMP_SENSORS_PER_IC + 2] = aux_reg[(3*i) + 2];
+        pack_temperatures[i*TEMP_SENSORS_PER_IC + 3] = aux_reg[(3*i) + (3*NUM_ICS)];
+        pack_temperatures[i*TEMP_SENSORS_PER_IC + 4] = aux_reg[(3*i) + (3*NUM_ICS) + 1];
+        pack_temperatures[i*TEMP_SENSORS_PER_IC + 5] = aux_reg[(3*i) + (6*NUM_ICS)];
+        pack_temperatures[i*TEMP_SENSORS_PER_IC + 6] = aux_reg[(3*i) + (6*NUM_ICS) + 1];
+        pack_temperatures[i*TEMP_SENSORS_PER_IC + 7] = aux_reg[(3*i) + (6*NUM_ICS) + 2];
+        pack_temperatures[i*TEMP_SENSORS_PER_IC + 8] = aux_reg[(3*i) + (9*NUM_ICS)];
     }
     
     return pack_temperature_check(pack_temperatures);
