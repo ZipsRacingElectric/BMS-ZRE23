@@ -61,6 +61,9 @@
 
 // TODO do this in a for loop or something, change size?
 uint16_t cell_voltages[NUM_CELLS+2] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
+uint8_t cell_voltages_valid[6*NUM_ICS] = {0, 0, 0, 0, 0, 0};
+
+//TODO move pack temp stuff up here, temp valid array
 
 /*
                          Main application
@@ -84,7 +87,7 @@ int main(void)
         
         //TODO balance for 20 s, check cell voltages, balance for 20 more s...
         
-        read_cell_voltages(cell_voltages);
+        read_cell_voltages(cell_voltages, cell_voltages_valid);
         report_cell_voltages(cell_voltages);
         
         update_cell_balance_array(cell_voltages);

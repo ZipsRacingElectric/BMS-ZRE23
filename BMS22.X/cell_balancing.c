@@ -35,7 +35,7 @@ void update_cell_balance_array(uint16_t* cell_voltages)
     uint16_t minimum_voltage = 42000;
     for(i = 0; i < NUM_CELLS; ++i)
     {
-        if(cell_voltages[i] < minimum_voltage && cell_voltages[i] > CELL_VOLTAGE_MIN) //TODO can't use this > check?
+        if(cell_voltages[i] < minimum_voltage && cell_voltages[i] > CELL_VOLTAGE_MIN) //TODO change this to a check that the cell voltage is > 0 -> since 0 is used to indicate invalid PEC or missing packet
         {
             minimum_voltage = cell_voltages[i];
         }
@@ -82,7 +82,7 @@ void timer2_interrupt(void)
         // TODO wrap this in a num ics for loop
         for(i = 0; i < 8; ++i)
         {
-            if(cell_needs_balanced[0] >> i == 1)
+            if((cell_needs_balanced[0] >> i) & 0x01 == 1)
             {
                 data_to_write[4] |= (1 << i);
             }

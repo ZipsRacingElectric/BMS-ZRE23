@@ -19,7 +19,7 @@ void LTC_initialize(void);
 // read configuration register A
 uint8_t read_config_reg_a(void);
 // send commands to get cell voltages
-uint8_t read_cell_voltages(uint16_t* cell_voltages);
+uint8_t read_cell_voltages(uint16_t* cell_voltages, uint8_t* cell_voltages_valid);
 // send commands to get pack temperatures
 uint8_t read_temperatures(uint16_t* pack_temperatures);
 // check whether sense line overcurrent protection has tripped

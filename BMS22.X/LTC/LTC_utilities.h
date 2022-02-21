@@ -26,7 +26,7 @@ extern "C" {
 // cell voltage x 10000 comes from LTC6813 chip
 #define CELL_VOLTAGE_MAX        (42000) //TODO: research what these values should be
 #define CELL_VOLTAGE_MIN        (30000)
-#define CELL_BALANCE_THRESHOLD  1000 // 0.1 V threshold for cell balancing TODO change this to like 20 mV
+#define CELL_BALANCE_THRESHOLD  200 // 0.02 V threshold for cell balancing TODO change this to like 10 mV
 // GPIO voltage x 10000 comes from LTC6813 chip
 #define CELL_TEMPERATURE_MAX    18536 // 15 C
 #define CELL_TEMPERATURE_MIN    5825  // 60 C
