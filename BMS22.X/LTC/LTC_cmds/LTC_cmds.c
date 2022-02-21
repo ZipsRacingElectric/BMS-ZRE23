@@ -216,9 +216,10 @@ void rdaux_register(uint8_t which_reg, uint16_t* buf)
     {
         if(verify_pec(&adaux_buf[8*i], 6, &adaux_buf[8 * i + 6]) == SUCCESS)
         {
-            buf[CELLS_PER_IC*i] = (adaux_buf[8*i + 1] << 8) + adaux_buf[8*i];
-            buf[CELLS_PER_IC*i + 1] = (adaux_buf[8*i + 3] << 8) + adaux_buf[8*i + 2];
-            buf[CELLS_PER_IC*i + 2] = (adaux_buf[8*i + 5] << 8) + adaux_buf[8*i + 4];
+            // TODO magic number 12: for each IC, 12 aux data bytes will be returned
+            buf[12*i] = (adaux_buf[8*i + 1] << 8) + adaux_buf[8*i];
+            buf[12*i + 1] = (adaux_buf[8*i + 3] << 8) + adaux_buf[8*i + 2];
+            buf[12*i + 2] = (adaux_buf[8*i + 5] << 8) + adaux_buf[8*i + 4];
             // adaux_buf 6 and 7 are PEC bytes
         }
     }
