@@ -9,7 +9,6 @@
 #include "LTC_driver.h"
 #include "LTC_utilities.h"
 #include "LTC_cmds/LTC_cmds.h"
-#include "../cell_balancing.h"
 #include "../fault_handler.h"
 #include <stdint.h>
 #include "../global_constants.h"
@@ -46,7 +45,7 @@ uint8_t read_cell_voltages(uint16_t* cell_voltages, uint8_t* cell_voltage_invali
 }
 
 // send commands to get pack temperatures
-uint8_t read_temperatures(uint16_t* pack_temperatures)
+uint8_t read_temperatures(uint16_t* pack_temperatures, uint8_t* aux_register_invalid_counter)
 {
     start_temperature_adc_conversion();
     poll_adc_status();
@@ -56,10 +55,10 @@ uint8_t read_temperatures(uint16_t* pack_temperatures)
     // is temperature sensor data. See LTC6813 datasheet pg 62
     //TODO read aux reg until get valid PEC back
     uint16_t aux_reg[12*NUM_ICS];
-    receive_aux_register(AUXA, &aux_reg[0*NUM_ICS]);
-    receive_aux_register(AUXB, &aux_reg[3*NUM_ICS]);
-    receive_aux_register(AUXC, &aux_reg[6*NUM_ICS]);
-    receive_aux_register(AUXD, &aux_reg[9*NUM_ICS]);
+    receive_aux_register(AUXA, &aux_reg[0*NUM_ICS], &aux_register_invalid_counter[0]);
+    receive_aux_register(AUXB, &aux_reg[3*NUM_ICS], &aux_register_invalid_counter[3]);
+    receive_aux_register(AUXC, &aux_reg[6*NUM_ICS], &aux_register_invalid_counter[6]);
+    receive_aux_register(AUXD, &aux_reg[9*NUM_ICS], &aux_register_invalid_counter[9]);
     // copy over temperature data to temperature array
     uint8_t i = 0;
     // TODO RHS indices seem wrong

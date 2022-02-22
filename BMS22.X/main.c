@@ -61,7 +61,9 @@
 uint16_t cell_voltages[NUM_CELLS+2] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
 uint8_t cell_voltage_invalid_counter[6*NUM_ICS] = {0, 0, 0, 0, 0, 0};
 
-//TODO move pack temp stuff up here, temp valid array
+// TODO do this in a for loop or something so size is dynamic depending on num temp sensors
+uint16_t pack_temperatures[NUM_TEMP_SENSORS] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+uint8_t pack_temperature_invalid_counter[4*NUM_ICS] = {0, 0, 0, 0};
 
 /*
                          Main application
@@ -81,8 +83,6 @@ int main(void)
     while (1)
     {
         calc_soc();
-        uint8_t config_reg_a[6*NUM_ICS];
-        read_config_reg_a(config_reg_a); //TODO get rid of this in production rev
         
         //TODO balance for 20 s, check cell voltages, balance for 20 more s...
         
@@ -93,13 +93,11 @@ int main(void)
         uint32_t* cell_needs_balanced = get_cell_balance_array();
         report_balancing(cell_needs_balanced);
 
-        // TODO do this in a for loop or something so size is dynamic depending on num temp sensors
-//        uint16_t pack_temperatures[NUM_TEMP_SENSORS] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-//        read_temperatures(pack_temperatures);
-//        report_pack_temperatures(pack_temperatures);
+        read_temperatures(pack_temperatures, pack_temperature_invalid_counter);
+        report_pack_temperatures(pack_temperatures);
         
         check_for_fault();
-        //TODO maybe don't put all the CAN output back to back to back here, transmit buffers overflow
+        //TODO don't put all the CAN output back to back to back here, transmit buffers overflow
         //open_sense_line_check();
         report_status();
         
