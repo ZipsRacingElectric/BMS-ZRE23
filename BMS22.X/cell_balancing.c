@@ -12,7 +12,7 @@
 #include <stdbool.h>
 #include "global_constants.h"
 
-volatile uint8_t turn_off_balance_switches = 0;
+volatile uint8_t cell_balance_duty_cycle_counter = 0;
 uint32_t cell_needs_balanced[NUM_ICS]; 
 
 ////////////////interrupt prototypes///////////////////////////////////////////
@@ -27,6 +27,8 @@ void balance_timer_initialize(void)
     TMR2_Start();
 }
 
+// param: cell voltages
+// updates cell_needs_balanced array to reflect latest cell voltages
 void update_cell_balance_array(uint16_t* cell_voltages)
 {
     // find minimum cell voltage
@@ -57,6 +59,8 @@ void update_cell_balance_array(uint16_t* cell_voltages)
     }
 }
 
+// returns pointer to cell_needs_balanced array
+// used to put cell balancing information on CAN bus
 uint32_t* get_cell_balance_array(void)
 {
     return cell_needs_balanced;
@@ -65,16 +69,18 @@ uint32_t* get_cell_balance_array(void)
 ////////////////interrupts/////////////////////////////////////////////////////
 void write_balance_switches(void)
 {
-    if(turn_off_balance_switches == 0)
+    if(cell_balance_duty_cycle_counter == 0)
     {
-        turn_off_balance_switches = 1;
-        turn_off_all_balancing();
+        cell_balance_duty_cycle_counter += 1;
+        uint8_t data_to_write[6*NUM_ICS] = {0xE4, 0x52, 0x27, 0xA0, 0x00, 0x50};
+
+        write_config_A(data_to_write);
     }
     else
     {
         //TODO balance based on cell voltage
         
-        turn_off_balance_switches += 1;
+        cell_balance_duty_cycle_counter += 1;
         uint8_t i = 0;
         uint8_t data_to_write[6*NUM_ICS] = {0xE4, 0x52, 0x27, 0xA0, 0x00, 0x50};
 
@@ -87,13 +93,13 @@ void write_balance_switches(void)
             }
         } 
 
-        wrcfga(data_to_write);
+        write_config_A(data_to_write);
         //TODO add cfgrb
         //TODO make this work for more cells, for multiple ICs
         
-        if(turn_off_balance_switches >= 5)
+        if(cell_balance_duty_cycle_counter >= 5)
         {
-            turn_off_balance_switches = 0;
+            cell_balance_duty_cycle_counter = 0;
         }
     }
 }

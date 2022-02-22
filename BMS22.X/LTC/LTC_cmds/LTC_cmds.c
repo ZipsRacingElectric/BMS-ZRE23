@@ -94,7 +94,7 @@ void poll_adc_status(void)
 /* receive voltage register data
  * command: RDCV
  */
-void rdcv_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_voltage_invalid_counter)
+void receive_voltage_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_voltage_invalid_counter)
 {
     wakeup_daisychain();
         
@@ -179,10 +179,10 @@ void rdcv_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_voltage_inval
     CS_6820_SetHigh();
 }
 
-/* receive GPIO register data
+/* receive GPIO register data. Temperature data is in these registers
  * command: RDAUX
  */
-void rdaux_register(uint8_t which_reg, uint16_t* buf)
+void receive_aux_register(uint8_t which_reg, uint16_t* buf)
 {
     wakeup_daisychain();
         
@@ -265,7 +265,7 @@ void open_wire_check(uint8_t pull_dir)
 /*
  * read config register A
  */
-uint8_t rdcfga(uint8_t* buffer)
+uint8_t read_config_A(uint8_t* buffer)
 {
     wakeup_daisychain();
     
@@ -290,7 +290,7 @@ uint8_t rdcfga(uint8_t* buffer)
 /*
  * write configuration register A
  */
-void wrcfga(uint8_t* data_to_write)
+void write_config_A(uint8_t* data_to_write)
 {
     wakeup_daisychain();
     

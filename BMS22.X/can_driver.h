@@ -28,7 +28,7 @@ void report_pack_temperatures(uint16_t* pack_temperatures);
 // put status message on main vehicle CAN bus
 void report_status(void);
 // put cell balancing status on BMS CAN bus
-void report_balancing(void);
+void report_balancing(uint32_t* cell_needs_balanced);
 
 #ifdef	__cplusplus
 }

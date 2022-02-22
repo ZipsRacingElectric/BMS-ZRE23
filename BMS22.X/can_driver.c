@@ -84,10 +84,8 @@ void report_status(void)
 }
 
 // put cell balance information on the CAN bus
-void report_balancing(void)
+void report_balancing(uint32_t* cell_needs_balanced)
 {
-    uint32_t* cell_needs_balanced = get_cell_balance_array();
-    
     // TODO make this work for multiple ICS
     uint8_t can_data[8] = {(cell_needs_balanced[0] & 0xFF),
                            (cell_needs_balanced[0] >> 8) & 0xFF,

@@ -113,12 +113,12 @@ void check_for_fault(void)
     }
 }
 
-void increment_oor_voltage_fault(uint8_t cell_id)
+void increment_outofrange_voltage_fault(uint8_t cell_id)
 {
     oor_voltage_faults[cell_id] += 1;
 }
 
-void reset_oor_voltage_fault(uint8_t cell_id)
+void reset_outofrange_voltage_fault(uint8_t cell_id)
 {
     oor_voltage_faults[cell_id] = 0;
 }
@@ -133,12 +133,12 @@ void reset_missing_voltage_measurement_fault(uint8_t section_id)
     missing_voltage_measurement_fault[section_id] = 0;
 }
 
-void increment_temperature_fault(uint8_t temp_sensor_id)
+void increment_outofrange_temperature_fault(uint8_t temp_sensor_id)
 {
     temp_faults[temp_sensor_id] += 1;
 }
 
-void reset_temperature_fault(uint8_t temp_sensor_id)
+void reset_outofrange_temperature_fault(uint8_t temp_sensor_id)
 {
     temp_faults[temp_sensor_id] = 0;
 }
@@ -160,5 +160,6 @@ static void set_temperature_fault_bit(void)
 
 static void shutdown_car(void)
 {
+    //TODO turn off all balancing
     BMS_RELAY_EN_SetLow();
 }
