@@ -60,9 +60,8 @@
 uint16_t cell_voltages[NUM_CELLS];
 uint8_t cell_voltage_invalid_counter[6*NUM_ICS];
 
-// TODO do this in a for loop or something so size is dynamic depending on num temp sensors
-uint16_t pack_temperatures[NUM_TEMP_SENSORS] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-uint8_t pack_temperature_invalid_counter[4*NUM_ICS] = {0, 0, 0, 0};
+uint16_t pack_temperatures[NUM_TEMP_SENSORS];
+uint8_t pack_temperature_invalid_counter[4*NUM_ICS];
 
 /*
                          Main application
@@ -81,6 +80,14 @@ int main(void)
     for(i = 0; i < 6*NUM_ICS; ++i)
     {
         cell_voltage_invalid_counter[i] = 0;
+    }
+    for(i = 0; i < NUM_TEMP_SENSORS; ++i)
+    {
+        pack_temperatures[i] = 0;
+    }
+    for(i = 0; i < 4*NUM_ICS; ++i)
+    {
+        pack_temperature_invalid_counter[i] = 0;
     }
 
     soc_initialize();
@@ -108,10 +115,7 @@ int main(void)
         report_pack_temperatures(pack_temperatures);
         
         check_for_fault();
-<<<<<<< HEAD
-=======
-        //TODO don't put all the CAN output back to back to back here, transmit buffers overflow
->>>>>>> dev
+
         //open_sense_line_check();
         report_status();
         
