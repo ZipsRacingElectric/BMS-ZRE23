@@ -24,23 +24,9 @@ void LTC_initialize()
 }
 
 // read configuration register A
-uint8_t read_config_reg_a()
+uint8_t read_config_reg_a(uint8_t* buffer)
 {
-    uint8_t buffer[6*NUM_ICS];
-    return rdcfga(buffer);
-}
-
-// turn off all cell balance switches
-uint8_t turn_off_all_balancing(void)
-{
-    // TODO add cfgrb
-    uint8_t data_to_write[6*NUM_ICS] = {0xE4, 0x52, 0x27, 0xA0, 0x00, 0x50};
-
-    wrcfga(data_to_write);
-    
-    // TODO make this work for multiple ICs
-    // TODO read back register values and make sure values were correctly written, then return success or failure
-    return SUCCESS;
+    return read_config_A(buffer);
 }
 
 // send commands to get cell voltages
@@ -49,12 +35,12 @@ uint8_t read_cell_voltages(uint16_t* cell_voltages, uint8_t* cell_voltage_invali
     start_cell_voltage_adc_conversion();
     poll_adc_status();
     __delay_ms(10); //TODO: is this delay necessary?
-    rdcv_register(ADCVA, &cell_voltages[0], &cell_voltage_invalid_counter[0]);
-    rdcv_register(ADCVB, &cell_voltages[3], &cell_voltage_invalid_counter[3]);
-    rdcv_register(ADCVC, &cell_voltages[6], &cell_voltage_invalid_counter[6]);
-    rdcv_register(ADCVD, &cell_voltages[9], &cell_voltage_invalid_counter[9]);
-    rdcv_register(ADCVE, &cell_voltages[12], &cell_voltage_invalid_counter[12]);
-    rdcv_register(ADCVF, &cell_voltages[15], &cell_voltage_invalid_counter[15]);
+    receive_voltage_register(ADCVA, &cell_voltages[0], &cell_voltage_invalid_counter[0]);
+    receive_voltage_register(ADCVB, &cell_voltages[3], &cell_voltage_invalid_counter[3]);
+    receive_voltage_register(ADCVC, &cell_voltages[6], &cell_voltage_invalid_counter[6]);
+    receive_voltage_register(ADCVD, &cell_voltages[9], &cell_voltage_invalid_counter[9]);
+    receive_voltage_register(ADCVE, &cell_voltages[12], &cell_voltage_invalid_counter[12]);
+    receive_voltage_register(ADCVF, &cell_voltages[15], &cell_voltage_invalid_counter[15]);
     
     return cell_voltage_check(cell_voltages);
 }
@@ -70,10 +56,10 @@ uint8_t read_temperatures(uint16_t* pack_temperatures)
     // is temperature sensor data. See LTC6813 datasheet pg 62
     //TODO read aux reg until get valid PEC back
     uint16_t aux_reg[12*NUM_ICS];
-    rdaux_register(AUXA, &aux_reg[0*NUM_ICS]);
-    rdaux_register(AUXB, &aux_reg[3*NUM_ICS]);
-    rdaux_register(AUXC, &aux_reg[6*NUM_ICS]);
-    rdaux_register(AUXD, &aux_reg[9*NUM_ICS]);
+    receive_aux_register(AUXA, &aux_reg[0*NUM_ICS]);
+    receive_aux_register(AUXB, &aux_reg[3*NUM_ICS]);
+    receive_aux_register(AUXC, &aux_reg[6*NUM_ICS]);
+    receive_aux_register(AUXD, &aux_reg[9*NUM_ICS]);
     // copy over temperature data to temperature array
     uint8_t i = 0;
     // TODO RHS indices seem wrong
@@ -154,12 +140,12 @@ static uint8_t pack_temperature_check(uint16_t* pack_temperatures)
     {
         if((pack_temperatures[i] > CELL_TEMPERATURE_MAX) | (pack_temperatures[i] < CELL_TEMPERATURE_MIN))
         {
-            increment_temperature_fault(i);
+            increment_oor_temperature_fault(i);
             ret_val = FAILURE;
         }
         else
         {
-            reset_temperature_fault(i);
+            reset_oor_temperature_fault(i);
         }
     }
     return ret_val;

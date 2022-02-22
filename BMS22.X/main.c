@@ -81,7 +81,8 @@ int main(void)
     while (1)
     {
         calc_soc();
-        read_config_reg_a(); //TODO get rid of this in production rev
+        uint8_t config_reg_a[6*NUM_ICS];
+        read_config_reg_a(config_reg_a); //TODO get rid of this in production rev
         
         //TODO balance for 20 s, check cell voltages, balance for 20 more s...
         

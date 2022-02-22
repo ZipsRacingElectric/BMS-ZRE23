@@ -27,6 +27,8 @@ void balance_timer_initialize(void)
     TMR2_Start();
 }
 
+// param: cell voltages
+// updates cell_needs_balanced array to reflect latest cell voltages
 void update_cell_balance_array(uint16_t* cell_voltages)
 {
     // find minimum cell voltage
@@ -57,6 +59,8 @@ void update_cell_balance_array(uint16_t* cell_voltages)
     }
 }
 
+// returns pointer to cell_needs_balanced array
+// used put cell balancing information on CAN bus
 uint32_t* get_cell_balance_array(void)
 {
     return cell_needs_balanced;
@@ -67,8 +71,10 @@ void write_balance_switches(void)
 {
     if(turn_off_balance_switches == 0)
     {
-        turn_off_balance_switches = 1;
-        turn_off_all_balancing();
+        turn_off_balance_switches += 1;
+        uint8_t data_to_write[6*NUM_ICS] = {0xE4, 0x52, 0x27, 0xA0, 0x00, 0x50};
+
+        write_config_A(data_to_write);
     }
     else
     {
@@ -87,7 +93,7 @@ void write_balance_switches(void)
             }
         } 
 
-        wrcfga(data_to_write);
+        write_config_A(data_to_write);
         //TODO add cfgrb
         //TODO make this work for more cells, for multiple ICs
         
