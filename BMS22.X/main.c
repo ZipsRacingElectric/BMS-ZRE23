@@ -89,9 +89,9 @@ int main(void)
     
     while (1)
     {
+        // WARN: don't put all the CAN output back to back to back here, 
+        //       the transmit buffers will overflow
         calc_soc();
-        uint8_t config_reg_a[6*NUM_ICS];
-        read_config_reg_a(config_reg_a); //TODO get rid of this in production rev
         
         //TODO balance for 20 s, check cell voltages, balance for 20 more s...
         
@@ -108,7 +108,6 @@ int main(void)
 //        report_pack_temperatures(pack_temperatures);
         
         check_for_fault();
-        //TODO maybe don't put all the CAN output back to back to back here, transmit buffers overflow
         //open_sense_line_check();
         report_status();
         

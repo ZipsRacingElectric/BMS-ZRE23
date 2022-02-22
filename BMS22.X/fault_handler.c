@@ -5,13 +5,13 @@
 #include "fault_handler.h"
 #include "LTC/LTC_utilities.h"
 #include "mcc_generated_files/pin_manager.h"
+#include "mcc_generated_files/tmr2.h"
 #include <stdint.h>
 ////////////////defines////////////////////////////////////////////////////////
-#define OOR_VOLTAGE_MAX_FAULTS                  20 //TODO make this 10 (50 ms measurement period, 500 ms fault period)
-#define MISSING_VOLTAGE_MEASUREMENT_MAX_FAULTS  20
-#define OPEN_SENSE_LINE_MAX_FAULTS              10
-#define TEMP_FAULTS_MAX                         10
-#define SELF_TEST_FAULTS_MAX                    10
+#define VOLTAGE_MAX_FAULTS                  20 //TODO make this 10 (50 ms measurement period, 500 ms fault period)
+#define OPEN_SENSE_LINE_MAX_FAULTS          10
+#define TEMP_FAULTS_MAX                     10
+#define SELF_TEST_FAULTS_MAX                10
 
 ////////////////globals////////////////////////////////////////////////////////
 uint8_t oor_voltage_faults[NUM_CELLS];
@@ -160,6 +160,11 @@ static void set_temperature_fault_bit(void)
 
 static void shutdown_car(void)
 {
-    //TODO turn off all balancing
+    // turn off all balancing
+    TMR2_Stop();
+    uint8_t data_to_write[6*NUM_ICS] = {0xE4, 0x52, 0x27, 0xA0, 0x00, 0x50};
+    write_config_A(data_to_write);
+    
+    // open shutdown loop
     BMS_RELAY_EN_SetLow();
 }

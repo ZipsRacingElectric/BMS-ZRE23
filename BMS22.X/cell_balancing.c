@@ -13,6 +13,7 @@
 #include "global_constants.h"
 
 volatile uint8_t cell_balance_duty_cycle_counter = 0;
+volatile uint8_t balancing_enabled = 1;
 uint32_t cell_needs_balanced[NUM_ICS]; 
 
 ////////////////interrupt prototypes///////////////////////////////////////////
@@ -73,7 +74,7 @@ uint32_t* get_cell_balance_array(void)
 ////////////////interrupts/////////////////////////////////////////////////////
 void write_balance_switches(void)
 {
-    if(cell_balance_duty_cycle_counter == 0)
+    if(cell_balance_duty_cycle_counter == 0 || balancing_enabled == 0)
     {
         cell_balance_duty_cycle_counter += 1;
         uint8_t data_to_write[6*NUM_ICS] = {0xE4, 0x52, 0x27, 0xA0, 0x00, 0x50};
