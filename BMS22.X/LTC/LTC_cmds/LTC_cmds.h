@@ -22,7 +22,7 @@ void start_temperature_adc_conversion(void);
 void poll_adc_status(void);
 // receive cell voltage register data
 void receive_voltage_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_voltage_invalid_counter);
-// receive GPIO voltage register data
+// receive GPIO voltage register data. Temperature data is in these registers
 void receive_aux_register(uint8_t which_reg, uint16_t* buf);
 // send command to start open sense line check
 void open_wire_check(uint8_t pull_dir);

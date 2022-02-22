@@ -179,7 +179,7 @@ void receive_voltage_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_vo
     CS_6820_SetHigh();
 }
 
-/* receive GPIO register data
+/* receive GPIO register data. Temperature data is in these registers
  * command: RDAUX
  */
 void receive_aux_register(uint8_t which_reg, uint16_t* buf)
