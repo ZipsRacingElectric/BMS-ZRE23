@@ -14,8 +14,12 @@ extern "C" {
 
 #include <stdint.h>
     
+// initialize peripherals necessary for cell balancing
 void balance_timer_initialize(void);
+// updates cell_needs_balanced array to reflect latest cell voltages
 void update_cell_balance_array(uint16_t* cell_voltages);
+// returns pointer to cell_needs_balanced array
+// used put cell balancing information on CAN bus
 uint32_t* get_cell_balance_array(void);
 
 #ifdef	__cplusplus
