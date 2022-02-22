@@ -156,22 +156,22 @@ void receive_voltage_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_vo
             buf[CELLS_PER_IC*i] = (adcv_buf[8*i + 1] << 8) + adcv_buf[8*i];
             buf[CELLS_PER_IC*i + 1] = (adcv_buf[8*i + 3] << 8) + adcv_buf[8*i + 2];
             buf[CELLS_PER_IC*i + 2] = (adcv_buf[8*i + 5] << 8) + adcv_buf[8*i + 4];
-            cell_voltage_invalid_counter[i*6] = 0;
+            cell_voltage_invalid_counter[which_reg + i*6] = 0;
             reset_missing_voltage_measurement_fault(which_reg + i*6);
             // adcv_buf 6 and 7 are PEC bytes
         }
         else
         {
-            ++cell_voltage_invalid_counter[i*6];
+            ++cell_voltage_invalid_counter[which_reg + i*6];
             increment_missing_voltage_measurement_fault(which_reg + i*6);
         }
         
-        if(cell_voltage_invalid_counter[i*6] >= 5) // TODO magic number
+        if(cell_voltage_invalid_counter[which_reg + i*6] >= 10) // TODO magic number
         {
             buf[CELLS_PER_IC*i] = 0;
             buf[CELLS_PER_IC*i + 1] = 0;
             buf[CELLS_PER_IC*i + 2] = 0;
-            cell_voltage_invalid_counter[i*6] = 0;
+            cell_voltage_invalid_counter[which_reg + i*6] = 0;
         }
     }
 
@@ -181,7 +181,7 @@ void receive_voltage_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_vo
 /* receive GPIO register data. Temperature data is in these registers
  * command: RDAUX
  */
-void receive_aux_register(uint8_t which_reg, uint16_t* buf)
+void receive_aux_register(uint8_t which_reg, uint16_t* buf, uint8_t* aux_register_invalid_counter)
 {
     wakeup_daisychain();
         
@@ -235,6 +235,21 @@ void receive_aux_register(uint8_t which_reg, uint16_t* buf)
             buf[12*i + 1] = (adaux_buf[8*i + 3] << 8) + adaux_buf[8*i + 2];
             buf[12*i + 2] = (adaux_buf[8*i + 5] << 8) + adaux_buf[8*i + 4];
             // adaux_buf 6 and 7 are PEC bytes
+            aux_register_invalid_counter[which_reg + i*4] = 0;
+            reset_missing_temperature_fault(which_reg + i*4);
+        }
+        else
+        {
+            ++aux_register_invalid_counter[which_reg + i*4];
+            increment_missing_temperature_fault(which_reg + i*4);
+        }
+        
+        if(aux_register_invalid_counter[which_reg + i*4] >= 10) // TODO magic number
+        {
+            adaux_buf[TEMP_SENSORS_PER_IC*i] = 0;
+            adaux_buf[TEMP_SENSORS_PER_IC*i + 1] = 0;
+            adaux_buf[TEMP_SENSORS_PER_IC*i + 2] = 0;
+            aux_register_invalid_counter[i*6] = 0;
         }
     }
 
