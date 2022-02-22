@@ -9,7 +9,6 @@
 #include "LTC_driver.h"
 #include "LTC_utilities.h"
 #include "LTC_cmds/LTC_cmds.h"
-#include "../cell_balancing.h"
 #include "../fault_handler.h"
 #include <stdint.h>
 #include "../global_constants.h"
