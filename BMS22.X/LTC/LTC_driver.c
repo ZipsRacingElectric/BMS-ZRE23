@@ -121,12 +121,12 @@ static uint8_t cell_voltage_check(uint16_t* cell_voltages) //TODO: implement tim
     {
         if((cell_voltages[i] > CELL_VOLTAGE_MAX) | (cell_voltages[i] < CELL_VOLTAGE_MIN))
         {
-            increment_oor_voltage_fault(i);
+            increment_outofrange_voltage_fault(i);
             ret_val = FAILURE;
         }
         else
         {
-            reset_oor_voltage_fault(i);
+            reset_outofrange_voltage_fault(i);
         }
     }
     return ret_val;
@@ -140,12 +140,12 @@ static uint8_t pack_temperature_check(uint16_t* pack_temperatures)
     {
         if((pack_temperatures[i] > CELL_TEMPERATURE_MAX) | (pack_temperatures[i] < CELL_TEMPERATURE_MIN))
         {
-            increment_oor_temperature_fault(i);
+            increment_outofrange_temperature_fault(i);
             ret_val = FAILURE;
         }
         else
         {
-            reset_oor_temperature_fault(i);
+            reset_outofrange_temperature_fault(i);
         }
     }
     return ret_val;
