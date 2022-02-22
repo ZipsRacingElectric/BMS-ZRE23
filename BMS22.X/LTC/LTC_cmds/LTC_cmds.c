@@ -40,7 +40,7 @@ void start_cell_voltage_adc_conversion(void)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow(); 
-    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
     CS_6820_SetHigh();
     __delay_us(2); //TODO is this necessary?
 }
@@ -59,7 +59,7 @@ void start_temperature_adc_conversion(void)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow(); 
-    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
     CS_6820_SetHigh();
     __delay_us(2); //TODO is this necessary?
 }
@@ -78,7 +78,7 @@ void poll_adc_status(void)
 
     CS_6820_SetLow();
     //send PLADC command
-    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
     
     uint8_t dummy_adc = 0;
 
@@ -140,11 +140,11 @@ void receive_voltage_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_vo
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow();
-    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
 
     // 8 data bytes = 2 * 3 cell voltages + 2 PEC bytes
     uint8_t adcv_buf[8 * NUM_ICS];
-    SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adcv_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adcv_buf);
 
     // verify PEC for each of the 6 cell voltage messages received from each of the ICs in the daisy chain
     // if PEC is valid, write cell voltages to buf to be shared over CAN bus
@@ -217,11 +217,11 @@ void receive_aux_register(uint8_t which_reg, uint16_t* buf, uint8_t* aux_registe
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow();
-    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
 
     // 8 data bytes = 2 * 3 GPIO results + 2 PEC bytes
     uint8_t adaux_buf[8 * NUM_ICS];
-    SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adaux_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adaux_buf);
 
     // verify PEC for each of the 4 GPIO messages received from each of the ICs in the daisy chain
     // if PEC is valid, write GPIO messages to buf to be shared over CAN bus
@@ -230,7 +230,7 @@ void receive_aux_register(uint8_t which_reg, uint16_t* buf, uint8_t* aux_registe
     {
         if(verify_pec(&adaux_buf[8*i], 6, &adaux_buf[8 * i + 6]) == SUCCESS)
         {
-            // TODO magic number 12: for each IC, 12 aux data bytes will be returned
+            // for each IC, 12 aux data bytes will be returned
             buf[12*i] = (adaux_buf[8*i + 1] << 8) + adaux_buf[8*i];
             buf[12*i + 1] = (adaux_buf[8*i + 3] << 8) + adaux_buf[8*i + 2];
             buf[12*i + 2] = (adaux_buf[8*i + 5] << 8) + adaux_buf[8*i + 4];
@@ -270,7 +270,7 @@ void open_wire_check(uint8_t pull_dir)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow(); 
-    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
 
     CS_6820_SetHigh();
 }
@@ -289,7 +289,7 @@ uint8_t read_config_A(uint8_t* buffer)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow(); 
-    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
     SPI1_Exchange8bitBuffer(dummy_buf, 6*NUM_ICS, buffer);
     CS_6820_SetHigh();
     
@@ -317,7 +317,7 @@ void write_config_A(uint8_t* data_to_write)
     uint16_t data_pec = pec15_calc(data_to_write, 6);
     uint8_t data_pec_transmit[2] = {(uint8_t)(data_pec >> 8), (uint8_t)(data_pec & 0xFF)};    
     CS_6820_SetLow(); 
-    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
     SPI1_Exchange8bitBuffer(data_to_write, 6*NUM_ICS, dummy_buf);
     SPI1_Exchange8bitBuffer(data_pec_transmit, 2, dummy_buf);
     CS_6820_SetHigh();

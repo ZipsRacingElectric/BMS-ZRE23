@@ -4,15 +4,16 @@
  * contains functions for timer-based cell balancing
  */
 #include "cell_balancing.h"
-#include "LTC/LTC_cmds/LTC_cmds.h"
-#include "LTC/LTC_driver.h"
 #include "LTC/LTC_utilities.h"
+#include "mcc_generated_files/pin_manager.h"
+#include "mcc_generated_files/spi1.h"
 #include "mcc_generated_files/tmr2.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include "global_constants.h"
 
 volatile uint8_t cell_balance_duty_cycle_counter = 0;
+volatile uint8_t balancing_enabled = 1;
 uint32_t cell_needs_balanced[NUM_ICS]; 
 
 ////////////////interrupt prototypes///////////////////////////////////////////
@@ -22,7 +23,11 @@ void write_balance_switches(void);
 // initialize peripherals necessary for cell balancing
 void balance_timer_initialize(void)
 {
-    // TODO initialize cell needs balanced values to false
+    uint8_t i = 0;
+    for(i = 0; i < NUM_ICS; ++i)
+    {
+        cell_needs_balanced[i] = 0;
+    }
     TMR2_SetInterruptHandler(write_balance_switches); //my function to handle timer2 interrupts   
     TMR2_Start();
 }
@@ -66,20 +71,44 @@ uint32_t* get_cell_balance_array(void)
     return cell_needs_balanced;
 }
 
+// disable all cell balancing
+void disable_cell_balancing(void)
+{
+    balancing_enabled = 0;
+}
+
 ////////////////interrupts/////////////////////////////////////////////////////
 void write_balance_switches(void)
 {
-    if(cell_balance_duty_cycle_counter == 0)
+    if(cell_balance_duty_cycle_counter == 0 || balancing_enabled == 0)
     {
         cell_balance_duty_cycle_counter += 1;
         uint8_t data_to_write[6*NUM_ICS] = {0xE4, 0x52, 0x27, 0xA0, 0x00, 0x50};
 
-        write_config_A(data_to_write);
+        // INFO: below appears the write_config_a function
+        //       this code is included directly instead of calling the function
+        //       to increase code simplicity inside the ISR
+        wakeup_daisychain();
+    
+        //WRCFGA cmd
+        uint8_t cmd[CMD_SIZE_BYTES];
+        cmd[0] = 0x00;
+        cmd[1] = 0x01;
+        uint16_t cmd_pec = pec15_calc(cmd, 2);
+        cmd[2] = (uint8_t)(cmd_pec >> 8);
+        cmd[3] = (uint8_t)(cmd_pec);
+
+        uint16_t data_pec = pec15_calc(data_to_write, 6);
+        uint8_t data_pec_transmit[2] = {(uint8_t)(data_pec >> 8), (uint8_t)(data_pec & 0xFF)};    
+        CS_6820_SetLow(); 
+        uint8_t dummy_buf[4];
+        SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
+        SPI1_Exchange8bitBuffer(data_to_write, 6*NUM_ICS, dummy_buf);
+        SPI1_Exchange8bitBuffer(data_pec_transmit, 2, dummy_buf);
+        CS_6820_SetHigh();
     }
     else
     {
-        //TODO balance based on cell voltage
-        
         cell_balance_duty_cycle_counter += 1;
         uint8_t i = 0;
         uint8_t data_to_write[6*NUM_ICS] = {0xE4, 0x52, 0x27, 0xA0, 0x00, 0x50};
@@ -93,7 +122,28 @@ void write_balance_switches(void)
             }
         } 
 
-        write_config_A(data_to_write);
+        // INFO: below appears the write_config_a function
+        //       this code is included directly instead of calling the function
+        //       to increase code simplicity inside the ISR
+        wakeup_daisychain();
+    
+        //WRCFGA cmd
+        uint8_t cmd[CMD_SIZE_BYTES];
+        cmd[0] = 0x00;
+        cmd[1] = 0x01;
+        uint16_t cmd_pec = pec15_calc(cmd, 2);
+        cmd[2] = (uint8_t)(cmd_pec >> 8);
+        cmd[3] = (uint8_t)(cmd_pec);
+
+        uint16_t data_pec = pec15_calc(data_to_write, 6);
+        uint8_t data_pec_transmit[2] = {(uint8_t)(data_pec >> 8), (uint8_t)(data_pec & 0xFF)};    
+        CS_6820_SetLow(); 
+        uint8_t dummy_buf[4];
+        SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
+        SPI1_Exchange8bitBuffer(data_to_write, 6*NUM_ICS, dummy_buf);
+        SPI1_Exchange8bitBuffer(data_pec_transmit, 2, dummy_buf);
+        CS_6820_SetHigh();
+        
         //TODO add cfgrb
         //TODO make this work for more cells, for multiple ICs
         

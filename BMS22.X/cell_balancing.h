@@ -20,6 +20,8 @@ void balance_timer_initialize(void);
 void update_cell_balance_array(uint16_t* cell_voltages);
 // returns pointer to array indicating which cells need to be balanced
 uint32_t* get_cell_balance_array(void);
+// disable all cell balancing
+void disable_cell_balancing(void);
 
 #ifdef	__cplusplus
 }

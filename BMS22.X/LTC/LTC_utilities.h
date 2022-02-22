@@ -20,7 +20,7 @@ extern "C" {
 #define CELLS_PER_IC        18
 #define NUM_CELLS           (CELLS_PER_IC * NUM_ICS)
 #define TEMP_SENSORS_PER_IC 9
-#define NUM_TEMP_SENSORS    (9 * NUM_ICS)
+#define NUM_TEMP_SENSORS    (TEMP_SENSORS_PER_IC * NUM_ICS)
 #define SUCCESS             0
 #define FAILURE             1
     

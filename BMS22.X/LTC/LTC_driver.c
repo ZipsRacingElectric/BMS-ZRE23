@@ -53,7 +53,6 @@ uint8_t read_temperatures(uint16_t* pack_temperatures, uint8_t* aux_register_inv
     
     // store aux register values in intermediate array since not all data
     // is temperature sensor data. See LTC6813 datasheet pg 62
-    //TODO read aux reg until get valid PEC back
     uint16_t aux_reg[12*NUM_ICS];
     receive_aux_register(AUXA, &aux_reg[0*NUM_ICS], &aux_register_invalid_counter[0]);
     receive_aux_register(AUXB, &aux_reg[3*NUM_ICS], &aux_register_invalid_counter[3]);
