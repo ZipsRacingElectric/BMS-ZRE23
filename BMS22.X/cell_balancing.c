@@ -22,7 +22,11 @@ void write_balance_switches(void);
 // initialize peripherals necessary for cell balancing
 void balance_timer_initialize(void)
 {
-    // TODO initialize cell needs balanced values to false
+    uint8_t i = 0;
+    for(i = 0; i < NUM_ICS; ++i)
+    {
+        cell_needs_balanced[i] = 0;
+    }
     TMR2_SetInterruptHandler(write_balance_switches); //my function to handle timer2 interrupts   
     TMR2_Start();
 }
@@ -78,8 +82,6 @@ void write_balance_switches(void)
     }
     else
     {
-        //TODO balance based on cell voltage
-        
         cell_balance_duty_cycle_counter += 1;
         uint8_t i = 0;
         uint8_t data_to_write[6*NUM_ICS] = {0xE4, 0x52, 0x27, 0xA0, 0x00, 0x50};

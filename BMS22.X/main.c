@@ -57,9 +57,8 @@
 #include "cell_balancing.h"
 #include "global_constants.h"
 
-// TODO do this in a for loop or something, change size?
-uint16_t cell_voltages[NUM_CELLS+2] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
-uint8_t cell_voltage_invalid_counter[6*NUM_ICS] = {0, 0, 0, 0, 0, 0};
+uint16_t cell_voltages[NUM_CELLS];
+uint8_t cell_voltage_invalid_counter[6*NUM_ICS];
 
 //TODO move pack temp stuff up here, temp valid array
 
@@ -71,6 +70,16 @@ int main(void)
     // initialize the device
     SYSTEM_Initialize();
     CS_6820_SetHigh();
+    
+    uint8_t i = 0;
+    for(i = 0; i < NUM_CELLS; ++i)
+    {
+        cell_voltages[i] = 0;
+    }
+    for(i = 0; i < 6*NUM_ICS; ++i)
+    {
+        cell_voltage_invalid_counter[i] = 0;
+    }
 
     soc_initialize();
     can_initialize();
