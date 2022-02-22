@@ -14,11 +14,12 @@
 #define SELF_TEST_FAULTS_MAX                    10
 
 ////////////////globals////////////////////////////////////////////////////////
-uint8_t oor_voltage_faults[NUM_CELLS];
+uint8_t outofrange_voltage_fault[NUM_CELLS];
 uint8_t missing_voltage_measurement_fault[NUM_ICS*6];
-uint8_t temp_faults[9*NUM_ICS];
-uint8_t sense_line_faults[NUM_CELLS];
-uint8_t self_test_faults[NUM_ICS];
+uint8_t outofrange_temperature_fault[9*NUM_ICS];
+uint8_t missing_temperature_measurement_fault[NUM_ICS*4];
+uint8_t sense_line_fault[NUM_CELLS];
+uint8_t self_test_fault[NUM_ICS];
 
 uint8_t fault_codes = 0;
 
@@ -38,8 +39,8 @@ void fault_handler_initialize(void)
     
     for(i = 0; i < NUM_CELLS; ++i)
     {
-        oor_voltage_faults[i] = 0;
-        sense_line_faults[i] = 0;
+        outofrange_voltage_fault[i] = 0;
+        sense_line_fault[i] = 0;
     }
     
     for(i = 0; i < NUM_ICS * 6; ++i)
@@ -49,12 +50,17 @@ void fault_handler_initialize(void)
     
     for(i = 0; i < NUM_TEMP_SENSORS; ++i)
     {
-        temp_faults[i] = 0;
+        outofrange_temperature_fault[i] = 0;
+    }
+    
+    for(i = 0; i < 4*NUM_ICS; ++i)
+    {
+        missing_temperature_measurement_fault[i] = 0;
     }
     
     for(i = 0; i < NUM_ICS; ++i)
     {
-        self_test_faults[i] = 0;
+        self_test_fault[i] = 0;
     }
     
     BMS_RELAY_EN_SetHigh();
@@ -72,13 +78,13 @@ void check_for_fault(void)
     
     for(i = 0; i < NUM_CELLS; ++i)
     {
-        if(oor_voltage_faults[i] > OOR_VOLTAGE_MAX_FAULTS)
+        if(outofrange_voltage_fault[i] > OOR_VOLTAGE_MAX_FAULTS)
         {
             shutdown_car();
             set_voltage_fault_bit();
         }
    
-        if(sense_line_faults[i] > OPEN_SENSE_LINE_MAX_FAULTS)
+        if(sense_line_fault[i] > OPEN_SENSE_LINE_MAX_FAULTS)
         {
             shutdown_car();
             //TODO SET_SENSE_LINE_FAULT_BIT(1);
@@ -96,7 +102,16 @@ void check_for_fault(void)
     
     for(i = 0; i < 9*NUM_ICS; ++i)
     {
-        if(temp_faults[i] > TEMP_FAULTS_MAX)
+        if(outofrange_temperature_fault[i] > TEMP_FAULTS_MAX)
+        {
+            shutdown_car();
+            set_temperature_fault_bit();
+        }
+    }
+    
+    for(i = 0; i < 4*NUM_ICS; ++i)
+    {
+        if(missing_temperature_measurement_fault[i] > TEMP_FAULTS_MAX)
         {
             shutdown_car();
             set_temperature_fault_bit();
@@ -105,7 +120,7 @@ void check_for_fault(void)
     
     for(i = 0; i < NUM_ICS; ++i)
     {
-        if(self_test_faults[i]> SELF_TEST_FAULTS_MAX)
+        if(self_test_fault[i]> SELF_TEST_FAULTS_MAX)
         {
             shutdown_car();
             //TODO set_self_test_fault_bit();)
@@ -115,12 +130,12 @@ void check_for_fault(void)
 
 void increment_outofrange_voltage_fault(uint8_t cell_id)
 {
-    oor_voltage_faults[cell_id] += 1;
+    outofrange_voltage_fault[cell_id] += 1;
 }
 
 void reset_outofrange_voltage_fault(uint8_t cell_id)
 {
-    oor_voltage_faults[cell_id] = 0;
+    outofrange_voltage_fault[cell_id] = 0;
 }
 
 void increment_missing_voltage_measurement_fault(uint8_t section_id)
@@ -135,12 +150,22 @@ void reset_missing_voltage_measurement_fault(uint8_t section_id)
 
 void increment_outofrange_temperature_fault(uint8_t temp_sensor_id)
 {
-    temp_faults[temp_sensor_id] += 1;
+    outofrange_temperature_fault[temp_sensor_id] += 1;
 }
 
 void reset_outofrange_temperature_fault(uint8_t temp_sensor_id)
 {
-    temp_faults[temp_sensor_id] = 0;
+    outofrange_temperature_fault[temp_sensor_id] = 0;
+}
+
+void increment_missing_temperature_fault(uint8_t section_id)
+{
+    missing_temperature_measurement_fault[section_id] += 1;
+}
+
+void reset_missing_temperature_fault(uint8_t section_id)
+{
+    missing_temperature_measurement_fault[section_id] += 1;
 }
 
 // TODO cell voltage fault check
