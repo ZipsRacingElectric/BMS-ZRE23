@@ -18,8 +18,7 @@ extern "C" {
 void balance_timer_initialize(void);
 // updates cell_needs_balanced array to reflect latest cell voltages
 void update_cell_balance_array(uint16_t* cell_voltages);
-// returns pointer to cell_needs_balanced array
-// used put cell balancing information on CAN bus
+// returns pointer to array indicating which cells need to be balanced
 uint32_t* get_cell_balance_array(void);
 
 #ifdef	__cplusplus
