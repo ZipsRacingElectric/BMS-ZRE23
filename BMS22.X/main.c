@@ -90,7 +90,8 @@ int main(void)
         report_cell_voltages(cell_voltages);
         
         update_cell_balance_array(cell_voltages);
-        report_balancing();
+        uint32_t* cell_needs_balanced = get_cell_balance_array();
+        report_balancing(cell_needs_balanced);
 
         // TODO do this in a for loop or something so size is dynamic depending on num temp sensors
 //        uint16_t pack_temperatures[NUM_TEMP_SENSORS] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
