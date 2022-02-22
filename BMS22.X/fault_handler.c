@@ -5,9 +5,11 @@
 #include "fault_handler.h"
 #include "LTC/LTC_utilities.h"
 #include "mcc_generated_files/pin_manager.h"
+#include "mcc_generated_files/tmr2.h"
+#include "cell_balancing.h"
 #include <stdint.h>
 ////////////////defines////////////////////////////////////////////////////////
-#define OOR_VOLTAGE_MAX_FAULTS                  20 //TODO make this 10 (50 ms measurement period, 500 ms fault period)
+#define OUTOFRANGE_VOLTAGE_MAX_FAULTS           20 //TODO make this 10 (50 ms measurement period, 500 ms fault period)
 #define MISSING_VOLTAGE_MEASUREMENT_MAX_FAULTS  20
 #define OPEN_SENSE_LINE_MAX_FAULTS              10
 #define TEMP_FAULTS_MAX                         10
@@ -78,7 +80,7 @@ void check_for_fault(void)
     
     for(i = 0; i < NUM_CELLS; ++i)
     {
-        if(outofrange_voltage_fault[i] > OOR_VOLTAGE_MAX_FAULTS)
+        if(outofrange_voltage_fault[i] > OUTOFRANGE_VOLTAGE_MAX_FAULTS)
         {
             shutdown_car();
             set_voltage_fault_bit();
@@ -185,6 +187,9 @@ static void set_temperature_fault_bit(void)
 
 static void shutdown_car(void)
 {
-    //TODO turn off all balancing
+    // turn off all balancing
+    disable_cell_balancing();
+    
+    // open shutdown loop
     BMS_RELAY_EN_SetLow();
 }
