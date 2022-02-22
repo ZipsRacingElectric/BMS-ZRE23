@@ -21,6 +21,8 @@
 #define PDN         0b0     // pull down for open wire conversions
 #define CHG         0b000   // GPIO selection for ADC conversion
 
+uint8_t config_A_data[6*NUM_ICS] = {0xFC, 0x52, 0x27, 0xA0, 0x00, 0x50};
+
 uint8_t buffer_iterator = 0;
 uint8_t cmd[4];
 uint8_t dummy_buf[4];

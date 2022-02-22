@@ -83,8 +83,9 @@ void write_balance_switches(void)
     if(cell_balance_duty_cycle_counter == 0 || balancing_enabled == 0)
     {
         cell_balance_duty_cycle_counter += 1;
-        uint8_t data_to_write[6*NUM_ICS] = {0xFC, 0x52, 0x27, 0xA0, 0x00, 0x50};
-        write_config_A(data_to_write);
+        uint8_t config_A_data[6*NUM_ICS] = {0xFC, 0x52, 0x27, 0xA0, 0x00, 0x50};
+        write_config_A(config_A_data);
+//        uint8_t config_B_data[6*NUM_ICS] = {0x0F, 0x, 0x00, 0x00, 0x00, 0x00};
     }
     else
     {
