@@ -9,12 +9,12 @@
 #include "cell_balancing.h"
 #include <stdint.h>
 ////////////////defines////////////////////////////////////////////////////////
-#define OUTOFRANGE_VOLTAGE_MAX_FAULTS           20 //TODO make this 10 (50 ms measurement period, 500 ms fault period)
-#define MISSING_VOLTAGE_MEASUREMENT_MAX_FAULTS  20
-#define OPEN_SENSE_LINE_MAX_FAULTS              10
-#define OUTOFRANGE_TEMPERATURE_MAX_FAULTS       10
-#define MISSING_TEMP_MEASUREMENT_FAULTS_MAX     10
-#define SELF_TEST_FAULTS_MAX                    10
+#define OUTOFRANGE_VOLTAGE_MAX_FAULTS           30 //TODO make this 10 (50 ms measurement period, 500 ms fault period)
+#define MISSING_VOLTAGE_MEASUREMENT_MAX_FAULTS  30
+#define OPEN_SENSE_LINE_MAX_FAULTS              30
+#define OUTOFRANGE_TEMPERATURE_MAX_FAULTS       30
+#define MISSING_TEMP_MEASUREMENT_FAULTS_MAX     30
+#define SELF_TEST_FAULTS_MAX                    30
 
 ////////////////globals////////////////////////////////////////////////////////
 uint8_t outofrange_voltage_fault[NUM_CELLS];
@@ -94,7 +94,7 @@ void check_for_fault(void)
         }
     }
     
-    for(i = 0; i < NUM_ICS * 6; ++i)
+    for(i = 0; i < 2; ++i) // TODO check all registers for missing voltage measurement NUM_ICS * 6; ++i)
     {
         if(missing_voltage_measurement_fault[i] > MISSING_VOLTAGE_MEASUREMENT_MAX_FAULTS)
         {
@@ -189,7 +189,7 @@ static void set_temperature_fault_bit(void)
 static void shutdown_car(void)
 {
     // turn off all balancing
-//    disable_cell_balancing();
+    disable_cell_balancing();
     
     // open shutdown loop
     BMS_RELAY_EN_SetLow();
