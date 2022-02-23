@@ -44,22 +44,24 @@ extern "C" {
 #define AUXC        2
 #define AUXD        3
     
+// initialize config register A and B values
+void init_cfgr_A_and_B_buffers(void);
 // Generic wakeup command to wake the LTC681x from sleep state
 void wakeup_daisychain(void);
 // verify that received packet error code matches calculated packet error code
-uint8_t verify_pec(char* data, uint8_t size, char* transmitted_pec);
+uint8_t verify_pec(uint8_t* data, uint8_t size, uint8_t* transmitted_pec);
 // function to pull lastest data to be written to cfgra
-void update_cfgra_write_data(void);
+void update_cfgra_write_buffer(void);
 // get data to write to cfgra
-uint8_t* get_cfgra_write_data(void);
-void set_cfgra_dcc8_1(uint8_t set_value);
-void set_cfgra_dcc12_9(uint8_t set_value);
+uint8_t* get_cfgra_write_buffer(uint8_t chip_number);
+void set_cfgra_dcc8_1(uint8_t chip_number, uint8_t set_value);
+void set_cfgra_dcc12_9(uint8_t chip_number, uint8_t set_value);
 // function to pull lastest data to be written to cfgrb
-void update_cfgrb_write_data(void);
+void update_cfgrb_write_buffer(void);
 // get data to write to cfgrb
-uint8_t* get_cfgrb_write_data(void);
-void set_cfgrb_dcc16_13(uint8_t set_value);
-void set_cfgrb_dcc18_17(uint8_t set_value);
+uint8_t* get_cfgrb_write_buffer(uint8_t chip_number);
+void set_cfgrb_dcc16_13(uint8_t chip_number, uint8_t set_value);
+void set_cfgrb_dcc18_17(uint8_t chip_number, uint8_t set_value);
 
 /************************************
 Copyright 2012 Analog Devices, Inc. (ADI)
@@ -73,7 +75,7 @@ OR OTHER TORTUOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFOR
 ***************************************/
 void init_PEC15_Table();
 // calculated packet error code based on received data and PEC table
-uint16_t pec15_calc(char *data , uint8_t len);
+uint16_t pec15_calc(uint8_t *data , uint8_t len);
 #ifdef	__cplusplus
 }
 #endif

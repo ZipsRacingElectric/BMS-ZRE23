@@ -111,9 +111,7 @@ int main(void)
         update_cell_balance_array(cell_voltages);
         uint32_t* cell_needs_balanced = get_cell_balance_array();
         report_balancing(cell_needs_balanced);
-        update_cfgra_write_data();
-        write_config_A(); //write cell balance status
-        //TODO write config B
+        refresh_config_A_and_B();
 
         read_temperatures(pack_temperatures, pack_temperature_invalid_counter);
         report_pack_temperatures(pack_temperatures);

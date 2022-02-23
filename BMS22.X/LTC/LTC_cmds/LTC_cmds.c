@@ -306,7 +306,6 @@ uint8_t read_config_A(uint8_t* buffer)
 void write_config_A(void)
 {
     //TODO make this work for multiple ICs
-    uint8_t* data_to_write = get_cfgra_write_data();
     wakeup_daisychain();
     
     //WRCFGA cmd
@@ -316,14 +315,21 @@ void write_config_A(void)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     
-    uint16_t data_pec = pec15_calc(data_to_write, 6);
-    uint8_t data_pec_transmit[2] = {(uint8_t)(data_pec >> 8), (uint8_t)(data_pec & 0xFF)};    
     CS_6820_SetLow(); 
-    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
-    SPI1_Exchange8bitBuffer(data_to_write, 6*NUM_ICS, dummy_buf);
-    SPI1_Exchange8bitBuffer(data_pec_transmit, 2, dummy_buf);
-    CS_6820_SetHigh();
     
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
+    
+    uint8_t i = 0;
+    for(i = 0; i < NUM_ICS; ++i)
+    {
+        uint8_t* data_to_write = get_cfgra_write_buffer(i);
+        uint16_t data_pec = pec15_calc(data_to_write, 6);
+        uint8_t data_pec_transmit[2] = {(uint8_t)(data_pec >> 8), (uint8_t)(data_pec & 0xFF)};    
+
+        SPI1_Exchange8bitBuffer(data_to_write, 6*NUM_ICS, dummy_buf);
+        SPI1_Exchange8bitBuffer(data_pec_transmit, 2, dummy_buf);
+    }
+    CS_6820_SetHigh();
 }
 
 /*
@@ -331,8 +337,6 @@ void write_config_A(void)
  */
 void write_config_B(void)
 {
-    //TODO make this work for multiple ICs
-    uint8_t* data_to_write = get_cfgrb_write_data();
     wakeup_daisychain();
     
     //WRCFGB cmd
@@ -342,12 +346,19 @@ void write_config_B(void)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     
-    uint16_t data_pec = pec15_calc(data_to_write, 6);
-    uint8_t data_pec_transmit[2] = {(uint8_t)(data_pec >> 8), (uint8_t)(data_pec & 0xFF)};    
     CS_6820_SetLow(); 
     SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
-    SPI1_Exchange8bitBuffer(data_to_write, 6*NUM_ICS, dummy_buf);
-    SPI1_Exchange8bitBuffer(data_pec_transmit, 2, dummy_buf);
-    CS_6820_SetHigh();
     
+    uint8_t i = 0;
+    for(i = 0; i < NUM_ICS; ++i)
+    {
+        uint8_t* data_to_write = get_cfgrb_write_buffer(i);
+
+        uint16_t data_pec = pec15_calc(data_to_write, 6);
+        uint8_t data_pec_transmit[2] = {(uint8_t)(data_pec >> 8), (uint8_t)(data_pec & 0xFF)};    
+
+        SPI1_Exchange8bitBuffer(data_to_write, 6*NUM_ICS, dummy_buf);
+        SPI1_Exchange8bitBuffer(data_pec_transmit, 2, dummy_buf); 
+    }
+    CS_6820_SetHigh();
 }

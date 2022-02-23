@@ -83,25 +83,29 @@ void write_balance_switches(void)
     if(cell_balance_duty_cycle_counter == 0 || balancing_enabled == 0)
     {
         cell_balance_duty_cycle_counter += 1;
-
-        set_cfgra_dcc8_1(0);
-        set_cfgra_dcc12_9(0);
-        set_cfgrb_dcc16_13(0);
-        set_cfgrb_dcc18_17(0);
         
-        // TODO make this work for multiple ICs
+        uint8_t i = 0;
+        for(i = 0; i < NUM_ICS; ++i)
+        {
+            set_cfgra_dcc8_1(i, 0);
+            set_cfgra_dcc12_9(i, 0);
+            set_cfgrb_dcc16_13(i, 0);
+            set_cfgrb_dcc18_17(i, 0);
+        }
     }
     else
     {
         cell_balance_duty_cycle_counter += 1;
         
-        set_cfgra_dcc8_1(cell_needs_balanced[0] & 0xFF);
-        set_cfgra_dcc12_9((cell_needs_balanced[0] >> 8) & 0xF);
-        set_cfgrb_dcc16_13((cell_needs_balanced[0] >> 12) & 0xF);
-        set_cfgrb_dcc18_17((cell_needs_balanced[0] >> 16) & 0x3);
-        
-        //TODO add cfgrb
-        //TODO make this work for more cells, for multiple ICs
+        uint8_t i = 0;
+        for(i = 0; i < NUM_ICS; ++i)
+        {
+            set_cfgra_dcc8_1(i, cell_needs_balanced[i] & 0xFF);
+            set_cfgra_dcc12_9(i, (cell_needs_balanced[i] >> 8) & 0xF);
+            set_cfgrb_dcc16_13(i, (cell_needs_balanced[i] >> 12) & 0xF);
+            set_cfgrb_dcc18_17(i, (cell_needs_balanced[i] >> 16) & 0x3);
+            
+        }
         
         if(cell_balance_duty_cycle_counter >= 5)
         {
