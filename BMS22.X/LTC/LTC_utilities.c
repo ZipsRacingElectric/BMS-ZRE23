@@ -126,6 +126,16 @@ uint8_t* get_cfgrb_write_data(void)
     return config_reg_B;
 }
 
+void set_cfgrb_dcc16_13(uint8_t set_value)
+{
+    cfgrb_dcc16_13 = set_value;
+}
+
+void set_cfgrb_dcc18_17(uint8_t set_value)
+{
+    cfgrb_dcc18_17 = set_value;
+}
+
 /************************************
 Copyright 2012 Analog Devices, Inc. (ADI)
 Permission to freely use, copy, modify, and distribute this software for any purpose with or

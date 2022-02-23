@@ -53,10 +53,13 @@ void update_cfgra_write_data(void);
 // get data to write to cfgra
 uint8_t* get_cfgra_write_data(void);
 void set_cfgra_dcc8_1(uint8_t set_value);
+void set_cfgra_dcc12_9(uint8_t set_value);
 // function to pull lastest data to be written to cfgrb
 void update_cfgrb_write_data(void);
 // get data to write to cfgrb
 uint8_t* get_cfgrb_write_data(void);
+void set_cfgrb_dcc16_13(uint8_t set_value);
+void set_cfgrb_dcc18_17(uint8_t set_value);
 
 /************************************
 Copyright 2012 Analog Devices, Inc. (ADI)

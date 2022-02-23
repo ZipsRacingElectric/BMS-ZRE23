@@ -85,13 +85,20 @@ void write_balance_switches(void)
         cell_balance_duty_cycle_counter += 1;
 
         set_cfgra_dcc8_1(0);
-        // TODO set other balancing bits to 0s
+        set_cfgra_dcc12_9(0);
+        set_cfgrb_dcc16_13(0);
+        set_cfgrb_dcc18_17(0);
+        
+        // TODO make this work for multiple ICs
     }
     else
     {
         cell_balance_duty_cycle_counter += 1;
         
         set_cfgra_dcc8_1(cell_needs_balanced[0] & 0xFF);
+        set_cfgra_dcc12_9((cell_needs_balanced[0] >> 8) & 0xF);
+        set_cfgrb_dcc16_13((cell_needs_balanced[0] >> 12) & 0xF);
+        set_cfgrb_dcc18_17((cell_needs_balanced[0] >> 16) & 0x3);
         
         //TODO add cfgrb
         //TODO make this work for more cells, for multiple ICs
