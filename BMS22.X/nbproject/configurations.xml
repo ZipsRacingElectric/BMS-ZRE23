@@ -4,13 +4,6 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="LTC" displayName="LTC" projectFiles="true">
-        <logicalFolder name="LTC_cmds" displayName="LTC_cmds" projectFiles="true">
-          <itemPath>LTC/LTC_cmds/LTC_cmds.h</itemPath>
-        </logicalFolder>
-        <itemPath>LTC/LTC_driver.h</itemPath>
-        <itemPath>LTC/LTC_utilities.h</itemPath>
-      </logicalFolder>
       <logicalFolder name="MCC Generated Files"
                      displayName="MCC Generated Files"
                      projectFiles="true">
@@ -31,14 +24,17 @@
         <itemPath>mcc_generated_files/adc1.h</itemPath>
         <itemPath>mcc_generated_files/adc_module_features.h</itemPath>
         <itemPath>mcc_generated_files/tmr1.h</itemPath>
-        <itemPath>mcc_generated_files/spi1.h</itemPath>
         <itemPath>mcc_generated_files/system.h</itemPath>
+        <itemPath>mcc_generated_files/spi1.h</itemPath>
         <itemPath>mcc_generated_files/tmr2.h</itemPath>
       </logicalFolder>
       <itemPath>can_driver.h</itemPath>
       <itemPath>soc_fns.h</itemPath>
-      <itemPath>fault_handler.h</itemPath>
+      <itemPath>LTC/LTC_cmds/LTC_cmds.h</itemPath>
+      <itemPath>LTC/LTC_driver.h</itemPath>
+      <itemPath>LTC/LTC_utilities.h</itemPath>
       <itemPath>cell_balancing.h</itemPath>
+      <itemPath>fault_handler.h</itemPath>
       <itemPath>global_constants.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -48,13 +44,6 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="LTC" displayName="LTC" projectFiles="true">
-        <logicalFolder name="LTC_cmds" displayName="LTC_cmds" projectFiles="true">
-          <itemPath>LTC/LTC_cmds/LTC_cmds.c</itemPath>
-        </logicalFolder>
-        <itemPath>LTC/LTC_utilities.c</itemPath>
-        <itemPath>LTC/LTC_driver.c</itemPath>
-      </logicalFolder>
       <logicalFolder name="MCC Generated Files"
                      displayName="MCC Generated Files"
                      projectFiles="true">
@@ -76,8 +65,11 @@
       <itemPath>main.c</itemPath>
       <itemPath>can_driver.c</itemPath>
       <itemPath>soc_fns.c</itemPath>
-      <itemPath>fault_handler.c</itemPath>
       <itemPath>cell_balancing.c</itemPath>
+      <itemPath>fault_handler.c</itemPath>
+      <itemPath>LTC/LTC_driver.c</itemPath>
+      <itemPath>LTC/LTC_utilities.c</itemPath>
+      <itemPath>LTC/LTC_cmds/LTC_cmds.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
