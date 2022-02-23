@@ -5,12 +5,12 @@
  */
 #include "cell_balancing.h"
 #include "LTC/LTC_utilities.h"
-#include "mcc_generated_files/pin_manager.h"
-#include "mcc_generated_files/spi1.h"
 #include "mcc_generated_files/tmr2.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include "global_constants.h"
+//TODO get rid of circular include between cell_balancing, fault_handler, and LTC_cmds
+#include "LTC/LTC_cmds/LTC_cmds.h"
 
 volatile uint8_t cell_balance_duty_cycle_counter = 0;
 volatile uint8_t balancing_enabled = 1;
@@ -83,35 +83,15 @@ void write_balance_switches(void)
     if(cell_balance_duty_cycle_counter == 0 || balancing_enabled == 0)
     {
         cell_balance_duty_cycle_counter += 1;
-        uint8_t data_to_write[6*NUM_ICS] = {0xE4, 0x52, 0x27, 0xA0, 0x00, 0x50};
-
-        // INFO: below appears the write_config_a function
-        //       this code is included directly instead of calling the function
-        //       to increase code simplicity inside the ISR
-        wakeup_daisychain();
-    
-        //WRCFGA cmd
-        uint8_t cmd[CMD_SIZE_BYTES];
-        cmd[0] = 0x00;
-        cmd[1] = 0x01;
-        uint16_t cmd_pec = pec15_calc(cmd, 2);
-        cmd[2] = (uint8_t)(cmd_pec >> 8);
-        cmd[3] = (uint8_t)(cmd_pec);
-
-        uint16_t data_pec = pec15_calc(data_to_write, 6);
-        uint8_t data_pec_transmit[2] = {(uint8_t)(data_pec >> 8), (uint8_t)(data_pec & 0xFF)};    
-        CS_6820_SetLow(); 
-        uint8_t dummy_buf[4];
-        SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
-        SPI1_Exchange8bitBuffer(data_to_write, 6*NUM_ICS, dummy_buf);
-        SPI1_Exchange8bitBuffer(data_pec_transmit, 2, dummy_buf);
-        CS_6820_SetHigh();
+        uint8_t config_A_data[6*NUM_ICS] = {0xFC, 0x52, 0x27, 0xA0, 0x00, 0x50};
+        write_config_A(config_A_data);
+//        uint8_t config_B_data[6*NUM_ICS] = {0x0F, 0x, 0x00, 0x00, 0x00, 0x00};
     }
     else
     {
         cell_balance_duty_cycle_counter += 1;
         uint8_t i = 0;
-        uint8_t data_to_write[6*NUM_ICS] = {0xE4, 0x52, 0x27, 0xA0, 0x00, 0x50};
+        uint8_t data_to_write[6*NUM_ICS] = {0xFC, 0x52, 0x27, 0xA0, 0x00, 0x50};
 
         // TODO wrap this in a num ics for loop
         for(i = 0; i < 8; ++i)
@@ -121,28 +101,7 @@ void write_balance_switches(void)
                 data_to_write[4] |= (1 << i);
             }
         } 
-
-        // INFO: below appears the write_config_a function
-        //       this code is included directly instead of calling the function
-        //       to increase code simplicity inside the ISR
-        wakeup_daisychain();
-    
-        //WRCFGA cmd
-        uint8_t cmd[CMD_SIZE_BYTES];
-        cmd[0] = 0x00;
-        cmd[1] = 0x01;
-        uint16_t cmd_pec = pec15_calc(cmd, 2);
-        cmd[2] = (uint8_t)(cmd_pec >> 8);
-        cmd[3] = (uint8_t)(cmd_pec);
-
-        uint16_t data_pec = pec15_calc(data_to_write, 6);
-        uint8_t data_pec_transmit[2] = {(uint8_t)(data_pec >> 8), (uint8_t)(data_pec & 0xFF)};    
-        CS_6820_SetLow(); 
-        uint8_t dummy_buf[4];
-        SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
-        SPI1_Exchange8bitBuffer(data_to_write, 6*NUM_ICS, dummy_buf);
-        SPI1_Exchange8bitBuffer(data_pec_transmit, 2, dummy_buf);
-        CS_6820_SetHigh();
+        write_config_A(data_to_write);
         
         //TODO add cfgrb
         //TODO make this work for more cells, for multiple ICs

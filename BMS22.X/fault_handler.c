@@ -9,11 +9,12 @@
 #include "cell_balancing.h"
 #include <stdint.h>
 ////////////////defines////////////////////////////////////////////////////////
-#define OUTOFRANGE_VOLTAGE_MAX_FAULTS           20 //TODO make this 10 (50 ms measurement period, 500 ms fault period)
-#define MISSING_VOLTAGE_MEASUREMENT_MAX_FAULTS  20
-#define OPEN_SENSE_LINE_MAX_FAULTS              10
-#define TEMP_FAULTS_MAX                         10
-#define SELF_TEST_FAULTS_MAX                    10
+#define OUTOFRANGE_VOLTAGE_MAX_FAULTS           30 //TODO make this 10 (50 ms measurement period, 500 ms fault period)
+#define MISSING_VOLTAGE_MEASUREMENT_MAX_FAULTS  30
+#define OPEN_SENSE_LINE_MAX_FAULTS              30
+#define OUTOFRANGE_TEMPERATURE_MAX_FAULTS       30
+#define MISSING_TEMP_MEASUREMENT_FAULTS_MAX     30
+#define SELF_TEST_FAULTS_MAX                    30
 
 ////////////////globals////////////////////////////////////////////////////////
 uint8_t outofrange_voltage_fault[NUM_CELLS];
@@ -78,7 +79,7 @@ void check_for_fault(void)
 {
     uint8_t i = 0;
     
-    for(i = 0; i < NUM_CELLS; ++i)
+    for(i = 0; i < 5; ++i)// TODO check all cell voltages NUM_CELLS; ++i)
     {
         if(outofrange_voltage_fault[i] > OUTOFRANGE_VOLTAGE_MAX_FAULTS)
         {
@@ -93,7 +94,7 @@ void check_for_fault(void)
         }
     }
     
-    for(i = 0; i < NUM_ICS * 6; ++i)
+    for(i = 0; i < 2; ++i) // TODO check all registers for missing voltage measurement NUM_ICS * 6; ++i)
     {
         if(missing_voltage_measurement_fault[i] > MISSING_VOLTAGE_MEASUREMENT_MAX_FAULTS)
         {
@@ -102,18 +103,18 @@ void check_for_fault(void)
         }
     }
     
-    for(i = 0; i < 9*NUM_ICS; ++i)
+    for(i = 0; i < 2; ++i) // TODO track faults in all temp sensors 9*NUM_ICS; ++i)
     {
-        if(outofrange_temperature_fault[i] > TEMP_FAULTS_MAX)
+        if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
         {
             shutdown_car();
             set_temperature_fault_bit();
         }
     }
     
-    for(i = 0; i < 4*NUM_ICS; ++i)
+    for(i = 0; i < 1; ++i) // TODO track temp faults for all regs for all ICs 4*NUM_ICS; ++i)
     {
-        if(missing_temperature_measurement_fault[i] > TEMP_FAULTS_MAX)
+        if(missing_temperature_measurement_fault[i] > MISSING_TEMP_MEASUREMENT_FAULTS_MAX)
         {
             shutdown_car();
             set_temperature_fault_bit();
@@ -167,7 +168,7 @@ void increment_missing_temperature_fault(uint8_t section_id)
 
 void reset_missing_temperature_fault(uint8_t section_id)
 {
-    missing_temperature_measurement_fault[section_id] += 1;
+    missing_temperature_measurement_fault[section_id] = 0;
 }
 
 // TODO cell voltage fault check

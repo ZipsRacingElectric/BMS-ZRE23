@@ -21,6 +21,8 @@
 #define PDN         0b0     // pull down for open wire conversions
 #define CHG         0b000   // GPIO selection for ADC conversion
 
+uint8_t config_A_data[6*NUM_ICS] = {0xFC, 0x52, 0x27, 0xA0, 0x00, 0x50};
+
 uint8_t buffer_iterator = 0;
 uint8_t cmd[4];
 uint8_t dummy_buf[4];
@@ -246,10 +248,10 @@ void receive_aux_register(uint8_t which_reg, uint16_t* buf, uint8_t* aux_registe
         
         if(aux_register_invalid_counter[which_reg + i*4] >= 10) // TODO magic number
         {
-            adaux_buf[TEMP_SENSORS_PER_IC*i] = 0;
-            adaux_buf[TEMP_SENSORS_PER_IC*i + 1] = 0;
-            adaux_buf[TEMP_SENSORS_PER_IC*i + 2] = 0;
-            aux_register_invalid_counter[i*6] = 0;
+            buf[TEMP_SENSORS_PER_IC*i] = 0;
+            buf[TEMP_SENSORS_PER_IC*i + 1] = 0;
+            buf[TEMP_SENSORS_PER_IC*i + 2] = 0;
+            aux_register_invalid_counter[which_reg + i*4] = 0;
         }
     }
 
