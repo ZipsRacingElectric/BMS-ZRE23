@@ -1,7 +1,7 @@
 VERSION ""
 
 
-NS_ : 
+NS_ :
 	NS_DESC_
 	CM_
 	BA_DEF_
@@ -38,6 +38,7 @@ BU_: BMS
 
 BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
  SG_ NewSignal_0001 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+<<<<<<< HEAD
  SG_ id1 : 8|8@1+ (1,0) [0|0] "cell ID number" Vector__XXX
  SG_ id5 : 40|8@1+ (1,0) [0|0] "cell ID number" Vector__XXX
  SG_ id4 : 32|8@1+ (1,0) [0|0] "cell ID number" Vector__XXX
@@ -45,6 +46,36 @@ BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
  SG_ id2 : 16|8@1+ (1,0) [0|0] "cell ID number" Vector__XXX
  SG_ id7 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ id6 : 48|8@1+ (1,0) [0|0] "cell ID number" Vector__XXX
+=======
+ SG_ cell64_balancing : 63|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell63_balancing : 62|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell62_balancing : 61|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell61_balancing : 60|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell60_balancing : 59|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell59_balancing : 58|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell58_balancing : 57|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell57_balancing : 56|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell56_balancing : 55|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell55_balancing : 54|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell54_balancing : 53|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell53_balancing : 52|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell52_balancing : 51|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell51_balancing : 50|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell50_balancing : 49|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell49_balancing : 48|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell48_balancing : 47|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell47_balancing : 46|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell46_balancing : 45|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell45_balancing : 44|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell44_balancing : 43|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell43_balancing : 42|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell42_balancing : 47|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell41_balancing : 46|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell40_balancing : 45|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell39_balancing : 44|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell38_balancing : 43|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell37_balancing : 42|1@1+ (1,0) [0|0] "bit" Vector__XXX
+>>>>>>> dev
 
 BO_ 1088 status: 7 BMS
  SG_ cs_lo : 32|16@1- (0.1,0) [0|0] "A" Vector__XXX
@@ -189,8 +220,8 @@ BO_ 1047 cell_voltages22: 4 BMS
  SG_ cell90 : 23|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
 
 BO_ 1051 pack_temperatures0: 8 BMS
- SG_ therm0 : 7|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm1 : 23|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ therm0 : 7|16@0+ (-0.0033,76) [0|0] "C" Vector__XXX
+ SG_ therm1 : 23|16@0+ (-0.0033,76) [0|0] "C" Vector__XXX
  SG_ therm2 : 39|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
  SG_ therm3 : 55|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
 
@@ -257,6 +288,7 @@ BO_ 1061 pack_temperatures10: 8 BMS
 BO_ 1062 pack_temperatures11: 2 BMS
  SG_ therm44 : 7|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
 
+<<<<<<< HEAD
 BO_ 1049 balancing0: 8 BMS
  SG_ cell1_balancing : 0|1@1+ (1,0) [0|0] "bitfield" Vector__XXX
  SG_ cell2_balancing : 1|1@1+ (1,0) [0|0] "bitfield" Vector__XXX
@@ -350,6 +382,83 @@ BO_ 1050 balancing1: 8 BMS
  SG_ cell88_balancing : 23|1@1+ (1,0) [0|0] "bitfield" Vector__XXX
  SG_ cell89_balancing : 24|1@1+ (1,0) [0|0] "bitfield" Vector__XXX
  SG_ cell90_balancing : 25|1@1+ (1,0) [0|0] "bitfield" Vector__XXX
+=======
+BO_ 1048 balancing0: 6 BMS
+ SG_ cell1_balancing : 0|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell2_balancing : 1|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell3_balancing : 2|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell4_balancing : 3|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell5_balancing : 4|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell6_balancing : 5|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell7_balancing : 6|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell8_balancing : 7|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell9_balancing : 8|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell10_balancing : 9|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell11_balancing : 10|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell12_balancing : 11|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell13_balancing : 12|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell14_balancing : 13|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell15_balancing : 14|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell16_balancing : 15|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell17_balancing : 16|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell18_balancing : 17|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell19_balancing : 24|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell20_balancing : 25|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell21_balancing : 26|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell22_balancing : 27|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell23_balancing : 28|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell24_balancing : 29|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell25_balancing : 30|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell26_balancing : 31|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell27_balancing : 32|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell28_balancing : 33|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell29_balancing : 34|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell30_balancing : 35|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell31_balancing : 36|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell32_balancing : 37|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell33_balancing : 38|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell34_balancing : 39|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell35_balancing : 40|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell36_balancing : 41|1@1+ (1,0) [0|0] "bit" Vector__XXX
+
+BO_ 1049 balancing1: 6 BMS
+ SG_ cell37_balancing : 0|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell38_balancing : 1|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell39_balancing : 2|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell40_balancing : 3|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell41_balancing : 4|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell42_balancing : 5|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell43_balancing : 6|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell44_balancing : 7|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell45_balancing : 8|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell46_balancing : 9|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell47_balancing : 10|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell48_balancing : 11|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell49_balancing : 12|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell50_balancing : 13|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell51_balancing : 14|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell52_balancing : 15|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell53_balancing : 16|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell54_balancing : 17|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell55_balancing : 24|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell56_balancing : 25|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell57_balancing : 26|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell58_balancing : 27|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell59_balancing : 28|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell60_balancing : 29|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell61_balancing : 30|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell62_balancing : 31|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell63_balancing : 32|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell64_balancing : 33|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell65_balancing : 34|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell66_balancing : 35|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell67_balancing : 36|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell68_balancing : 37|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell69_balancing : 38|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell70_balancing : 39|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell71_balancing : 40|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell72_balancing : 41|1@1+ (1,0) [0|0] "bit" Vector__XXX
+>>>>>>> dev
 
 BO_ 1085 fuse_blown0: 6 BMS
  SG_ segment1 : 0|24@1+ (1,0) [0|0] "bitfield" Vector__XXX
@@ -362,6 +471,28 @@ BO_ 1086 fuse_blown1: 6 BMS
 BO_ 1087 fuse_blown2: 3 BMS
  SG_ segment5 : 0|24@1+ (1,0) [0|0] "bitfield" Vector__XXX
 
+<<<<<<< HEAD
+=======
+BO_ 1050 balancing2: 3 BMS
+ SG_ cell73_balancing : 0|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell74_balancing : 1|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell75_balancing : 2|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell76_balancing : 3|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell77_balancing : 4|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell78_balancing : 5|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell79_balancing : 6|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell80_balancing : 7|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell81_balancing : 8|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell82_balancing : 9|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell83_balancing : 10|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell84_balancing : 11|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell85_balancing : 12|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell86_balancing : 13|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell87_balancing : 14|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell88_balancing : 15|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell89_balancing : 16|1@1+ (1,0) [0|0] "bit" Vector__XXX
+ SG_ cell90_balancing : 17|1@1+ (1,0) [0|0] "bit" Vector__XXX
+>>>>>>> dev
 
 
 

@@ -111,6 +111,7 @@
 #include "tmr1.h"
 #include "can1.h"
 #include "can2.h"
+#include "tmr2.h"
 
 void SYSTEM_Initialize(void)
 {
@@ -121,6 +122,7 @@ void SYSTEM_Initialize(void)
     ADC1_Initialize();
     CAN2_Initialize();
     CAN1_Initialize();
+    TMR2_Initialize();
     DMA_Initialize();
     TMR1_Initialize();
     INTERRUPT_GlobalEnable();

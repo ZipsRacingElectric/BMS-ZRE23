@@ -8,8 +8,7 @@
 #include "LTC_utilities.h"
 #include <stdint.h>
 #include "../mcc_generated_files/pin_manager.h"
-#define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
-#include <libpic30.h>        // __delayXXX() functions macros defined here
+#include "../global_constants.h"
 
 // Generic wakeup command to wake the LTC681x from sleep state
 // wakeup time depends on number of chips in daisy chain

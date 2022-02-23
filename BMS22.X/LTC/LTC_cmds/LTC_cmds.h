@@ -16,16 +16,20 @@ extern "C" {
     
 // send command to start ADC conversion for cell voltages
 void start_cell_voltage_adc_conversion(void);
-// send command to start ADC converstion for pack temperatures
+// send command to start ADC conversion for pack temperatures
 void start_temperature_adc_conversion(void);
 // send command to poll ADC status
 void poll_adc_status(void);
 // receive cell voltage register data
-void rdcv_register(uint8_t which_reg, uint16_t* buf);
-// receive GPIO voltage register data
-void rdaux_register(uint8_t which_reg, uint16_t* buf);
+void receive_voltage_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_voltage_invalid_counter);
+// receive GPIO voltage register data. Temperature data is in these registers
+void receive_aux_register(uint8_t which_reg, uint16_t* buf, uint8_t* aux_register_invalid_counter);
 // send command to start open sense line check
 void open_wire_check(uint8_t pull_dir);
+// read configuration register A
+uint8_t read_config_A(uint8_t* buffer);
+// write configuration register A
+void write_config_A(uint8_t* data_to_write);
 
 #ifdef	__cplusplus
 }

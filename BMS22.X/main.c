@@ -54,9 +54,14 @@
 #include "LTC/LTC_driver.h"
 #include "LTC/LTC_utilities.h"
 #include "fault_handler.h"
+#include "cell_balancing.h"
+#include "global_constants.h"
 
-#define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
-#include <libpic30.h>        // __delayXXX() functions macros defined here
+uint16_t cell_voltages[NUM_CELLS];
+uint8_t cell_voltage_invalid_counter[6*NUM_ICS];
+
+uint16_t pack_temperatures[NUM_TEMP_SENSORS];
+uint8_t pack_temperature_invalid_counter[4*NUM_ICS];
 
 /*
                          Main application
@@ -66,24 +71,47 @@ int main(void)
     // initialize the device
     SYSTEM_Initialize();
     CS_6820_SetHigh();
+    
+    uint8_t i = 0;
+    for(i = 0; i < NUM_CELLS; ++i)
+    {
+        cell_voltages[i] = 0;
+    }
+    for(i = 0; i < 6*NUM_ICS; ++i)
+    {
+        cell_voltage_invalid_counter[i] = 0;
+    }
+    for(i = 0; i < NUM_TEMP_SENSORS; ++i)
+    {
+        pack_temperatures[i] = 0;
+    }
+    for(i = 0; i < 4*NUM_ICS; ++i)
+    {
+        pack_temperature_invalid_counter[i] = 0;
+    }
 
     soc_initialize();
     can_initialize();
     LTC_initialize();
     fault_handler_initialize();
+    balance_timer_initialize();
     
     while (1)
     {
+        // WARN: don't put all the CAN output back to back to back here, 
+        //       the transmit buffers will overflow
         calc_soc();
         
-        // TODO do this in a for loop or something, change size?
-        uint16_t cell_voltages[NUM_CELLS+2] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
-        read_cell_voltages(cell_voltages);
+        //TODO balance for 20 s, check cell voltages, balance for 20 more s...
+        
+        read_cell_voltages(cell_voltages, cell_voltage_invalid_counter);
         report_cell_voltages(cell_voltages);
+        
+        update_cell_balance_array(cell_voltages);
+        uint32_t* cell_needs_balanced = get_cell_balance_array();
+        report_balancing(cell_needs_balanced);
 
-        // TODO do this in a for loop or something so size is dynamic depending on num temp sensors
-        uint16_t pack_temperatures[NUM_TEMP_SENSORS] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-        read_temperatures(pack_temperatures);
+        read_temperatures(pack_temperatures, pack_temperature_invalid_counter);
         report_pack_temperatures(pack_temperatures);
         
         uint32_t sense_line_status[NUM_ICS];
@@ -91,7 +119,7 @@ int main(void)
         report_sense_line_status(sense_line_status);
         
         check_for_fault();
-        //TODO maybe don't put all the CAN output back to back to back here, transmit buffers overflow
+
         //open_sense_line_check();
         report_status();
         

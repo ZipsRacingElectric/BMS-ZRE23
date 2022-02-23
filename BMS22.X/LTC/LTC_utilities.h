@@ -19,13 +19,15 @@ extern "C" {
 #define NUM_ICS             1 //TODO: change to 5
 #define CELLS_PER_IC        18
 #define NUM_CELLS           (CELLS_PER_IC * NUM_ICS)
-#define NUM_TEMP_SENSORS    (9 * NUM_ICS)
+#define TEMP_SENSORS_PER_IC 9
+#define NUM_TEMP_SENSORS    (TEMP_SENSORS_PER_IC * NUM_ICS)
 #define SUCCESS             0
 #define FAILURE             1
     
 // cell voltage x 10000 comes from LTC6813 chip
 #define CELL_VOLTAGE_MAX        (42000) //TODO: research what these values should be
 #define CELL_VOLTAGE_MIN        (30000)
+#define CELL_BALANCE_THRESHOLD  200 // 0.02 V threshold for cell balancing TODO change this to like 10 mV
 // GPIO voltage x 10000 comes from LTC6813 chip
 #define CELL_TEMPERATURE_MAX    18536 // 15 C
 #define CELL_TEMPERATURE_MIN    5825  // 60 C

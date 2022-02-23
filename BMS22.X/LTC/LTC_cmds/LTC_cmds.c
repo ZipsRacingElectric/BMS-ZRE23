@@ -9,9 +9,9 @@
 #include "../LTC_utilities.h"
 #include "../../mcc_generated_files/pin_manager.h"
 #include "../../mcc_generated_files/spi1.h"
+#include "../../fault_handler.h"
 #include <stdint.h>
-#define FCY 40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
-#include <libpic30.h>        // __delayXXX() functions macros defined here
+#include "../../global_constants.h"
 
 // see LTC6813 datasheet page 59 table 37 Command Bit Descriptions
 #define MD          0b10    // ADC mode
@@ -20,6 +20,8 @@
 #define PUP         0b1     // pull up for open wire conversions
 #define PDN         0b0     // pull down for open wire conversions
 #define CHG         0b000   // GPIO selection for ADC conversion
+
+uint8_t config_A_data[6*NUM_ICS] = {0xFC, 0x52, 0x27, 0xA0, 0x00, 0x50};
 
 uint8_t buffer_iterator = 0;
 uint8_t cmd[4];
@@ -40,7 +42,7 @@ void start_cell_voltage_adc_conversion(void)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow(); 
-    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
     CS_6820_SetHigh();
     __delay_us(2); //TODO is this necessary?
 }
@@ -59,7 +61,7 @@ void start_temperature_adc_conversion(void)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow(); 
-    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
     CS_6820_SetHigh();
     __delay_us(2); //TODO is this necessary?
 }
@@ -78,7 +80,7 @@ void poll_adc_status(void)
 
     CS_6820_SetLow();
     //send PLADC command
-    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
     
     uint8_t dummy_adc = 0;
 
@@ -94,7 +96,7 @@ void poll_adc_status(void)
 /* receive voltage register data
  * command: RDCV
  */
-void rdcv_register(uint8_t which_reg, uint16_t* buf)
+void receive_voltage_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_voltage_invalid_counter)
 {
     wakeup_daisychain();
         
@@ -140,11 +142,11 @@ void rdcv_register(uint8_t which_reg, uint16_t* buf)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow();
-    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
 
     // 8 data bytes = 2 * 3 cell voltages + 2 PEC bytes
     uint8_t adcv_buf[8 * NUM_ICS];
-    SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adcv_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adcv_buf);
 
     // verify PEC for each of the 6 cell voltage messages received from each of the ICs in the daisy chain
     // if PEC is valid, write cell voltages to buf to be shared over CAN bus
@@ -156,18 +158,32 @@ void rdcv_register(uint8_t which_reg, uint16_t* buf)
             buf[CELLS_PER_IC*i] = (adcv_buf[8*i + 1] << 8) + adcv_buf[8*i];
             buf[CELLS_PER_IC*i + 1] = (adcv_buf[8*i + 3] << 8) + adcv_buf[8*i + 2];
             buf[CELLS_PER_IC*i + 2] = (adcv_buf[8*i + 5] << 8) + adcv_buf[8*i + 4];
+            cell_voltage_invalid_counter[which_reg + i*6] = 0;
+            reset_missing_voltage_measurement_fault(which_reg + i*6);
             // adcv_buf 6 and 7 are PEC bytes
         }
+        else
+        {
+            ++cell_voltage_invalid_counter[which_reg + i*6];
+            increment_missing_voltage_measurement_fault(which_reg + i*6);
+        }
+        
+        if(cell_voltage_invalid_counter[which_reg + i*6] >= 10) // TODO magic number
+        {
+            buf[CELLS_PER_IC*i] = 0;
+            buf[CELLS_PER_IC*i + 1] = 0;
+            buf[CELLS_PER_IC*i + 2] = 0;
+            cell_voltage_invalid_counter[which_reg + i*6] = 0;
+        }
     }
-    // TODO add else statements to set the cell voltages to 0 if the PEC is incorrect
 
     CS_6820_SetHigh();
 }
 
-/* receive GPIO register data
+/* receive GPIO register data. Temperature data is in these registers
  * command: RDAUX
  */
-void rdaux_register(uint8_t which_reg, uint16_t* buf)
+void receive_aux_register(uint8_t which_reg, uint16_t* buf, uint8_t* aux_register_invalid_counter)
 {
     wakeup_daisychain();
         
@@ -203,11 +219,11 @@ void rdaux_register(uint8_t which_reg, uint16_t* buf)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow();
-    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
 
     // 8 data bytes = 2 * 3 GPIO results + 2 PEC bytes
     uint8_t adaux_buf[8 * NUM_ICS];
-    SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adaux_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adaux_buf);
 
     // verify PEC for each of the 4 GPIO messages received from each of the ICs in the daisy chain
     // if PEC is valid, write GPIO messages to buf to be shared over CAN bus
@@ -216,13 +232,28 @@ void rdaux_register(uint8_t which_reg, uint16_t* buf)
     {
         if(verify_pec(&adaux_buf[8*i], 6, &adaux_buf[8 * i + 6]) == SUCCESS)
         {
-            buf[CELLS_PER_IC*i] = (adaux_buf[8*i + 1] << 8) + adaux_buf[8*i];
-            buf[CELLS_PER_IC*i + 1] = (adaux_buf[8*i + 3] << 8) + adaux_buf[8*i + 2];
-            buf[CELLS_PER_IC*i + 2] = (adaux_buf[8*i + 5] << 8) + adaux_buf[8*i + 4];
+            // for each IC, 12 aux data bytes will be returned
+            buf[12*i] = (adaux_buf[8*i + 1] << 8) + adaux_buf[8*i];
+            buf[12*i + 1] = (adaux_buf[8*i + 3] << 8) + adaux_buf[8*i + 2];
+            buf[12*i + 2] = (adaux_buf[8*i + 5] << 8) + adaux_buf[8*i + 4];
             // adaux_buf 6 and 7 are PEC bytes
+            aux_register_invalid_counter[which_reg + i*4] = 0;
+            reset_missing_temperature_fault(which_reg + i*4);
+        }
+        else
+        {
+            ++aux_register_invalid_counter[which_reg + i*4];
+            increment_missing_temperature_fault(which_reg + i*4);
+        }
+        
+        if(aux_register_invalid_counter[which_reg + i*4] >= 10) // TODO magic number
+        {
+            buf[TEMP_SENSORS_PER_IC*i] = 0;
+            buf[TEMP_SENSORS_PER_IC*i + 1] = 0;
+            buf[TEMP_SENSORS_PER_IC*i + 2] = 0;
+            aux_register_invalid_counter[which_reg + i*4] = 0;
         }
     }
-    // TODO add else statements to set the GPIO measurements to 0 if the PEC is incorrect
 
     CS_6820_SetHigh();
 }
@@ -241,7 +272,56 @@ void open_wire_check(uint8_t pull_dir)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow(); 
-    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf); //TODO use uint16_t return value for something?
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
 
     CS_6820_SetHigh();
+}
+
+/*
+ * read config register A
+ */
+uint8_t read_config_A(uint8_t* buffer)
+{
+    wakeup_daisychain();
+    
+    //RDCFGA cmd
+    cmd[0] = 0x00;
+    cmd[1] = 0x02;
+    cmd_pec = pec15_calc(cmd, 2);
+    cmd[2] = (uint8_t)(cmd_pec >> 8);
+    cmd[3] = (uint8_t)(cmd_pec);
+    CS_6820_SetLow(); 
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
+    SPI1_Exchange8bitBuffer(dummy_buf, 6*NUM_ICS, buffer);
+    CS_6820_SetHigh();
+    
+    if(verify_pec(buffer, 6, &buffer[6]) == SUCCESS)
+    {
+        return SUCCESS;
+    }
+    return FAILURE;
+}
+
+/*
+ * write configuration register A
+ */
+void write_config_A(uint8_t* data_to_write)
+{
+    wakeup_daisychain();
+    
+    //WRCFGA cmd
+    cmd[0] = 0x00;
+    cmd[1] = 0x01;
+    cmd_pec = pec15_calc(cmd, 2);
+    cmd[2] = (uint8_t)(cmd_pec >> 8);
+    cmd[3] = (uint8_t)(cmd_pec);
+    
+    uint16_t data_pec = pec15_calc(data_to_write, 6);
+    uint8_t data_pec_transmit[2] = {(uint8_t)(data_pec >> 8), (uint8_t)(data_pec & 0xFF)};    
+    CS_6820_SetLow(); 
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
+    SPI1_Exchange8bitBuffer(data_to_write, 6*NUM_ICS, dummy_buf);
+    SPI1_Exchange8bitBuffer(data_pec_transmit, 2, dummy_buf);
+    CS_6820_SetHigh();
+    
 }

@@ -20,7 +20,7 @@
 #define G_V_PER_A_HIGH                  0.004
 #define G_V_PER_A_LOW                   0.0267
 #define SAMPLE_TIME_S_X_THOU            4
-#define OFFSET_VOLTAGE                  2.518
+#define OFFSET_VOLTAGE                  2.475 //TODO is this correct? This seems to be what the ADC is reading on the CS Low pin when no current is flowing
 
 #define CS_SAMPLE_HI_COEFF              ADC_REF_VOLT * SAMPLE_TIME_S_X_THOU / (ADC_MAX_BITS * FIVE_THREE_V_DIV * G_V_PER_A_HIGH * 60 * 60)
 #define OFFSET_HI_COEFF                 SAMPLE_TIME_S_X_THOU / (G_V_PER_A_HIGH * 60 * 60)
@@ -83,7 +83,7 @@ void calc_soc(void)
 
     cs_lo_to_transmit = (int16_t)CS_LOW_ADC_BITS_TO_AMPS(ADCBUF2);
     
-    /*
+    /* TODO
      * do I need/want the following line? cs_high_sample is often junk value 
      * since we only retrieve the high sample val if current is too big to be 
      * measured using the low channel
@@ -134,7 +134,7 @@ void adc1_cs_lo_interrupt(uint16_t valCS_LO)
     }
     else //else need to use high channel
     {
-        uint16_t valCS_HI = ADCBUF3;
+        uint16_t valCS_HI = ADC1_ConversionResultGet(CS_HI);
         sum_cs_hi_samples = sum_cs_hi_samples + valCS_HI;
         cs_high_sample = valCS_HI;
         sample_hi_count = sample_hi_count + 1;

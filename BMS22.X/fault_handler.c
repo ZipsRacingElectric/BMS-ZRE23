@@ -5,18 +5,24 @@
 #include "fault_handler.h"
 #include "LTC/LTC_utilities.h"
 #include "mcc_generated_files/pin_manager.h"
+#include "mcc_generated_files/tmr2.h"
+#include "cell_balancing.h"
 #include <stdint.h>
 ////////////////defines////////////////////////////////////////////////////////
-#define CELL_VOLTAGE_MAX_FAULTS     20 //TODO make this 10 (50 ms measurement period, 500 ms fault period)
-#define OPEN_SENSE_LINE_MAX_FAULTS  20 //TODO make this 10 (50 ms measurement period, 500 ms fault period)
-#define TEMP_FAULTS_MAX             10
-#define SELF_TEST_FAULTS_MAX        10
+#define OUTOFRANGE_VOLTAGE_MAX_FAULTS           30 //TODO make this 10 (50 ms measurement period, 500 ms fault period)
+#define MISSING_VOLTAGE_MEASUREMENT_MAX_FAULTS  30
+#define OPEN_SENSE_LINE_MAX_FAULTS              30
+#define OUTOFRANGE_TEMPERATURE_MAX_FAULTS       30
+#define MISSING_TEMP_MEASUREMENT_FAULTS_MAX     30
+#define SELF_TEST_FAULTS_MAX                    30
 
 ////////////////globals////////////////////////////////////////////////////////
-uint8_t cell_voltage_faults[NUM_CELLS];
-uint8_t temp_faults[9*NUM_ICS];
-uint8_t sense_line_faults[NUM_CELLS + NUM_ICS]; // num cells (sense line for each cell) + num ics (0th sense line on each segment)
-uint8_t self_test_faults[NUM_ICS];
+uint8_t outofrange_voltage_fault[NUM_CELLS];
+uint8_t missing_voltage_measurement_fault[NUM_ICS*6];
+uint8_t outofrange_temperature_fault[9*NUM_ICS];
+uint8_t missing_temperature_measurement_fault[NUM_ICS*4];
+uint8_t sense_line_fault[NUM_CELLS];
+uint8_t self_test_fault[NUM_ICS];
 
 uint8_t fault_codes = 0;
 
@@ -37,18 +43,28 @@ void fault_handler_initialize(void)
     
     for(i = 0; i < NUM_CELLS; ++i)
     {
-        cell_voltage_faults[i] = 0;
-        sense_line_faults[i] = 0;
+        outofrange_voltage_fault[i] = 0;
+        sense_line_fault[i] = 0;
+    }
+    
+    for(i = 0; i < NUM_ICS * 6; ++i)
+    {
+        missing_voltage_measurement_fault[i] = 0;
     }
     
     for(i = 0; i < NUM_TEMP_SENSORS; ++i)
     {
-        temp_faults[i] = 0;
+        outofrange_temperature_fault[i] = 0;
+    }
+    
+    for(i = 0; i < 4*NUM_ICS; ++i)
+    {
+        missing_temperature_measurement_fault[i] = 0;
     }
     
     for(i = 0; i < NUM_ICS; ++i)
     {
-        self_test_faults[i] = 0;
+        self_test_fault[i] = 0;
     }
     
     BMS_RELAY_EN_SetHigh();
@@ -64,27 +80,42 @@ void check_for_fault(void)
 {
     uint8_t i = 0;
     
-    for(i = 0; i < NUM_CELLS; ++i)
+    for(i = 0; i < 5; ++i)// TODO check all cell voltages NUM_CELLS; ++i)
     {
-        if(cell_voltage_faults[i] > CELL_VOLTAGE_MAX_FAULTS)
+        if(outofrange_voltage_fault[i] > OUTOFRANGE_VOLTAGE_MAX_FAULTS)
         {
             shutdown_car();
             set_voltage_fault_bit();
         }
-    }
-    
-    for(i = 0; i < (NUM_CELLS + NUM_ICS); ++i)
-    {
-        if(sense_line_faults[i] > OPEN_SENSE_LINE_MAX_FAULTS)
+   
+        if(sense_line_fault[i] > OPEN_SENSE_LINE_MAX_FAULTS)
         {
             shutdown_car();
             set_sense_line_fault_bit();
         }
     }
     
-    for(i = 0; i < 9*NUM_ICS; ++i)
+    for(i = 0; i < 2; ++i) // TODO check all registers for missing voltage measurement NUM_ICS * 6; ++i)
     {
-        if(temp_faults[i] > TEMP_FAULTS_MAX)
+        if(missing_voltage_measurement_fault[i] > MISSING_VOLTAGE_MEASUREMENT_MAX_FAULTS)
+        {
+            shutdown_car();
+            set_voltage_fault_bit();
+        }
+    }
+    
+    for(i = 0; i < 2; ++i) // TODO track faults in all temp sensors 9*NUM_ICS; ++i)
+    {
+        if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
+        {
+            shutdown_car();
+            set_temperature_fault_bit();
+        }
+    }
+    
+    for(i = 0; i < 1; ++i) // TODO track temp faults for all regs for all ICs 4*NUM_ICS; ++i)
+    {
+        if(missing_temperature_measurement_fault[i] > MISSING_TEMP_MEASUREMENT_FAULTS_MAX)
         {
             shutdown_car();
             set_temperature_fault_bit();
@@ -93,7 +124,7 @@ void check_for_fault(void)
     
     for(i = 0; i < NUM_ICS; ++i)
     {
-        if(self_test_faults[i]> SELF_TEST_FAULTS_MAX)
+        if(self_test_fault[i]> SELF_TEST_FAULTS_MAX)
         {
             shutdown_car();
             //TODO set_self_test_fault_bit();)
@@ -101,35 +132,58 @@ void check_for_fault(void)
     }
 }
 
-void increment_cell_voltage_fault(uint8_t cell_id)
+void increment_outofrange_voltage_fault(uint8_t cell_id)
 {
-    cell_voltage_faults[cell_id] += 1;
+    outofrange_voltage_fault[cell_id] += 1;
 }
 
-void reset_cell_voltage_fault(uint8_t cell_id)
+void reset_outofrange_voltage_fault(uint8_t cell_id)
 {
-    cell_voltage_faults[cell_id] = 0;
+    outofrange_voltage_fault[cell_id] = 0;
 }
 
-void increment_temperature_fault(uint8_t temp_sensor_id)
+void increment_missing_voltage_measurement_fault(uint8_t section_id)
 {
-    temp_faults[temp_sensor_id] += 1;
+    missing_voltage_measurement_fault[section_id] += 1;
 }
 
-void reset_temperature_fault(uint8_t temp_sensor_id)
+void reset_missing_voltage_measurement_fault(uint8_t section_id)
 {
-    temp_faults[temp_sensor_id] = 0;
+    missing_voltage_measurement_fault[section_id] = 0;
+}
+
+void increment_outofrange_temperature_fault(uint8_t temp_sensor_id)
+{
+    outofrange_temperature_fault[temp_sensor_id] += 1;
+}
+
+void reset_outofrange_temperature_fault(uint8_t temp_sensor_id)
+{
+    outofrange_temperature_fault[temp_sensor_id] = 0;
+}
+
+void increment_missing_temperature_fault(uint8_t section_id)
+{
+    missing_temperature_measurement_fault[section_id] += 1;
+}
+
+void reset_missing_temperature_fault(uint8_t section_id)
+{
+    missing_temperature_measurement_fault[section_id] = 0;
 }
 
 void increment_sense_line_fault(uint8_t cell_id)
 {
-    sense_line_faults[cell_id] += 1;
+    sense_line_fault[cell_id] += 1;
 }
 
 void reset_sense_line_fault(uint8_t cell_id)
 {
-    sense_line_faults[cell_id] = 0;
+    sense_line_fault[cell_id] = 0;
 }
+
+// TODO cell voltage fault check
+// possible faults: over voltage, under voltage, missing measurement
 
 //////////////// private functions ////////////////////////////////////////////
 
@@ -150,5 +204,9 @@ static void set_sense_line_fault_bit(void)
 
 static void shutdown_car(void)
 {
+    // turn off all balancing
+    disable_cell_balancing();
+    
+    // open shutdown loop
     BMS_RELAY_EN_SetLow();
 }

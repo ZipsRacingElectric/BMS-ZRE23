@@ -16,16 +16,27 @@ extern "C" {
     
 // initialize fault tracking arrays, enable BMS shutdown loop relay
 void fault_handler_initialize(void);
+// returns fault code byte which is transmitted on the CAN bus
 uint8_t get_fault_codes(void);
 // iterate through fault arrays to determine whether actionable fault has occurred
 void check_for_fault(void);
 
-void increment_cell_voltage_fault(uint8_t cell_id);
-void reset_cell_voltage_fault(uint8_t cell_id);
-void increment_temperature_fault(uint8_t temp_sensor_id);
-void reset_temperature_fault(uint8_t temp_sensor_id);
+// out-of-range voltage fault functions
+void increment_outofrange_voltage_fault(uint8_t cell_id);
+void reset_outofrange_voltage_fault(uint8_t cell_id);
+// missing/invalid PEC when cell voltages are requested
+void increment_missing_voltage_measurement_fault(uint8_t section_id);
+void reset_missing_voltage_measurement_fault(uint8_t section_id);
+// out-of-range temperature functions
+void increment_outofrange_temperature_fault(uint8_t temp_sensor_id);
+void reset_outofrange_temperature_fault(uint8_t temp_sensor_id);
+// missing temperature measurement functions
+void increment_missing_temperature_fault(uint8_t section_id);
+void reset_missing_temperature_fault(uint8_t section_id);
+// open sense line fault functions
 void increment_sense_line_fault(uint8_t cell_id);
 void reset_sense_line_fault(uint8_t cell_id);
+
 
 #ifdef	__cplusplus
 }
