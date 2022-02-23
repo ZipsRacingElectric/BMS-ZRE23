@@ -21,6 +21,8 @@
 #define PDN         0b0     // pull down for open wire conversions
 #define CHG         0b000   // GPIO selection for ADC conversion
 
+uint8_t data_to_write[6*NUM_ICS] = {0xE4, 0x52, 0x27, 0xA0, 0x00, 0x50};
+
 uint8_t buffer_iterator = 0;
 uint8_t cmd[4];
 uint8_t dummy_buf[4];
@@ -303,13 +305,41 @@ uint8_t read_config_A(uint8_t* buffer)
 /*
  * write configuration register A
  */
-void write_config_A(uint8_t* data_to_write)
+void write_config_A(void)
 {
+    //TODO make this work for multiple ICs
+    uint8_t data_to_write[6] = get_cfgra_write_data();
     wakeup_daisychain();
     
     //WRCFGA cmd
     cmd[0] = 0x00;
     cmd[1] = 0x01;
+    cmd_pec = pec15_calc(cmd, 2);
+    cmd[2] = (uint8_t)(cmd_pec >> 8);
+    cmd[3] = (uint8_t)(cmd_pec);
+    
+    uint16_t data_pec = pec15_calc(data_to_write, 6);
+    uint8_t data_pec_transmit[2] = {(uint8_t)(data_pec >> 8), (uint8_t)(data_pec & 0xFF)};    
+    CS_6820_SetLow(); 
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
+    SPI1_Exchange8bitBuffer(data_to_write, 6*NUM_ICS, dummy_buf);
+    SPI1_Exchange8bitBuffer(data_pec_transmit, 2, dummy_buf);
+    CS_6820_SetHigh();
+    
+}
+
+/*
+ * write configuration register B
+ */
+void write_config_B(void)
+{
+    //TODO make this work for multiple ICs
+    uint8_t data_to_write[6] = get_cfgrb_write_data();
+    wakeup_daisychain();
+    
+    //WRCFGB cmd
+    cmd[0] = 0x00;
+    cmd[1] = 0x24;
     cmd_pec = pec15_calc(cmd, 2);
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);

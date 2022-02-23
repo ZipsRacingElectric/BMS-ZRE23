@@ -29,7 +29,9 @@ void open_wire_check(uint8_t pull_dir);
 // read configuration register A
 uint8_t read_config_A(uint8_t* buffer);
 // write configuration register A
-void write_config_A(uint8_t* data_to_write);
+void write_config_A(void);
+// write configuration register B
+void write_config_B(void);
 
 #ifdef	__cplusplus
 }

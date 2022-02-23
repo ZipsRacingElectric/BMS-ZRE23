@@ -83,7 +83,6 @@ void write_balance_switches(void)
     if(cell_balance_duty_cycle_counter == 0 || balancing_enabled == 0)
     {
         cell_balance_duty_cycle_counter += 1;
-        uint8_t data_to_write[6*NUM_ICS] = {0xE4, 0x52, 0x27, 0xA0, 0x00, 0x50};
 
         // INFO: below appears the write_config_a function
         //       this code is included directly instead of calling the function

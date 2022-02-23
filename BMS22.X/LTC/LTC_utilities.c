@@ -10,6 +10,36 @@
 #include "../mcc_generated_files/pin_manager.h"
 #include "../global_constants.h"
 
+///////////////////////// Config Register A ///////////////////////////////////
+// see LTC6813 datasheet page 60 for config register contents
+uint8_t cfgra_gpio5_1 = 0b11111;
+uint8_t cfgra_refon = 0b0;
+uint8_t cfgra_dten = 0b1;
+uint8_t cfgra_adcopt = 0b0;
+uint8_t cfgra_vuv7_0 = 0x27;
+uint8_t cfgra_vuv11_8 = 0x7;
+uint8_t cfgra_vov3_0 = 0x1;
+uint8_t cfgra_vov11_4 = 0xA4;
+uint8_t cfgra_dcc8_1 = 0b00000000;
+uint8_t cfgra_dcto3_0 = 0x5;
+uint8_t cfgra_dcc12_9 = 0b0000;
+// to construct config register A from these values:
+uint8_t config_reg_A[6]; //TODO make this work for multiple ICs
+
+///////////////////////// Config Register B ///////////////////////////////////
+// see LTC6813 datasheet page 60 for config register contents
+uint8_t cfgrb_dcc16_13 = 0b0000;
+uint8_t cfgrb_gpio9_6 = 0b1111;
+uint8_t cfgrb_mute = 0b0;
+uint8_t cfgrb_fdrf = 0b0;
+uint8_t cfgrb_ps1_0 = 0b00;
+uint8_t cfgrb_dtmen = 0b1;
+uint8_t cfgrb_dcc0 = 0b0;
+uint8_t cfgrb_dcc18_17 = 0b00;
+
+// to construct config register B from these values:
+uint8_t config_reg_B[6]; //TODO make this work for multiple ICs
+
 // Generic wakeup command to wake the LTC681x from sleep state
 // wakeup time depends on number of chips in daisy chain
 void wakeup_daisychain(void) 
@@ -39,6 +69,51 @@ uint8_t verify_pec(char* data, uint8_t size, char* received_pec)
         LED5_SetLow();
         return FAILURE;
     }
+}
+
+void update_cfgra_write_data(void)
+{
+    uint8_t config_reg_A0 = (cfgra_gpio5_1 << 3) | (cfgra_refon << 2) | (cfgra_dten << 1) | (cfgra_adcopt);
+    uint8_t config_reg_A1 = (cfgra_vuv7_0);
+    uint8_t config_reg_A2 = (cfgra_vov3_0 << 4) | (cfgra_vuv11_8);
+    uint8_t config_reg_A3 = (cfgra_vov11_4);
+    uint8_t config_reg_A4 = (cfgra_dcc8_1);
+    uint8_t config_reg_A5 = (cfgra_dcto3_0 << 4) | (cfgra_dcc12_9);
+
+    config_reg_A[] = {config_reg_A0, config_reg_A1, config_reg_A2, config_reg_A3, config_reg_A4, config_reg_A5};
+}
+
+uint8_t* get_cfgra_write_data(void)
+{
+    return config_reg_A;
+}
+
+void set_cfgra_dcc8_1(uint8_t set_value)
+{
+    cfgra_dcc8_1 = set_value;
+}
+
+void set_cfgra_dcc12_9(uint8_t set_value)
+{
+    cfgra_dcc12_9 = set_value;
+}
+
+void update_cfgrb_write_data(void)
+{
+    // B2-B5 are reserved bits
+    uint8_t config_reg_B0 = (cfgrb_dcc16_13 << 4) | (cfgrb_gpio9_6);
+    uint8_t config_reg_B1 = (cfgrb_mute << 7) | (cfgrb_fdrf << 6) | (cfgrb_ps1_0 << 4) | (cfgrb_dtmen << 3) | (cfgrb_dcc0 << 2) | (cfgrb_dcc18_17);
+    uint8_t config_reg_B2 = 0x00;
+    uint8_t config_reg_B3 = 0x00;
+    uint8_t config_reg_B4 = 0x00;
+    uint8_t config_reg_B5 = 0x00;
+
+    config_reg_B[] = {config_reg_B0, config_reg_B1, config_reg_B2, config_reg_B3, config_reg_B4, config_reg_B5};
+}
+
+uint8_t* get_cfgrb_write_data(void)
+{
+    return config_reg_B;
 }
 
 /************************************
