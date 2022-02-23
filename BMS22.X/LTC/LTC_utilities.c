@@ -80,7 +80,12 @@ void update_cfgra_write_data(void)
     uint8_t config_reg_A4 = (cfgra_dcc8_1);
     uint8_t config_reg_A5 = (cfgra_dcto3_0 << 4) | (cfgra_dcc12_9);
 
-    config_reg_A[] = {config_reg_A0, config_reg_A1, config_reg_A2, config_reg_A3, config_reg_A4, config_reg_A5};
+    config_reg_A[0] = config_reg_A0;
+    config_reg_A[1] = config_reg_A1;
+    config_reg_A[2] = config_reg_A2;
+    config_reg_A[3] = config_reg_A3;
+    config_reg_A[4] = config_reg_A4;
+    config_reg_A[5] = config_reg_A5;
 }
 
 uint8_t* get_cfgra_write_data(void)
@@ -108,7 +113,12 @@ void update_cfgrb_write_data(void)
     uint8_t config_reg_B4 = 0x00;
     uint8_t config_reg_B5 = 0x00;
 
-    config_reg_B[] = {config_reg_B0, config_reg_B1, config_reg_B2, config_reg_B3, config_reg_B4, config_reg_B5};
+    config_reg_B[0] = config_reg_B0;
+    config_reg_B[1] = config_reg_B1;
+    config_reg_B[2] = config_reg_B2;
+    config_reg_B[3] = config_reg_B3;
+    config_reg_B[4] = config_reg_B4;
+    config_reg_B[5] = config_reg_B5;
 }
 
 uint8_t* get_cfgrb_write_data(void)

@@ -51,7 +51,7 @@ uint8_t verify_pec(char* data, uint8_t size, char* transmitted_pec);
 // function to pull lastest data to be written to cfgra
 void update_cfgra_write_data(void);
 // get data to write to cfgra
-uint8_t* get_cfgra_write_data(void)
+uint8_t* get_cfgra_write_data(void);
 // function to pull lastest data to be written to cfgrb
 void update_cfgrb_write_data(void);
 // get data to write to cfgrb

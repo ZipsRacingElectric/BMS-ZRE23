@@ -53,6 +53,7 @@
 #include "mcc_generated_files/spi1.h"
 #include "LTC/LTC_driver.h"
 #include "LTC/LTC_utilities.h"
+#include "LTC/LTC_cmds/LTC_cmds.h"
 #include "fault_handler.h"
 #include "cell_balancing.h"
 #include "global_constants.h"
@@ -110,6 +111,9 @@ int main(void)
         update_cell_balance_array(cell_voltages);
         uint32_t* cell_needs_balanced = get_cell_balance_array();
         report_balancing(cell_needs_balanced);
+        update_cfgra_write_data();
+        write_config_A(); //write cell balance status
+        //TODO write config B
 
         read_temperatures(pack_temperatures, pack_temperature_invalid_counter);
         report_pack_temperatures(pack_temperatures);

@@ -308,7 +308,7 @@ uint8_t read_config_A(uint8_t* buffer)
 void write_config_A(void)
 {
     //TODO make this work for multiple ICs
-    uint8_t data_to_write[6] = get_cfgra_write_data();
+    uint8_t* data_to_write = get_cfgra_write_data();
     wakeup_daisychain();
     
     //WRCFGA cmd
@@ -334,7 +334,7 @@ void write_config_A(void)
 void write_config_B(void)
 {
     //TODO make this work for multiple ICs
-    uint8_t data_to_write[6] = get_cfgrb_write_data();
+    uint8_t* data_to_write = get_cfgrb_write_data();
     wakeup_daisychain();
     
     //WRCFGB cmd
