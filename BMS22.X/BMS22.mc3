@@ -26148,7 +26148,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR2" name="callBackRate"/>
-         <value>4.9999753850</value>
+         <value>0.999995077</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR2" name="clockSourceSelect"/>
@@ -26192,7 +26192,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR2" name="tickerFactor"/>
-         <value>10</value>
+         <value>2</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR2" name="timerBitMode"/>
@@ -26393,12 +26393,12 @@
          <hash>f3be23ca0d2b138f6db8ae2697bca9be81aefd76788f8a65d8aacb93d602c520</hash>
       </entry>
       <entry>
-         <file>mcc_generated_files\dma.h</file>
-         <hash>e73a00fe6e98de08b45c8ec237d04866ce9f996ea84bcc0dc0ecc15b0079aa00</hash>
-      </entry>
-      <entry>
          <file>mcc_generated_files\can1.h</file>
          <hash>e001330c5151d019e51d9886862788bc15add7431cd1f5a150ce62ccc2b426be</hash>
+      </entry>
+      <entry>
+         <file>mcc_generated_files\dma.h</file>
+         <hash>e73a00fe6e98de08b45c8ec237d04866ce9f996ea84bcc0dc0ecc15b0079aa00</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\adc_module_features.h</file>
@@ -26422,7 +26422,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\system.c</file>
-         <hash>8b4e3bdfcbeb5e73dd58b4fadef61aa72076e5439b0dc8ca93af36c4945dde5d</hash>
+         <hash>8aec910e5538f03dbabc3a64719d4b655aabff973799835ced00007f6b647ce5</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\clock.h</file>
@@ -26438,7 +26438,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\mcc.h</file>
-         <hash>c892aab7f589a620066820ffb310b7e1528a7f5cd916b035e39bfd6cf431f7a5</hash>
+         <hash>da399b867540aa3a4ee33593da83705cc7667cfdbbb701cd34f3048c2d365b7f</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\reset.c</file>
@@ -26453,12 +26453,12 @@
          <hash>4a3def2b4faf78c0c80e8985298b05772eeae0ae992a62f54682153256ab8a27</hash>
       </entry>
       <entry>
-         <file>main.c</file>
-         <hash>9e11dab396ad62a8e86f86a339b0b033ccc4d71622300b7d73c8a06c7c34ca5e</hash>
-      </entry>
-      <entry>
          <file>mcc_generated_files\can_types.h</file>
          <hash>313b0f88ebe4e19bf422ee20747d72fcd5f239a05428c9997d612e5f93ca31a3</hash>
+      </entry>
+      <entry>
+         <file>main.c</file>
+         <hash>9e11dab396ad62a8e86f86a339b0b033ccc4d71622300b7d73c8a06c7c34ca5e</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\adc1.c</file>
@@ -26466,15 +26466,15 @@
       </entry>
       <entry>
          <file>mcc_generated_files\tmr2.h</file>
-         <hash>a66d331b0309ae7eed5d01e72b7390d09e1b1e494c8e743e8225293525f69f7a</hash>
+         <hash>fe6947e209cd5d6b2d756593f4eb15d8e8a78251d3f6175fdd370bf4bbcb3e38</hash>
+      </entry>
+      <entry>
+         <file>mcc_generated_files\tmr2.c</file>
+         <hash>eaf0c302ab2860048fd51dcd1a798094a3e177519c9c070fa46130e937ca51bb</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\pin_manager.h</file>
          <hash>6678047bfabd1a4d830ae5d77c2f9204afd769b634d968b568dd992f3bf59bb3</hash>
-      </entry>
-      <entry>
-         <file>mcc_generated_files\tmr2.c</file>
-         <hash>967c03798ac22c3b94dd57f26e4132e0a8eb7b429906673a0c6223b5170f4449</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\tmr1.c</file>
@@ -26482,7 +26482,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\pin_manager.c</file>
-         <hash>35b4cf0795bf3fda3cf40ff10cdbbbe1fe87f5fb554723341daada52a8bcb0cf</hash>
+         <hash>f1b9a90b5cc1868787afc98218ddaa3d4d2ff255866971c337e15b42748f9525</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\can2.c</file>

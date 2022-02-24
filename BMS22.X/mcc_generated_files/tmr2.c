@@ -117,7 +117,7 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _T2Interrupt (  )
     //***User Area Begin
     static volatile unsigned int CountCallBack = 0;
 
-    // callback function - called every 10th pass
+    // callback function - called every 2th pass
     if (++CountCallBack >= TMR2_INTERRUPT_TICKER_FACTOR)
     {
         // ticker function call
