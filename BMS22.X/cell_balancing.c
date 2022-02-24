@@ -9,8 +9,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "global_constants.h"
-//TODO get rid of circular include between cell_balancing, fault_handler, and LTC_cmds
-#include "LTC/LTC_cmds/LTC_cmds.h"
 
 volatile uint8_t cell_balance_duty_cycle_counter = 0;
 volatile uint8_t balancing_enabled = 1;

@@ -53,7 +53,6 @@
 #include "mcc_generated_files/spi1.h"
 #include "LTC/LTC_driver.h"
 #include "LTC/LTC_utilities.h"
-#include "LTC/LTC_cmds/LTC_cmds.h"
 #include "fault_handler.h"
 #include "cell_balancing.h"
 #include "global_constants.h"

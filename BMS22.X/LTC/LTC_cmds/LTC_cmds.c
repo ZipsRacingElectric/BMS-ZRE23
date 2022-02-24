@@ -305,7 +305,6 @@ uint8_t read_config_A(uint8_t* buffer)
  */
 void write_config_A(void)
 {
-    //TODO make this work for multiple ICs
     wakeup_daisychain();
     
     //WRCFGA cmd

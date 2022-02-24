@@ -19,6 +19,7 @@ void LTC_initialize(void);
 // read configuration register A
 uint8_t read_config_reg_a(uint8_t* buffer);
 // get latest config buffer values and write config registers
+// TODO I HATE THIS FUNCTION NAME PLS COME UP WITH SOMETHING BETTER
 uint8_t refresh_config_A_and_B(void);
 // send commands to get cell voltages
 uint8_t read_cell_voltages(uint16_t* cell_voltages, uint8_t* cell_voltage_invalid_counter);

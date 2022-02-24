@@ -24,7 +24,7 @@ uint8_t cfgra_dcc8_1[NUM_ICS];
 uint8_t cfgra_dcto3_0[NUM_ICS];
 uint8_t cfgra_dcc12_9[NUM_ICS];
 // to construct config register A from these values:
-uint8_t config_reg_A[NUM_ICS][6]; //TODO make this work for multiple ICs
+uint8_t config_reg_A[NUM_ICS][6];
 
 ///////////////////////// Config Register B ///////////////////////////////////
 // see LTC6813 datasheet page 60 for config register contents
@@ -38,7 +38,7 @@ uint8_t cfgrb_dcc0[NUM_ICS];
 uint8_t cfgrb_dcc18_17[NUM_ICS];
 
 // to construct config register B from these values:
-uint8_t config_reg_B[NUM_ICS][6]; //TODO make this work for multiple ICs
+uint8_t config_reg_B[NUM_ICS][6];
 
 // initialize config register A and B values
 void init_cfgr_A_and_B_buffers(void)
