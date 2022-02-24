@@ -105,7 +105,7 @@ void write_balance_switches(void)
             
         }
         
-        if(cell_balance_duty_cycle_counter >= 5)
+        if(cell_balance_duty_cycle_counter >= 10)
         {
             cell_balance_duty_cycle_counter = 0;
         }

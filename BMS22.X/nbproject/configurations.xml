@@ -33,8 +33,8 @@
       <itemPath>LTC/LTC_cmds/LTC_cmds.h</itemPath>
       <itemPath>LTC/LTC_driver.h</itemPath>
       <itemPath>LTC/LTC_utilities.h</itemPath>
-      <itemPath>cell_balancing.h</itemPath>
       <itemPath>fault_handler.h</itemPath>
+      <itemPath>cell_balancing.h</itemPath>
       <itemPath>global_constants.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -65,11 +65,11 @@
       <itemPath>main.c</itemPath>
       <itemPath>can_driver.c</itemPath>
       <itemPath>soc_fns.c</itemPath>
-      <itemPath>cell_balancing.c</itemPath>
       <itemPath>fault_handler.c</itemPath>
       <itemPath>LTC/LTC_driver.c</itemPath>
       <itemPath>LTC/LTC_utilities.c</itemPath>
       <itemPath>LTC/LTC_cmds/LTC_cmds.c</itemPath>
+      <itemPath>cell_balancing.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
