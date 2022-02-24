@@ -95,7 +95,7 @@ void report_balancing(uint32_t* cell_needs_balanced)
 
     CAN_Msg_Send(CAN_ID_CELL_BALANCING, CAN_DLC_8, can_data);
     
-    // TODO add code for rest of cells (2nd balancing status msg)
+    // TODO add code for rest of cells (2nd & 3rd balancing status msg)
 }
 
 static void CAN_Msg_Send(uint16_t id, CAN_DLC dlc, uint8_t *tx_data)

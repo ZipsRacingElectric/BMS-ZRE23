@@ -22,12 +22,25 @@ static uint8_t pack_temperature_check(uint16_t* pack_temperatures);
 void LTC_initialize()
 {
     init_PEC15_Table();
+    init_cfgr_A_and_B_buffers();
+    update_config_A_and_B();
 }
 
 // read configuration register A
 uint8_t read_config_reg_a(uint8_t* buffer)
 {
     return read_config_A(buffer);
+}
+
+// get latest config buffer values and write config registers
+uint8_t update_config_A_and_B(void)
+{
+    refresh_cfgra_write_buffer();
+    refresh_cfgrb_write_buffer();
+    
+    write_config_A();
+    write_config_B();
+    return SUCCESS;
 }
 
 // send commands to get cell voltages
