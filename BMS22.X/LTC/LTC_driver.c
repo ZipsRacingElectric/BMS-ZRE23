@@ -23,7 +23,7 @@ void LTC_initialize()
 {
     init_PEC15_Table();
     init_cfgr_A_and_B_buffers();
-    refresh_config_A_and_B();
+    update_config_A_and_B();
 }
 
 // read configuration register A
@@ -33,10 +33,10 @@ uint8_t read_config_reg_a(uint8_t* buffer)
 }
 
 // get latest config buffer values and write config registers
-uint8_t refresh_config_A_and_B(void)
+uint8_t update_config_A_and_B(void)
 {
-    update_cfgra_write_buffer();
-    update_cfgrb_write_buffer();
+    refresh_cfgra_write_buffer();
+    refresh_cfgrb_write_buffer();
     
     write_config_A();
     write_config_B();

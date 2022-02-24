@@ -100,7 +100,7 @@ uint8_t verify_pec(uint8_t* data, uint8_t size, uint8_t* received_pec)
     }
 }
 
-void update_cfgra_write_buffer(void)
+void refresh_cfgra_write_buffer(void)
 {
     uint8_t i = 0;
     
@@ -138,7 +138,7 @@ void set_cfgra_dcc12_9(uint8_t chip_number, uint8_t set_value)
     cfgra_dcc12_9[chip_number] = set_value;
 }
 
-void update_cfgrb_write_buffer(void)
+void refresh_cfgrb_write_buffer(void)
 {
     uint8_t i = 0;
     for(i = 0; i < NUM_ICS; ++i)
