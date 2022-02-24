@@ -110,6 +110,7 @@ int main(void)
         update_cell_balance_array(cell_voltages);
         uint32_t* cell_needs_balanced = get_cell_balance_array();
         report_balancing(cell_needs_balanced);
+        update_config_A_and_B();
 
         read_temperatures(pack_temperatures, pack_temperature_invalid_counter);
         report_pack_temperatures(pack_temperatures);
@@ -124,9 +125,9 @@ int main(void)
         report_status();
         
         LED1_HEARTBEAT_SetHigh();
-        __delay_ms(250);
+        __delay_ms(150);
         LED1_HEARTBEAT_SetLow();
-        __delay_ms(250);
+        __delay_ms(150);
     }
     return 1; 
 }

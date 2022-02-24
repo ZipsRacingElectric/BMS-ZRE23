@@ -59,7 +59,7 @@
 
 #endif
 
-#define TMR2_INTERRUPT_TICKER_FACTOR    10
+#define TMR2_INTERRUPT_TICKER_FACTOR    2
 
 /**
   Section: Interface Routines

@@ -9,8 +9,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "global_constants.h"
-//TODO get rid of circular include between cell_balancing, fault_handler, and LTC_cmds
-#include "LTC/LTC_cmds/LTC_cmds.h"
 
 volatile uint8_t cell_balance_duty_cycle_counter = 0;
 volatile uint8_t balancing_enabled = 1;
@@ -83,30 +81,31 @@ void write_balance_switches(void)
     if(cell_balance_duty_cycle_counter == 0 || balancing_enabled == 0)
     {
         cell_balance_duty_cycle_counter += 1;
-        uint8_t config_A_data[6*NUM_ICS] = {0xFC, 0x52, 0x27, 0xA0, 0x00, 0x50};
-        write_config_A(config_A_data);
-//        uint8_t config_B_data[6*NUM_ICS] = {0x0F, 0x, 0x00, 0x00, 0x00, 0x00};
+        
+        uint8_t i = 0;
+        for(i = 0; i < NUM_ICS; ++i)
+        {
+            set_cfgra_dcc8_1(i, 0);
+            set_cfgra_dcc12_9(i, 0);
+            set_cfgrb_dcc16_13(i, 0);
+            set_cfgrb_dcc18_17(i, 0);
+        }
     }
     else
     {
         cell_balance_duty_cycle_counter += 1;
+        
         uint8_t i = 0;
-        uint8_t data_to_write[6*NUM_ICS] = {0xFC, 0x52, 0x27, 0xA0, 0x00, 0x50};
-
-        // TODO wrap this in a num ics for loop
-        for(i = 0; i < 8; ++i)
+        for(i = 0; i < NUM_ICS; ++i)
         {
-            if(((cell_needs_balanced[0] >> i) & 0x01) == 1)
-            {
-                data_to_write[4] |= (1 << i);
-            }
-        } 
-        write_config_A(data_to_write);
+            set_cfgra_dcc8_1(i, cell_needs_balanced[i] & 0xFF);
+            set_cfgra_dcc12_9(i, (cell_needs_balanced[i] >> 8) & 0xF);
+            set_cfgrb_dcc16_13(i, (cell_needs_balanced[i] >> 12) & 0xF);
+            set_cfgrb_dcc18_17(i, (cell_needs_balanced[i] >> 16) & 0x3);
+            
+        }
         
-        //TODO add cfgrb
-        //TODO make this work for more cells, for multiple ICs
-        
-        if(cell_balance_duty_cycle_counter >= 5)
+        if(cell_balance_duty_cycle_counter >= 10)
         {
             cell_balance_duty_cycle_counter = 0;
         }

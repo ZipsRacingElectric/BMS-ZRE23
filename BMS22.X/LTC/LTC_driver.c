@@ -22,12 +22,25 @@ static uint8_t pack_temperature_check(uint16_t* pack_temperatures);
 void LTC_initialize()
 {
     init_PEC15_Table();
+    init_cfgr_A_and_B_buffers();
+    update_config_A_and_B();
 }
 
 // read configuration register A
 uint8_t read_config_reg_a(uint8_t* buffer)
 {
     return read_config_A(buffer);
+}
+
+// get latest config buffer values and write config registers
+uint8_t update_config_A_and_B(void)
+{
+    refresh_cfgra_write_buffer();
+    refresh_cfgrb_write_buffer();
+    
+    write_config_A();
+    write_config_B();
+    return SUCCESS;
 }
 
 // send commands to get cell voltages
@@ -91,12 +104,12 @@ void open_sense_line_check(uint32_t* sense_line_status)
     __delay_us(10);
     open_wire_check(1); // param: pull dir 0 for down 1 for up
     uint16_t cell_pu[NUM_CELLS]; //TODO make sure valid PEC is received when getting voltage reg values
-    receive_voltage_register(ADCVA, &cell_pu[0]);
-    receive_voltage_register(ADCVB, &cell_pu[3]);
-    receive_voltage_register(ADCVC, &cell_pu[6]);
-    receive_voltage_register(ADCVD, &cell_pu[9]);
-    receive_voltage_register(ADCVE, &cell_pu[12]);
-    receive_voltage_register(ADCVF, &cell_pu[15]);
+//    receive_voltage_register(ADCVA, &cell_pu[0]);
+//    receive_voltage_register(ADCVB, &cell_pu[3]);
+//    receive_voltage_register(ADCVC, &cell_pu[6]);
+//    receive_voltage_register(ADCVD, &cell_pu[9]);
+//    receive_voltage_register(ADCVE, &cell_pu[12]);
+//    receive_voltage_register(ADCVF, &cell_pu[15]);
     open_wire_check(0); // param: pull dir 0 for down 1 for up
     __delay_us(10);
     open_wire_check(0); // param: pull dir 0 for down 1 for up
@@ -105,12 +118,12 @@ void open_sense_line_check(uint32_t* sense_line_status)
     __delay_us(10);
     open_wire_check(0); // param: pull dir 0 for down 1 for up
     uint16_t cell_pd[NUM_CELLS];
-    receive_voltage_register(ADCVA, &cell_pd[0]); //TODO make sure valid PEC is received when getting voltage reg values
-    receive_voltage_register(ADCVB, &cell_pd[3]);
-    receive_voltage_register(ADCVC, &cell_pd[6]);
-    receive_voltage_register(ADCVD, &cell_pd[9]);
-    receive_voltage_register(ADCVE, &cell_pd[12]);
-    receive_voltage_register(ADCVF, &cell_pd[15]);
+//    receive_voltage_register(ADCVA, &cell_pd[0]); //TODO make sure valid PEC is received when getting voltage reg values
+//    receive_voltage_register(ADCVB, &cell_pd[3]);
+//    receive_voltage_register(ADCVC, &cell_pd[6]);
+//    receive_voltage_register(ADCVD, &cell_pd[9]);
+//    receive_voltage_register(ADCVE, &cell_pd[12]);
+//    receive_voltage_register(ADCVF, &cell_pd[15]);
     
     //TODO: finish this
     uint8_t i = 0;
