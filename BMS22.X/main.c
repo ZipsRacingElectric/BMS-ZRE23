@@ -121,9 +121,9 @@ int main(void)
         report_status();
         
         LED1_HEARTBEAT_SetHigh();
-        __delay_ms(250);
+        __delay_ms(150);
         LED1_HEARTBEAT_SetLow();
-        __delay_ms(250);
+        __delay_ms(150);
     }
     return 1; 
 }
