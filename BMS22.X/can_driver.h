@@ -18,6 +18,7 @@ extern "C" {
 #define CAN_ID_PACK_TEMPERATURE  0x41B
 #define CAN_ID_STATUS            0x440
 #define CAN_ID_CELL_BALANCING    0x418
+#define CAN_ID_SENSE_LINE        0x43D
     
 // initialize 2 CAN peripherals, set standby pins low
 void can_initialize(void);

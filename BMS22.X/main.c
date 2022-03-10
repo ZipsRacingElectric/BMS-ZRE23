@@ -94,7 +94,7 @@ int main(void)
     can_initialize();
     LTC_initialize();
     fault_handler_initialize();
-    balance_timer_initialize();
+//    balance_timer_initialize(); TODO turn off when using resistor ladder circuit
     
     while (1)
     {

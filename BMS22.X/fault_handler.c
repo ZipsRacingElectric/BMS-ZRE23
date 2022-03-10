@@ -108,8 +108,8 @@ void check_for_fault(void)
     {
         if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
         {
-            shutdown_car();
-            set_temperature_fault_bit();
+//            shutdown_car(); TODO uncomment when back to board with thermistors
+//            set_temperature_fault_bit();
         }
     }
     
@@ -117,7 +117,7 @@ void check_for_fault(void)
     {
         if(missing_temperature_measurement_fault[i] > MISSING_TEMP_MEASUREMENT_FAULTS_MAX)
         {
-            shutdown_car();
+            shutdown_car(); 
             set_temperature_fault_bit();
         }
     }

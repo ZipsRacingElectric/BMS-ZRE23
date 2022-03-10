@@ -49,7 +49,7 @@ uint8_t read_cell_voltages(uint16_t* cell_voltages, uint8_t* cell_voltage_invali
     start_cell_voltage_adc_conversion();
     poll_adc_status();
     __delay_ms(10); //TODO: is this delay necessary?
-    receive_voltage_register(ADCVA, &cell_voltages[0], &cell_voltage_invalid_counter[0]);
+    receive_voltage_register(ADCVA, &cell_voltages[0], &cell_voltage_invalid_counter[0]); //TODO is cell_voltage_invalid_counter index consistent w/ ltc_cmds?
     receive_voltage_register(ADCVB, &cell_voltages[3], &cell_voltage_invalid_counter[3]);
     receive_voltage_register(ADCVC, &cell_voltages[6], &cell_voltage_invalid_counter[6]);
     receive_voltage_register(ADCVD, &cell_voltages[9], &cell_voltage_invalid_counter[9]);
@@ -97,36 +97,115 @@ void open_sense_line_check(uint32_t* sense_line_status)
 {
     //see pg 32 of 6813 datasheet for info
     open_wire_check(1); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
     __delay_us(10);
     open_wire_check(1); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
     __delay_us(10);
     open_wire_check(1); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
     __delay_us(10);
     open_wire_check(1); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    __delay_us(10);
+    open_wire_check(1); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    __delay_us(10);
+    open_wire_check(1); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
     uint16_t cell_pu[NUM_CELLS]; //TODO make sure valid PEC is received when getting voltage reg values
-//    receive_voltage_register(ADCVA, &cell_pu[0]);
-//    receive_voltage_register(ADCVB, &cell_pu[3]);
-//    receive_voltage_register(ADCVC, &cell_pu[6]);
-//    receive_voltage_register(ADCVD, &cell_pu[9]);
-//    receive_voltage_register(ADCVE, &cell_pu[12]);
-//    receive_voltage_register(ADCVF, &cell_pu[15]);
-    open_wire_check(0); // param: pull dir 0 for down 1 for up
-    __delay_us(10);
-    open_wire_check(0); // param: pull dir 0 for down 1 for up
-    __delay_us(10);
-    open_wire_check(0); // param: pull dir 0 for down 1 for up
-    __delay_us(10);
-    open_wire_check(0); // param: pull dir 0 for down 1 for up
-    uint16_t cell_pd[NUM_CELLS];
-//    receive_voltage_register(ADCVA, &cell_pd[0]); //TODO make sure valid PEC is received when getting voltage reg values
-//    receive_voltage_register(ADCVB, &cell_pd[3]);
-//    receive_voltage_register(ADCVC, &cell_pd[6]);
-//    receive_voltage_register(ADCVD, &cell_pd[9]);
-//    receive_voltage_register(ADCVE, &cell_pd[12]);
-//    receive_voltage_register(ADCVF, &cell_pd[15]);
-    
-    //TODO: finish this
+    uint8_t data_not_valid; //TODO make this work for multiple ICs
     uint8_t i = 0;
+    for(i = 0; i < NUM_CELLS; ++i)
+    {
+        cell_pu[i] = 0;
+    }
+    
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVA, &cell_pu[0], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVB, &cell_pu[3], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVC, &cell_pu[6], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVD, &cell_pu[9], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVE, &cell_pu[12], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVF, &cell_pu[15], &data_not_valid);
+    } while(data_not_valid != 0);
+    
+    open_wire_check(0); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    __delay_us(10);
+    open_wire_check(0); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    __delay_us(10);
+    open_wire_check(0); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    __delay_us(10);
+    open_wire_check(0); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    __delay_us(10);
+    open_wire_check(0); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    __delay_us(10);
+    open_wire_check(0); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    uint16_t cell_pd[NUM_CELLS];
+    for(i = 0; i < NUM_CELLS; ++i)
+    {
+        cell_pd[i] = 0;
+    }
+
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVA, &cell_pd[0], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVB, &cell_pd[3], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVC, &cell_pd[6], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVD, &cell_pd[9], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVE, &cell_pd[12], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVF, &cell_pd[15], &data_not_valid);
+    } while(data_not_valid != 0);
+    
     for(i = 0; i < NUM_CELLS; ++i) // for each ic - 0-5
     {
         if(i % 18 == 0) // sense line 0 in a segment
