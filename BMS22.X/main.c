@@ -94,7 +94,7 @@ int main(void)
     can_initialize();
     LTC_initialize();
     fault_handler_initialize();
-    balance_timer_initialize();
+//    balance_timer_initialize(); TODO turn off when using resistor ladder circuit
     
     while (1)
     {
@@ -114,6 +114,10 @@ int main(void)
 
         read_temperatures(pack_temperatures, pack_temperature_invalid_counter);
         report_pack_temperatures(pack_temperatures);
+        
+        uint32_t sense_line_status[NUM_ICS];
+        open_sense_line_check(sense_line_status);
+        report_sense_line_status(sense_line_status);
         
         check_for_fault();
 

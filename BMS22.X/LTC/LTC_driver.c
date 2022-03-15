@@ -49,7 +49,7 @@ uint8_t read_cell_voltages(uint16_t* cell_voltages, uint8_t* cell_voltage_invali
     start_cell_voltage_adc_conversion();
     poll_adc_status();
     __delay_ms(10); //TODO: is this delay necessary?
-    receive_voltage_register(ADCVA, &cell_voltages[0], &cell_voltage_invalid_counter[0]);
+    receive_voltage_register(ADCVA, &cell_voltages[0], &cell_voltage_invalid_counter[0]); //TODO is cell_voltage_invalid_counter index consistent w/ ltc_cmds?
     receive_voltage_register(ADCVB, &cell_voltages[3], &cell_voltage_invalid_counter[3]);
     receive_voltage_register(ADCVC, &cell_voltages[6], &cell_voltage_invalid_counter[6]);
     receive_voltage_register(ADCVD, &cell_voltages[9], &cell_voltage_invalid_counter[9]);
@@ -93,36 +93,162 @@ uint8_t read_temperatures(uint16_t* pack_temperatures, uint8_t* aux_register_inv
 }
 
 // check whether sense line overcurrent protection has tripped
-uint8_t open_sense_line_check(void)
+void open_sense_line_check(uint32_t* sense_line_status)
 {
-//    //see pg 32 of 6813 datasheet for info
-//    open_wire_check(1); // param: pull dir 0 for down 1 for up
-//    open_wire_check(1); // param: pull dir 0 for down 1 for up
-//    uint16_t cell_pu[8*NUM_ICS];
-//    rdcv_register(ADCVA, &cell_pu[0]);
-//    rdcv_register(ADCVB, &cell_pu[3]);
-//    rdcv_register(ADCVC, &cell_pu[6]);
-//    rdcv_register(ADCVD, &cell_pu[9]);
-//    rdcv_register(ADCVE, &cell_pu[12]);
-//    rdcv_register(ADCVF, &cell_pu[15]);
-//    open_wire_check(0); // param: pull dir 0 for down 1 for up
-//    open_wire_check(0); // param: pull dir 0 for down 1 for up
-//    uint16_t cell_pd[8*NUM_ICS];
-//    rdcv_register(ADCVA, &cell_pd[0]);
-//    rdcv_register(ADCVB, &cell_pd[3]);
-//    rdcv_register(ADCVC, &cell_pd[6]);
-//    rdcv_register(ADCVD, &cell_pd[9]);
-//    rdcv_register(ADCVE, &cell_pd[12]);
-//    rdcv_register(ADCVF, &cell_pd[15]);
+    //see pg 32 of 6813 datasheet for info
+    open_wire_check(1); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    __delay_us(10);
+    open_wire_check(1); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    __delay_us(10);
+    open_wire_check(1); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    __delay_us(10);
+    open_wire_check(1); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    __delay_us(10);
+    open_wire_check(1); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    __delay_us(10);
+    open_wire_check(1); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    uint16_t cell_pu[NUM_CELLS]; //TODO make sure valid PEC is received when getting voltage reg values
+    uint8_t data_not_valid; //TODO make this work for multiple ICs
+    uint8_t i = 0;
+    for(i = 0; i < NUM_CELLS; ++i)
+    {
+        cell_pu[i] = 0;
+    }
     
-    //TODO: finish this
-//    uint8_t i = 0;
-//    for(i = 0; i < NUM_CELLS; ++i) // for each ic - 0-35
-//    {
-//        if()
-//    }
-//    // edge cases - C0 and C18
-//    if()
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVA, &cell_pu[0], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVB, &cell_pu[3], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVC, &cell_pu[6], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVD, &cell_pu[9], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVE, &cell_pu[12], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVF, &cell_pu[15], &data_not_valid);
+    } while(data_not_valid != 0);
+    
+    open_wire_check(0); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    __delay_us(10);
+    open_wire_check(0); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    __delay_us(10);
+    open_wire_check(0); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    __delay_us(10);
+    open_wire_check(0); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    __delay_us(10);
+    open_wire_check(0); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    __delay_us(10);
+    open_wire_check(0); // param: pull dir 0 for down 1 for up
+    poll_adc_status();
+    uint16_t cell_pd[NUM_CELLS];
+    for(i = 0; i < NUM_CELLS; ++i)
+    {
+        cell_pd[i] = 0;
+    }
+
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVA, &cell_pd[0], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVB, &cell_pd[3], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVC, &cell_pd[6], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVD, &cell_pd[9], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVE, &cell_pd[12], &data_not_valid);
+    } while(data_not_valid != 0);
+    do
+    {
+        data_not_valid = 0;
+        receive_voltage_register(ADCVF, &cell_pd[15], &data_not_valid);
+    } while(data_not_valid != 0);
+    
+    for(i = 0; i < NUM_CELLS; ++i) // for each ic - 0-5
+    {
+        if(i % 18 == 0) // sense line 0 in a segment
+        {
+            if(cell_pu[i] == 0) // TODO: exactly equal to zero or just close to zero?
+            {
+                sense_line_status[i / 18] |= (1 << i);
+                increment_sense_line_fault(i);
+            }
+            else
+            {
+                sense_line_status[i / 18] &= (uint32_t)(~(1 << i));
+                reset_sense_line_fault(i);
+            }
+        }
+        else if(i % 18 == 17) // cell 18 in a segment
+        {
+            if(cell_pd[i] == 0) // TODO: exactly equal to zero or just close to zero?
+            {
+                sense_line_status[i / 18] |= (1 << i);
+                increment_sense_line_fault(i);
+            }
+            else
+            {
+                sense_line_status[i / 18] &= (uint32_t)(~(1 << i));
+                reset_sense_line_fault(i);
+            }
+        }
+        else // cells 2-17 in a segment
+        {
+            int16_t delta = cell_pu[i+1] - cell_pd[i+1]; // V * 10000
+            if(delta < -4000) //TODO magic number
+            {
+                sense_line_status[i / 18] |= (1 << i);
+                increment_sense_line_fault(i);
+            }
+            else
+            {
+                sense_line_status[i / 18] &= (uint32_t)(~(1 << i));
+                reset_sense_line_fault(i);
+            }
+        }
+    }
     
 }
 

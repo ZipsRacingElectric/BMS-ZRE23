@@ -29,6 +29,7 @@ uint8_t fault_codes = 0;
 //////////////// prototypes ///////////////////////////////////////////////////
 static void set_voltage_fault_bit(void);
 static void set_temperature_fault_bit(void);
+static void set_sense_line_fault_bit(void);
 static void shutdown_car(void);
 
 //////////////// public functions /////////////////////////////////////////////
@@ -90,7 +91,7 @@ void check_for_fault(void)
         if(sense_line_fault[i] > OPEN_SENSE_LINE_MAX_FAULTS)
         {
             shutdown_car();
-            //TODO SET_SENSE_LINE_FAULT_BIT(1);
+            set_sense_line_fault_bit();
         }
     }
     
@@ -107,8 +108,8 @@ void check_for_fault(void)
     {
         if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
         {
-            shutdown_car();
-            set_temperature_fault_bit();
+//            shutdown_car(); TODO uncomment when back to board with thermistors
+//            set_temperature_fault_bit();
         }
     }
     
@@ -116,7 +117,7 @@ void check_for_fault(void)
     {
         if(missing_temperature_measurement_fault[i] > MISSING_TEMP_MEASUREMENT_FAULTS_MAX)
         {
-            shutdown_car();
+            shutdown_car(); 
             set_temperature_fault_bit();
         }
     }
@@ -171,6 +172,16 @@ void reset_missing_temperature_fault(uint8_t section_id)
     missing_temperature_measurement_fault[section_id] = 0;
 }
 
+void increment_sense_line_fault(uint8_t cell_id)
+{
+    sense_line_fault[cell_id] += 1;
+}
+
+void reset_sense_line_fault(uint8_t cell_id)
+{
+    sense_line_fault[cell_id] = 0;
+}
+
 // TODO cell voltage fault check
 // possible faults: over voltage, under voltage, missing measurement
 
@@ -184,6 +195,11 @@ static void set_voltage_fault_bit(void)
 static void set_temperature_fault_bit(void)
 {
     fault_codes |= (1 << 0); //TODO magic numbers?
+}
+
+static void set_sense_line_fault_bit(void)
+{
+    fault_codes |= (1 << 4); //TODO magic numbers?
 }
 
 static void shutdown_car(void)

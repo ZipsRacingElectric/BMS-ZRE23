@@ -33,6 +33,9 @@ void reset_outofrange_temperature_fault(uint8_t temp_sensor_id);
 // missing temperature measurement functions
 void increment_missing_temperature_fault(uint8_t section_id);
 void reset_missing_temperature_fault(uint8_t section_id);
+// open sense line fault functions
+void increment_sense_line_fault(uint8_t cell_id);
+void reset_sense_line_fault(uint8_t cell_id);
 
 
 #ifdef	__cplusplus

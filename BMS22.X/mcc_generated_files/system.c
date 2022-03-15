@@ -103,15 +103,15 @@
 #include "clock.h"
 #include "system.h"
 #include "system_types.h"
-#include "spi1.h"
-#include "can1.h"
-#include "dma.h"
-#include "tmr1.h"
-#include "tmr2.h"
-#include "can2.h"
 #include "interrupt_manager.h"
 #include "traps.h"
 #include "adc1.h"
+#include "spi1.h"
+#include "dma.h"
+#include "tmr2.h"
+#include "tmr1.h"
+#include "can1.h"
+#include "can2.h"
 
 void SYSTEM_Initialize(void)
 {

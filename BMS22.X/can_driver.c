@@ -51,6 +51,16 @@ void report_cell_voltages(uint16_t* cell_voltages)
     }
 }
 
+// put sense line status on CAN bus
+void report_sense_line_status(uint32_t* sense_line_status)
+{
+    uint8_t sense_line0[6] = {(sense_line_status[0] & 0xFF), ((sense_line_status[0] >> 8) & 0xFF), ((sense_line_status[0] >> 16) & 0xFF)};
+//    uint8_t sense_line1[6] = {};
+//    uint8_t sense_line2[3]= {}; TODO add these when NUM_IC increases
+
+    CAN_Msg_Send(CAN_ID_SENSE_LINE, 6, sense_line0);
+}
+
 // put pack temperatures on the CAN bus
 void report_pack_temperatures(uint16_t* pack_temperatures)
 {
