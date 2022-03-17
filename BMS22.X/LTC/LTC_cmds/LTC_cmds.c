@@ -227,11 +227,7 @@ void receive_aux_register(uint8_t which_reg, uint16_t* buf)
     CS_6820_SetLow();
     SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
 
-    // 8 data bytes = 2 * 3 GPIO results + 2 PEC bytes
-    uint8_t adaux_buf[8 * NUM_ICS];
-    SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adaux_buf);
-
-    // verify PEC for each of the 4 GPIO messages received from each of the ICs in the daisy chain
+    // verify PEC for each of the 4 GPIO registers received from each of the ICs in the daisy chain
     // if PEC is valid, write GPIO messages to buf to be shared over CAN bus
     uint8_t i = 0;
     for(i = 0; i < NUM_ICS; ++i)
@@ -265,9 +261,9 @@ void receive_aux_register(uint8_t which_reg, uint16_t* buf)
             // TODO only do this if we get several missing measurement faults in a row?
             if(get_missing_temperature_fault(which_reg + i*4) > 10) //TODO magic number
             {
-                buf[TEMP_SENSORS_PER_IC*i] = 0;
-                buf[TEMP_SENSORS_PER_IC*i + 1] = 0;
-                buf[TEMP_SENSORS_PER_IC*i + 2] = 0;
+                buf[12*i] = 0;
+                buf[12*i + 1] = 0;
+                buf[12*i + 2] = 0;
             }
         }
     }

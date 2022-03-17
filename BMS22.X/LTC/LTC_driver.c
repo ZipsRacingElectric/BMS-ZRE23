@@ -116,44 +116,19 @@ void open_sense_line_check(uint32_t* sense_line_status)
     __delay_us(10);
     start_open_wire_check(1); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    uint16_t cell_pu[NUM_CELLS]; //TODO make sure valid PEC is received when getting voltage reg values
-    uint8_t data_not_valid; //TODO make this work for multiple ICs
+    uint16_t cell_pu[NUM_CELLS];
     uint8_t i = 0;
     for(i = 0; i < NUM_CELLS; ++i)
     {
         cell_pu[i] = 0;
     }
     
-    do
-    {
-        data_not_valid = 0;
-        receive_voltage_register(ADCVA, &cell_pu[0]);
-    } while(data_not_valid != 0);
-    do
-    {
-        data_not_valid = 0;
-        receive_voltage_register(ADCVB, &cell_pu[3]);
-    } while(data_not_valid != 0);
-    do
-    {
-        data_not_valid = 0;
-        receive_voltage_register(ADCVC, &cell_pu[6]);
-    } while(data_not_valid != 0);
-    do
-    {
-        data_not_valid = 0;
-        receive_voltage_register(ADCVD, &cell_pu[9]);
-    } while(data_not_valid != 0);
-    do
-    {
-        data_not_valid = 0;
-        receive_voltage_register(ADCVE, &cell_pu[12]);
-    } while(data_not_valid != 0);
-    do
-    {
-        data_not_valid = 0;
-        receive_voltage_register(ADCVF, &cell_pu[15]);
-    } while(data_not_valid != 0);
+    receive_voltage_register(ADCVA, &cell_pu[0]);
+    receive_voltage_register(ADCVB, &cell_pu[3]);
+    receive_voltage_register(ADCVC, &cell_pu[6]);
+    receive_voltage_register(ADCVD, &cell_pu[9]);
+    receive_voltage_register(ADCVE, &cell_pu[12]);
+    receive_voltage_register(ADCVF, &cell_pu[15]);
     
     start_open_wire_check(0); // param: pull dir 0 for down 1 for up
     poll_adc_status();
@@ -178,36 +153,12 @@ void open_sense_line_check(uint32_t* sense_line_status)
         cell_pd[i] = 0;
     }
 
-    do
-    {
-        data_not_valid = 0;
-        receive_voltage_register(ADCVA, &cell_pd[0]);
-    } while(data_not_valid != 0);
-    do
-    {
-        data_not_valid = 0;
-        receive_voltage_register(ADCVB, &cell_pd[3]);
-    } while(data_not_valid != 0);
-    do
-    {
-        data_not_valid = 0;
-        receive_voltage_register(ADCVC, &cell_pd[6]);
-    } while(data_not_valid != 0);
-    do
-    {
-        data_not_valid = 0;
-        receive_voltage_register(ADCVD, &cell_pd[9]);
-    } while(data_not_valid != 0);
-    do
-    {
-        data_not_valid = 0;
-        receive_voltage_register(ADCVE, &cell_pd[12]);
-    } while(data_not_valid != 0);
-    do
-    {
-        data_not_valid = 0;
-        receive_voltage_register(ADCVF, &cell_pd[15]);
-    } while(data_not_valid != 0);
+    receive_voltage_register(ADCVA, &cell_pd[0]);
+    receive_voltage_register(ADCVB, &cell_pd[3]);
+    receive_voltage_register(ADCVC, &cell_pd[6]);
+    receive_voltage_register(ADCVD, &cell_pd[9]);
+    receive_voltage_register(ADCVE, &cell_pd[12]);
+    receive_voltage_register(ADCVF, &cell_pd[15]);
     
     for(i = 0; i < NUM_CELLS; ++i) // for each ic - 0-5
     {
@@ -271,10 +222,10 @@ void self_test()
     // check whether received values are expected value
     uint8_t i = 0;
     uint8_t k = 0;
-    for(i = 0; i < NUM_ICS; ++i)
+    for(i = 0; i < NUM_ICS * REGISTERS_PER_IC; ++i)
     {
         bool pass = true;
-        for(k = i*CELLS_PER_IC; k < (i + 1) * CELLS_PER_IC; ++k)
+        for(k = i * CELLS_PER_REGISTER; k < (i + 1) * CELLS_PER_REGISTER; ++k)
         {
             if(cell_voltages[k] != SELF_TEST_RESULT)
             {

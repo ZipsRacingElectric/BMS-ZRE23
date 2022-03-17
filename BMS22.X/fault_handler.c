@@ -18,11 +18,11 @@
 
 ////////////////globals////////////////////////////////////////////////////////
 uint8_t outofrange_voltage_fault[NUM_CELLS];
-uint8_t missing_voltage_measurement_fault[NUM_ICS*6];
-uint8_t outofrange_temperature_fault[9*NUM_ICS];
-uint8_t missing_temperature_measurement_fault[NUM_ICS*4];
+uint8_t missing_voltage_measurement_fault[NUM_ICS * 6];
+uint8_t outofrange_temperature_fault[9 * NUM_ICS];
+uint8_t missing_temperature_measurement_fault[NUM_ICS * 4];
 uint8_t sense_line_fault[NUM_CELLS];
-uint8_t self_test_fault[NUM_ICS];
+uint8_t self_test_fault[NUM_ICS * REGISTERS_PER_IC];
 
 uint8_t fault_codes = 0;
 
@@ -123,9 +123,9 @@ void check_for_fault(void)
         }
     }
     
-    for(i = 0; i < NUM_ICS; ++i)
+    for(i = 0; i < NUM_ICS * REGISTERS_PER_IC; ++i)
     {
-        if(self_test_fault[i]> SELF_TEST_FAULTS_MAX)
+        if(self_test_fault[i] > SELF_TEST_FAULTS_MAX)
         {
             shutdown_car();
             set_self_test_fault_bit();
@@ -193,14 +193,14 @@ void reset_sense_line_fault(uint8_t cell_id)
     sense_line_fault[cell_id] = 0;
 }
 
-void increment_self_test_fault(uint8_t chip_id)
+void increment_self_test_fault(uint8_t section_id)
 {
-    self_test_fault[chip_id] += 1;
+    self_test_fault[section_id] += 1;
 }
 
-void reset_self_test_fault(uint8_t chip_id)
+void reset_self_test_fault(uint8_t section_id)
 {
-    self_test_fault[chip_id] = 0;
+    self_test_fault[section_id] = 0;
 }
 
 // TODO cell voltage fault check
