@@ -20,7 +20,7 @@
 #define PUP         0b1     // pull up for open wire conversions
 #define PDN         0b0     // pull down for open wire conversions
 #define CHG         0b000   // GPIO selection for ADC conversion
-#define ST          0b10    // which self-test to run
+#define ST          0b01    // which self-test to run
 
 uint8_t buffer_iterator = 0;
 uint8_t cmd[4];
@@ -157,13 +157,13 @@ void receive_voltage_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_vo
             buf[CELLS_PER_IC*i] = (adcv_buf[8*i + 1] << 8) + adcv_buf[8*i];
             buf[CELLS_PER_IC*i + 1] = (adcv_buf[8*i + 3] << 8) + adcv_buf[8*i + 2];
             buf[CELLS_PER_IC*i + 2] = (adcv_buf[8*i + 5] << 8) + adcv_buf[8*i + 4];
-            cell_voltage_invalid_counter[which_reg + i*6] = 0;
+            cell_voltage_invalid_counter[i*6] = 0;
             reset_missing_voltage_measurement_fault(which_reg + i*6);
             // adcv_buf 6 and 7 are PEC bytes
         }
         else
         {
-            ++cell_voltage_invalid_counter[which_reg + i*6];
+            ++cell_voltage_invalid_counter[i*6];
             increment_missing_voltage_measurement_fault(which_reg + i*6);
         }
         
@@ -172,7 +172,7 @@ void receive_voltage_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_vo
             buf[CELLS_PER_IC*i] = 0;
             buf[CELLS_PER_IC*i + 1] = 0;
             buf[CELLS_PER_IC*i + 2] = 0;
-            cell_voltage_invalid_counter[which_reg + i*6] = 0;
+            cell_voltage_invalid_counter[i*6] = 0;
         }
     }
 
