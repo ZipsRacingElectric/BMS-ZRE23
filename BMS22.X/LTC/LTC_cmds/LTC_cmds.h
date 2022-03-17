@@ -26,6 +26,8 @@ void receive_voltage_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_vo
 void receive_aux_register(uint8_t which_reg, uint16_t* buf, uint8_t* aux_register_invalid_counter);
 // send command to start open sense line check
 void open_wire_check(uint8_t pull_dir);
+// run self test command on cell voltage ADCs
+void cell_voltage_self_test();
 // read configuration register A
 uint8_t read_config_A(uint8_t* buffer);
 // write configuration register A

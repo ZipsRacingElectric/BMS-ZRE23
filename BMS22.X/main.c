@@ -57,6 +57,7 @@
 #include "cell_balancing.h"
 #include "global_constants.h"
 
+//TODO why are these globals?
 uint16_t cell_voltages[NUM_CELLS];
 uint8_t cell_voltage_invalid_counter[6*NUM_ICS];
 
@@ -119,9 +120,9 @@ int main(void)
         open_sense_line_check(sense_line_status);
         report_sense_line_status(sense_line_status);
         
+        self_test();
+        
         check_for_fault();
-
-        //open_sense_line_check();
         report_status();
         
         LED1_HEARTBEAT_SetHigh();
