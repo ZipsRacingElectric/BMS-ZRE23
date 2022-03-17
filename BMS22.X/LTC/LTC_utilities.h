@@ -44,6 +44,8 @@ extern "C" {
 #define AUXC        2
 #define AUXD        3
     
+#define SELF_TEST_RESULT    0x9555
+    
 // initialize config register A and B values
 void init_cfgr_A_and_B_buffers(void);
 // Generic wakeup command to wake the LTC681x from sleep state

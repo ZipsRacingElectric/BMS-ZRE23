@@ -30,6 +30,7 @@ uint8_t fault_codes = 0;
 static void set_voltage_fault_bit(void);
 static void set_temperature_fault_bit(void);
 static void set_sense_line_fault_bit(void);
+static void set_self_test_fault_bit(void);
 static void shutdown_car(void);
 
 //////////////// public functions /////////////////////////////////////////////
@@ -127,7 +128,7 @@ void check_for_fault(void)
         if(self_test_fault[i]> SELF_TEST_FAULTS_MAX)
         {
             shutdown_car();
-            //TODO set_self_test_fault_bit();)
+            set_self_test_fault_bit();
         }
     }
 }
@@ -182,6 +183,16 @@ void reset_sense_line_fault(uint8_t cell_id)
     sense_line_fault[cell_id] = 0;
 }
 
+void increment_self_test_fault(uint8_t chip_id)
+{
+    self_test_fault[chip_id] += 1;
+}
+
+void reset_self_test_fault(uint8_t chip_id)
+{
+    self_test_fault[chip_id] = 0;
+}
+
 // TODO cell voltage fault check
 // possible faults: over voltage, under voltage, missing measurement
 
@@ -200,6 +211,11 @@ static void set_temperature_fault_bit(void)
 static void set_sense_line_fault_bit(void)
 {
     fault_codes |= (1 << 4); //TODO magic numbers?
+}
+
+static void set_self_test_fault_bit(void)
+{
+    fault_codes |= (1 << 2);
 }
 
 static void shutdown_car(void)

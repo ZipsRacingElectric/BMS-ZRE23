@@ -13,6 +13,8 @@
 #include <stdint.h>
 #include "../global_constants.h"
 
+//TODO come up with better way to verify that valid PEC is received from commands'
+
 uint16_t aux_reg[12*NUM_ICS] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; //TODO initialize in for loop
     
 static uint8_t cell_voltage_check(uint16_t* cell_voltages);
@@ -250,6 +252,44 @@ void open_sense_line_check(uint32_t* sense_line_status)
         }
     }
     
+}
+
+// run self-test commands
+void self_test()
+{
+    cell_voltage_self_test();
+    __delay_ms(10); //TODO: is this delay necessary?
+    uint16_t cell_voltages[NUM_CELLS];
+    uint8_t cell_voltage_invalid_counter[6*NUM_ICS];
+    receive_voltage_register(ADCVA, &cell_voltages[0], &cell_voltage_invalid_counter[0]); //TODO is cell_voltage_invalid_counter index consistent w/ ltc_cmds?
+    receive_voltage_register(ADCVB, &cell_voltages[3], &cell_voltage_invalid_counter[3]);
+    receive_voltage_register(ADCVC, &cell_voltages[6], &cell_voltage_invalid_counter[6]);
+    receive_voltage_register(ADCVD, &cell_voltages[9], &cell_voltage_invalid_counter[9]);
+    receive_voltage_register(ADCVE, &cell_voltages[12], &cell_voltage_invalid_counter[12]);
+    receive_voltage_register(ADCVF, &cell_voltages[15], &cell_voltage_invalid_counter[15]);
+    
+    // check whether received values are expected value
+    uint8_t i = 0;
+    uint8_t k = 0;
+    for(i = 0; i < NUM_ICS; ++i)
+    {
+        uint8_t pass = 1;
+        for(k = i*CELLS_PER_IC; k < (i + 1) * CELLS_PER_IC; ++k)
+        {
+            if(cell_voltages[k] != SELF_TEST_RESULT)
+            {
+                pass = 0;
+            }   
+        }
+        if(pass == 0)
+        {
+            increment_self_test_fault(i);
+        }
+        else
+        {
+            reset_self_test_fault(i);
+        }
+    }
 }
 
 static uint8_t cell_voltage_check(uint16_t* cell_voltages) //TODO: implement timeout, or consecutive count of out-of-range samples

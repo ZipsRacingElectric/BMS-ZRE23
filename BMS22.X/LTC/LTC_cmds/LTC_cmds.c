@@ -20,6 +20,7 @@
 #define PUP         0b1     // pull up for open wire conversions
 #define PDN         0b0     // pull down for open wire conversions
 #define CHG         0b000   // GPIO selection for ADC conversion
+#define ST          0b10    // which self-test to run
 
 uint8_t buffer_iterator = 0;
 uint8_t cmd[4];
@@ -271,6 +272,35 @@ void open_wire_check(uint8_t pull_dir)
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow(); 
     SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
+
+    CS_6820_SetHigh();
+}
+
+/*
+ * run self test on cell voltage ADCs
+ * command: CVST
+ */
+void cell_voltage_self_test()
+{
+    wakeup_daisychain();
+    
+    //CVST cmd
+    cmd[0] = 0x02 | ((MD >> 1) & 0b01);
+    cmd[1] = ((MD&0b01) << 7) | (ST << 5) | 0x7;
+    cmd_pec = pec15_calc(cmd, 2);
+    cmd[2] = (uint8_t)(cmd_pec >> 8);
+    cmd[3] = (uint8_t)(cmd_pec);
+    CS_6820_SetLow(); 
+    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
+    
+    uint8_t dummy_adc = 0;
+
+    //when ADC conversion is complete, MISO will be pulled high
+    while(dummy_adc <= 0)
+    {
+        LED6_Toggle();
+        dummy_adc = SPI1_Exchange8bit(DUMMY);
+    }
 
     CS_6820_SetHigh();
 }

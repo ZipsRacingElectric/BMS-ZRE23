@@ -36,7 +36,9 @@ void reset_missing_temperature_fault(uint8_t section_id);
 // open sense line fault functions
 void increment_sense_line_fault(uint8_t cell_id);
 void reset_sense_line_fault(uint8_t cell_id);
-
+// self test fault functions
+void increment_self_test_fault(uint8_t chip_id);
+void reset_self_test_fault(uint8_t chip_id);
 
 #ifdef	__cplusplus
 }

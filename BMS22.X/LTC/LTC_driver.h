@@ -26,6 +26,8 @@ uint8_t read_cell_voltages(uint16_t* cell_voltages, uint8_t* cell_voltage_invali
 uint8_t read_temperatures(uint16_t* pack_temperatures, uint8_t* aux_register_invalid_counter);
 // check whether sense line overcurrent protection has tripped
 void open_sense_line_check(uint32_t* sense_line_status);
+// run BMS self test
+void self_test();
 
 #ifdef	__cplusplus
 }
