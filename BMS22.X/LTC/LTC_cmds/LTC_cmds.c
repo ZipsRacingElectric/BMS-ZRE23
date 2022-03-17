@@ -286,7 +286,7 @@ void cell_voltage_self_test()
     
     //CVST cmd
     cmd[0] = 0x02 | ((MD >> 1) & 0b01);
-    cmd[1] = ((MD&0b01) << 7) | (ST << 5) | 0x7;
+    cmd[1] = ((MD & 0b01) << 7) | (ST << 5) | 0x7;
     cmd_pec = pec15_calc(cmd, 2);
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);

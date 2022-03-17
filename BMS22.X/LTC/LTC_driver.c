@@ -11,6 +11,7 @@
 #include "LTC_cmds/LTC_cmds.h"
 #include "../fault_handler.h"
 #include <stdint.h>
+#include <stdbool.h>
 #include "../global_constants.h"
 
 //TODO come up with better way to verify that valid PEC is received from commands'
@@ -273,7 +274,7 @@ void self_test()
     uint8_t k = 0;
     for(i = 0; i < NUM_ICS; ++i)
     {
-        uint8_t pass = 1;
+        bool pass = true;
         for(k = i*CELLS_PER_IC; k < (i + 1) * CELLS_PER_IC; ++k)
         {
             if(cell_voltages[k] != SELF_TEST_RESULT)
@@ -281,7 +282,7 @@ void self_test()
                 pass = 0;
             }   
         }
-        if(pass == 0)
+        if(pass == false)
         {
             increment_self_test_fault(i);
         }
