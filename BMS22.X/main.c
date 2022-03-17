@@ -59,10 +59,8 @@
 
 //TODO why are these globals?
 uint16_t cell_voltages[NUM_CELLS];
-uint8_t cell_voltage_invalid_counter[6*NUM_ICS];
 
 uint16_t pack_temperatures[NUM_TEMP_SENSORS];
-uint8_t pack_temperature_invalid_counter[4*NUM_ICS];
 
 /*
                          Main application
@@ -78,17 +76,9 @@ int main(void)
     {
         cell_voltages[i] = 0;
     }
-    for(i = 0; i < 6*NUM_ICS; ++i)
-    {
-        cell_voltage_invalid_counter[i] = 0;
-    }
     for(i = 0; i < NUM_TEMP_SENSORS; ++i)
     {
         pack_temperatures[i] = 0;
-    }
-    for(i = 0; i < 4*NUM_ICS; ++i)
-    {
-        pack_temperature_invalid_counter[i] = 0;
     }
 
     soc_initialize();
@@ -105,7 +95,7 @@ int main(void)
         
         //TODO balance for 20 s, check cell voltages, balance for 20 more s...
         
-        read_cell_voltages(cell_voltages, cell_voltage_invalid_counter);
+        read_cell_voltages(cell_voltages);
         report_cell_voltages(cell_voltages);
         
         update_cell_balance_array(cell_voltages);
@@ -113,7 +103,7 @@ int main(void)
         report_balancing(cell_needs_balanced);
         update_config_A_and_B();
 
-        read_temperatures(pack_temperatures, pack_temperature_invalid_counter);
+        read_temperatures(pack_temperatures);
         report_pack_temperatures(pack_temperatures);
         
         uint32_t sense_line_status[NUM_ICS];

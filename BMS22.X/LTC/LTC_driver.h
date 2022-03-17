@@ -21,9 +21,9 @@ uint8_t read_config_reg_a(uint8_t* buffer);
 // get latest config buffer values and write config registers
 uint8_t update_config_A_and_B(void);
 // send commands to get cell voltages
-uint8_t read_cell_voltages(uint16_t* cell_voltages, uint8_t* cell_voltage_invalid_counter);
+uint8_t read_cell_voltages(uint16_t* cell_voltages);
 // send commands to get pack temperatures
-uint8_t read_temperatures(uint16_t* pack_temperatures, uint8_t* aux_register_invalid_counter);
+uint8_t read_temperatures(uint16_t* pack_temperatures);
 // check whether sense line overcurrent protection has tripped
 void open_sense_line_check(uint32_t* sense_line_status);
 // run BMS self test

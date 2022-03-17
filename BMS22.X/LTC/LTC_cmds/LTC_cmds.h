@@ -21,13 +21,13 @@ void start_temperature_adc_conversion(void);
 // send command to poll ADC status
 void poll_adc_status(void);
 // receive cell voltage register data
-void receive_voltage_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_voltage_invalid_counter);
+void receive_voltage_register(uint8_t which_reg, uint16_t* buf);
 // receive GPIO voltage register data. Temperature data is in these registers
-void receive_aux_register(uint8_t which_reg, uint16_t* buf, uint8_t* aux_register_invalid_counter);
+void receive_aux_register(uint8_t which_reg, uint16_t* buf);
 // send command to start open sense line check
-void open_wire_check(uint8_t pull_dir);
+void start_open_wire_check(uint8_t pull_dir);
 // run self test command on cell voltage ADCs
-void cell_voltage_self_test();
+void start_cell_voltage_self_test();
 // read configuration register A
 uint8_t read_config_A(uint8_t* buffer);
 // write configuration register A

@@ -153,6 +153,11 @@ void reset_missing_voltage_measurement_fault(uint8_t section_id)
     missing_voltage_measurement_fault[section_id] = 0;
 }
 
+uint8_t get_missing_voltage_measurement_fault(uint8_t section_id)
+{
+    return missing_voltage_measurement_fault[section_id];
+}
+
 void increment_outofrange_temperature_fault(uint8_t temp_sensor_id)
 {
     outofrange_temperature_fault[temp_sensor_id] += 1;

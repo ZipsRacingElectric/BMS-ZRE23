@@ -27,6 +27,7 @@ void reset_outofrange_voltage_fault(uint8_t cell_id);
 // missing/invalid PEC when cell voltages are requested
 void increment_missing_voltage_measurement_fault(uint8_t section_id);
 void reset_missing_voltage_measurement_fault(uint8_t section_id);
+uint8_t get_missing_voltage_measurement_fault(uint8_t section_id);
 // out-of-range temperature functions
 void increment_outofrange_temperature_fault(uint8_t temp_sensor_id);
 void reset_outofrange_temperature_fault(uint8_t temp_sensor_id);
