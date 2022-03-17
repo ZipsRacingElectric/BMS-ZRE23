@@ -178,6 +178,11 @@ void reset_missing_temperature_fault(uint8_t section_id)
     missing_temperature_measurement_fault[section_id] = 0;
 }
 
+uint8_t get_missing_temperature_fault(uint8_t section_id)
+{
+    return missing_temperature_measurement_fault[section_id];
+}
+
 void increment_sense_line_fault(uint8_t cell_id)
 {
     sense_line_fault[cell_id] += 1;

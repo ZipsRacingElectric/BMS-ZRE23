@@ -236,29 +236,40 @@ void receive_aux_register(uint8_t which_reg, uint16_t* buf)
     uint8_t i = 0;
     for(i = 0; i < NUM_ICS; ++i)
     {
-        if(verify_pec(&adaux_buf[8*i], 6, &adaux_buf[8 * i + 6]) == SUCCESS)
+        uint8_t k = 0;
+        bool got_valid_pec = false;
+        for(k = 0; k < 10; ++k) //TODO magic number. try 10 times to get valid PEC
         {
-            // for each IC, 12 aux data bytes will be returned
-            buf[12*i] = (adaux_buf[8*i + 1] << 8) + adaux_buf[8*i];
-            buf[12*i + 1] = (adaux_buf[8*i + 3] << 8) + adaux_buf[8*i + 2];
-            buf[12*i + 2] = (adaux_buf[8*i + 5] << 8) + adaux_buf[8*i + 4];
-            // adaux_buf 6 and 7 are PEC bytes
-//            aux_register_invalid_counter[which_reg + i*4] = 0;
-            reset_missing_temperature_fault(which_reg + i*4);
+            __delay_us(2); //TODO is this necessary? Want to put some time gap between attempts at reading registers
+            // 8 data bytes = 2 * 3 GPIO results + 2 PEC bytes
+            uint8_t adaux_buf[8 * NUM_ICS];
+            SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adaux_buf);
+
+            // if valid PEC: update cell voltages, reset invalid counter
+            if(verify_pec(&adaux_buf[8*i], 6, &adaux_buf[8 * i + 6]) == SUCCESS)
+            {
+                // for each IC, 12 aux data bytes will be returned
+                buf[12*i] = (adaux_buf[8*i + 1] << 8) + adaux_buf[8*i];
+                buf[12*i + 1] = (adaux_buf[8*i + 3] << 8) + adaux_buf[8*i + 2];
+                buf[12*i + 2] = (adaux_buf[8*i + 5] << 8) + adaux_buf[8*i + 4];
+                // adaux_buf 6 and 7 are PEC bytes
+                reset_missing_temperature_fault(which_reg + i*4);
+                got_valid_pec = true;
+                break; //end for loop
+            }
         }
-        else
+
+        if(got_valid_pec == false)
         {
-//            ++aux_register_invalid_counter[which_reg + i*4];
             increment_missing_temperature_fault(which_reg + i*4);
+            // TODO only do this if we get several missing measurement faults in a row?
+            if(get_missing_temperature_fault(which_reg + i*4) > 10) //TODO magic number
+            {
+                buf[TEMP_SENSORS_PER_IC*i] = 0;
+                buf[TEMP_SENSORS_PER_IC*i + 1] = 0;
+                buf[TEMP_SENSORS_PER_IC*i + 2] = 0;
+            }
         }
-        
-//        if(aux_register_invalid_counter[which_reg + i*4] >= 10) // TODO magic number
-//        {
-//            buf[TEMP_SENSORS_PER_IC*i] = 0;
-//            buf[TEMP_SENSORS_PER_IC*i + 1] = 0;
-//            buf[TEMP_SENSORS_PER_IC*i + 2] = 0;
-//            aux_register_invalid_counter[which_reg + i*4] = 0;
-//        }
     }
 
     CS_6820_SetHigh();
