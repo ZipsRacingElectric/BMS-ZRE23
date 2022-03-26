@@ -18,9 +18,9 @@
 
 ////////////////globals////////////////////////////////////////////////////////
 uint8_t outofrange_voltage_fault[NUM_CELLS];
-uint8_t missing_voltage_measurement_fault[NUM_ICS * 6];
-uint8_t outofrange_temperature_fault[9 * NUM_ICS];
-uint8_t missing_temperature_measurement_fault[NUM_ICS * 4];
+uint8_t missing_voltage_measurement_fault[NUM_ICS * CV_REGISTERS_PER_IC];
+uint8_t outofrange_temperature_fault[NUM_TEMP_SENSORS];
+uint8_t missing_temperature_measurement_fault[NUM_ICS * AUX_REGISTERS_PER_IC];
 uint8_t sense_line_fault[NUM_CELLS];
 uint8_t self_test_fault[NUM_ICS * REGISTERS_PER_IC];
 
