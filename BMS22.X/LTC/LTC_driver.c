@@ -72,7 +72,7 @@ uint8_t read_temperatures(uint16_t* pack_temperatures)
     // store aux register values in intermediate array since not all data
     // is temperature sensor data. See LTC6813 datasheet pg 62
 
-    receive_aux_register(AUXA, &aux_reg[0*NUM_ICS]);
+    receive_aux_register(AUXA, &aux_reg[0*NUM_ICS]); // TODO are these indices correct?
     receive_aux_register(AUXB, &aux_reg[3*NUM_ICS]);
     receive_aux_register(AUXC, &aux_reg[6*NUM_ICS]);
     receive_aux_register(AUXD, &aux_reg[9*NUM_ICS]);
@@ -222,23 +222,54 @@ void self_test()
     // check whether received values are expected value
     uint8_t i = 0;
     uint8_t k = 0;
-    for(i = 0; i < NUM_ICS * REGISTERS_PER_IC; ++i)
+    for(i = 0; i < NUM_ICS * CV_REGISTERS_PER_IC; ++i)
     {
         bool pass = true;
         for(k = i * CELLS_PER_REGISTER; k < (i + 1) * CELLS_PER_REGISTER; ++k)
         {
-            if(cell_voltages[k] != SELF_TEST_RESULT)
+            if(cell_voltages[k] != CV_SELF_TEST_RESULT)
             {
                 pass = false;
             }   
         }
         if(pass == false)
         {
-            increment_self_test_fault(i);
+            increment_cv_self_test_fault(i);
         }
         else
         {
-            reset_self_test_fault(i);
+            reset_cv_self_test_fault(i);
+        }
+    }
+    
+    start_aux_reg_self_test();
+    __delay_ms(10) //TODO is this necessary?
+    uint16_t aux_registers[12 * NUM_ICS];
+    receive_aux_register(AUXA, &aux_registers[0]);
+    receive_aux_register(AUXB, &aux_registers[3]);
+    receive_aux_register(AUXC, &aux_registers[6]);
+    receive_aux_register(AUXD, &aux_registers[9]);
+    
+    // check whether received values are expected value
+    i = 0;
+    k = 0;
+    for(i = 0; i < NUM_ICS * AUX_REGISTERS_PER_IC; ++i)
+    {
+        bool pass = true;
+        for(k = i * 12; i < (i + 1) * 12; ++k)
+        {
+            if(aux_registers[k] != AUX_SELF_TEST_RESULT)
+            {
+                pass = false;
+            }
+        }
+        if(pass == false)
+        {
+            increment_aux_self_test_fault(i);
+        }
+        else
+        {
+            reset_aux_self_test_fault(i);
         }
     }
 }
