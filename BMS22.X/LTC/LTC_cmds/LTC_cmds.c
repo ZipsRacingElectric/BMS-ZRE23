@@ -95,7 +95,7 @@ void poll_adc_status(void)
 /* receive voltage register data
  * command: RDCV
  */
-void receive_voltage_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_voltage_invalid_counter)
+void receive_voltage_register(uint8_t which_reg, uint16_t* buf)
 {
     wakeup_daisychain();
         
@@ -143,36 +143,43 @@ void receive_voltage_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_vo
     CS_6820_SetLow();
     SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
 
-    // 8 data bytes = 2 * 3 cell voltages + 2 PEC bytes
-    uint8_t adcv_buf[8 * NUM_ICS];
-    SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adcv_buf);
-
     // verify PEC for each of the 6 cell voltage messages received from each of the ICs in the daisy chain
     // if PEC is valid, write cell voltages to buf to be shared over CAN bus
     uint8_t i = 0;
     for(i = 0; i < NUM_ICS; ++i)
     {
-        if(verify_pec(&adcv_buf[8*i], 6, &adcv_buf[8 * i + 6]) == SUCCESS)
+        uint8_t k = 0;
+        bool got_valid_pec = false;
+        for(k = 0; k < 10; ++k) //TODO magic number. try 10 times to get valid PEC
         {
-            buf[CELLS_PER_IC*i] = (adcv_buf[8*i + 1] << 8) + adcv_buf[8*i];
-            buf[CELLS_PER_IC*i + 1] = (adcv_buf[8*i + 3] << 8) + adcv_buf[8*i + 2];
-            buf[CELLS_PER_IC*i + 2] = (adcv_buf[8*i + 5] << 8) + adcv_buf[8*i + 4];
-            cell_voltage_invalid_counter[i*6] = 0;
-            reset_missing_voltage_measurement_fault(which_reg + i*6);
-            // adcv_buf 6 and 7 are PEC bytes
-        }
-        else
-        {
-            ++cell_voltage_invalid_counter[i*6];
-            increment_missing_voltage_measurement_fault(which_reg + i*6);
+            __delay_us(2); //TODO is this necessary? Want to put some time gap between attempts at reading registers
+            // 8 data bytes = 2 * 3 cell voltages + 2 PEC bytes
+            uint8_t adcv_buf[8 * NUM_ICS];
+            SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adcv_buf);
+    
+            // if valid PEC: update cell voltages, reset invalid counter
+            if(verify_pec(&adcv_buf[8*i], 6, &adcv_buf[8 * i + 6]) == SUCCESS)
+            {
+                buf[CELLS_PER_IC*i] = (adcv_buf[8*i + 1] << 8) + adcv_buf[8*i];
+                buf[CELLS_PER_IC*i + 1] = (adcv_buf[8*i + 3] << 8) + adcv_buf[8*i + 2];
+                buf[CELLS_PER_IC*i + 2] = (adcv_buf[8*i + 5] << 8) + adcv_buf[8*i + 4];
+                reset_missing_voltage_measurement_fault(which_reg + i*6);
+                // adcv_buf 6 and 7 are PEC bytes
+                got_valid_pec = true;
+                break; //end for loop
+            }
         }
         
-        if(cell_voltage_invalid_counter[which_reg + i*6] >= 10) // TODO magic number
+        if(got_valid_pec == false)
         {
-            buf[CELLS_PER_IC*i] = 0;
-            buf[CELLS_PER_IC*i + 1] = 0;
-            buf[CELLS_PER_IC*i + 2] = 0;
-            cell_voltage_invalid_counter[i*6] = 0;
+            increment_missing_voltage_measurement_fault(which_reg + i*6);
+            // TODO only do this if we get several missing measurement faults in a row?
+            if(get_missing_voltage_measurement_fault(which_reg + i*6) > 10) //TODO magic number
+            {
+                buf[CELLS_PER_IC*i] = 0;
+                buf[CELLS_PER_IC*i + 1] = 0;
+                buf[CELLS_PER_IC*i + 2] = 0;
+            }
         }
     }
 
@@ -182,7 +189,7 @@ void receive_voltage_register(uint8_t which_reg, uint16_t* buf, uint8_t* cell_vo
 /* receive GPIO register data. Temperature data is in these registers
  * command: RDAUX
  */
-void receive_aux_register(uint8_t which_reg, uint16_t* buf, uint8_t* aux_register_invalid_counter)
+void receive_aux_register(uint8_t which_reg, uint16_t* buf)
 {
     wakeup_daisychain();
         
@@ -220,37 +227,44 @@ void receive_aux_register(uint8_t which_reg, uint16_t* buf, uint8_t* aux_registe
     CS_6820_SetLow();
     SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
 
-    // 8 data bytes = 2 * 3 GPIO results + 2 PEC bytes
-    uint8_t adaux_buf[8 * NUM_ICS];
-    SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adaux_buf);
-
-    // verify PEC for each of the 4 GPIO messages received from each of the ICs in the daisy chain
+    // verify PEC for each of the 4 GPIO registers received from each of the ICs in the daisy chain
     // if PEC is valid, write GPIO messages to buf to be shared over CAN bus
     uint8_t i = 0;
     for(i = 0; i < NUM_ICS; ++i)
     {
-        if(verify_pec(&adaux_buf[8*i], 6, &adaux_buf[8 * i + 6]) == SUCCESS)
+        uint8_t k = 0;
+        bool got_valid_pec = false;
+        for(k = 0; k < 10; ++k) //TODO magic number. try 10 times to get valid PEC
         {
-            // for each IC, 12 aux data bytes will be returned
-            buf[12*i] = (adaux_buf[8*i + 1] << 8) + adaux_buf[8*i];
-            buf[12*i + 1] = (adaux_buf[8*i + 3] << 8) + adaux_buf[8*i + 2];
-            buf[12*i + 2] = (adaux_buf[8*i + 5] << 8) + adaux_buf[8*i + 4];
-            // adaux_buf 6 and 7 are PEC bytes
-            aux_register_invalid_counter[which_reg + i*4] = 0;
-            reset_missing_temperature_fault(which_reg + i*4);
+            __delay_us(2); //TODO is this necessary? Want to put some time gap between attempts at reading registers
+            // 8 data bytes = 2 * 3 GPIO results + 2 PEC bytes
+            uint8_t adaux_buf[8 * NUM_ICS];
+            SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adaux_buf);
+
+            // if valid PEC: update cell voltages, reset invalid counter
+            if(verify_pec(&adaux_buf[8*i], 6, &adaux_buf[8 * i + 6]) == SUCCESS)
+            {
+                // for each IC, 12 aux data bytes will be returned
+                buf[12*i] = (adaux_buf[8*i + 1] << 8) + adaux_buf[8*i];
+                buf[12*i + 1] = (adaux_buf[8*i + 3] << 8) + adaux_buf[8*i + 2];
+                buf[12*i + 2] = (adaux_buf[8*i + 5] << 8) + adaux_buf[8*i + 4];
+                // adaux_buf 6 and 7 are PEC bytes
+                reset_missing_temperature_fault(which_reg + i*4);
+                got_valid_pec = true;
+                break; //end for loop
+            }
         }
-        else
+
+        if(got_valid_pec == false)
         {
-            ++aux_register_invalid_counter[which_reg + i*4];
             increment_missing_temperature_fault(which_reg + i*4);
-        }
-        
-        if(aux_register_invalid_counter[which_reg + i*4] >= 10) // TODO magic number
-        {
-            buf[TEMP_SENSORS_PER_IC*i] = 0;
-            buf[TEMP_SENSORS_PER_IC*i + 1] = 0;
-            buf[TEMP_SENSORS_PER_IC*i + 2] = 0;
-            aux_register_invalid_counter[which_reg + i*4] = 0;
+            // TODO only do this if we get several missing measurement faults in a row?
+            if(get_missing_temperature_fault(which_reg + i*4) > 10) //TODO magic number
+            {
+                buf[12*i] = 0;
+                buf[12*i + 1] = 0;
+                buf[12*i + 2] = 0;
+            }
         }
     }
 
@@ -260,7 +274,7 @@ void receive_aux_register(uint8_t which_reg, uint16_t* buf, uint8_t* aux_registe
 /* run open sense line check
  * command: ADOW
  */
-void open_wire_check(uint8_t pull_dir)
+void start_open_wire_check(uint8_t pull_dir)
 {
     wakeup_daisychain();
     
@@ -280,7 +294,7 @@ void open_wire_check(uint8_t pull_dir)
  * run self test on cell voltage ADCs
  * command: CVST
  */
-void cell_voltage_self_test()
+void start_cell_voltage_self_test()
 {
     wakeup_daisychain();
     
