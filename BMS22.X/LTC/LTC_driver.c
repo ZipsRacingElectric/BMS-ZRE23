@@ -256,8 +256,12 @@ void self_test()
     for(i = 0; i < NUM_ICS * AUX_REGISTERS_PER_IC; ++i)
     {
         bool pass = true;
-        for(k = i * 12; i < (i + 1) * 12; ++k)
+        for(k = i * 3; k < (i + 1) * 3; ++k) // TODO magic number VALS_PER_REG = 3
         {
+            if(k % 12 == 10 || k % 12 == 11) //skip reserved bit places in AUXD
+            {
+                break;
+            }
             if(aux_registers[k] != AUX_SELF_TEST_RESULT)
             {
                 pass = false;
