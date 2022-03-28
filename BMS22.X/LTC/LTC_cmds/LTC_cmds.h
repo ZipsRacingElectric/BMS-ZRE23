@@ -28,6 +28,8 @@ void receive_aux_register(uint8_t which_reg, uint16_t* buf);
 void start_open_wire_check(uint8_t pull_dir);
 // run self test command on cell voltage ADCs
 void start_cell_voltage_self_test();
+// run self test command on GPIO ADCs
+void start_aux_reg_self_test();
 // read configuration register A
 uint8_t read_config_A(uint8_t* buffer);
 // write configuration register A

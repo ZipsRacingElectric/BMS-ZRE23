@@ -14,9 +14,9 @@ extern "C" {
 
 #include <stdint.h>
 
-#define DUMMY               0xFF
+#define DUMMY                0xFF
     
-#define CMD_SIZE_BYTES      4
+#define CMD_SIZE_BYTES       4
 
 // system constants
 #define NUM_ICS                 1 //TODO: change to 5
@@ -28,8 +28,8 @@ extern "C" {
 #define AUX_REGISTERS_PER_IC    4
 #define NUM_TEMP_SENSORS        (TEMP_SENSORS_PER_IC * NUM_ICS)
     
-#define SUCCESS             0
-#define FAILURE             1
+#define SUCCESS              0
+#define FAILURE              1
     
 // cell voltage x 10000 comes from LTC6813 chip
 #define CELL_VOLTAGE_MAX        (42000) //TODO: research what these values should be
@@ -51,7 +51,8 @@ extern "C" {
 #define AUXC        2
 #define AUXD        3
     
-#define SELF_TEST_RESULT    0x9555
+#define CV_SELF_TEST_RESULT    0x9555
+#define AUX_SELF_TEST_RESULT   0x9555
     
 // initialize config register A and B values
 void init_cfgr_A_and_B_buffers(void);
