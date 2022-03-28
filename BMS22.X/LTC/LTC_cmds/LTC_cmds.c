@@ -24,7 +24,7 @@
 
 uint8_t buffer_iterator = 0;
 uint8_t cmd[4];
-uint8_t dummy_buf[4];
+uint8_t dummy_buf[8]; // is this the right size?
 uint16_t cmd_pec = 0;
 
 /* send command to start ADC conversion for cell voltages
@@ -361,14 +361,25 @@ uint8_t read_config_A(uint8_t* buffer)
     cmd_pec = pec15_calc(cmd, 2);
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
-    CS_6820_SetLow(); 
-    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
-    SPI1_Exchange8bitBuffer(dummy_buf, 6*NUM_ICS, buffer);
-    CS_6820_SetHigh();
-    
-    if(verify_pec(buffer, 6, &buffer[6]) == SUCCESS)
+
+    uint8_t i = 0;
+    for(i = 0; i < 10; ++i) // 10 tries to get valid PEC
     {
-        return SUCCESS;
+        CS_6820_SetLow();
+        SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
+        uint8_t intermediate_buffer[8 * NUM_ICS]; //TODO is intermediate buffer the best way to do this?
+        SPI1_Exchange8bitBuffer(dummy_buf, 8*NUM_ICS, intermediate_buffer); 
+        // 6 data bytes plus 2 byte PEC
+        CS_6820_SetHigh();
+
+        if(verify_pec(intermediate_buffer, 6, &intermediate_buffer[6]) == SUCCESS) // TODO make this work for multiple ICs
+        {
+            for(i = 0; i < 6; ++i) // copy intermediate buffer over to actual buffer
+            {
+                buffer[i] = intermediate_buffer[i];
+            }
+            return SUCCESS;
+        }
     }
     return FAILURE;
 }
@@ -448,14 +459,25 @@ uint8_t read_status_A(uint8_t* buffer)
     cmd_pec = pec15_calc(cmd, 2);
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
-    CS_6820_SetLow();
-    SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
-    SPI1_Exchange8bitBuffer(dummy_buf, 6*NUM_ICS, buffer);
-    CS_6820_SetHigh();
 
-    if(verify_pec(buffer, 6, &buffer[6]) == SUCCESS)
+    uint8_t i = 0;
+    for(i = 0; i < 10; ++i) // 10 tries to get valid PEC
     {
-        return SUCCESS;
+        CS_6820_SetLow();
+        SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
+        uint8_t intermediate_buffer[8 * NUM_ICS];
+        SPI1_Exchange8bitBuffer(dummy_buf, 8*NUM_ICS, intermediate_buffer); 
+        // 6 data bytes plus 2 byte PEC
+        CS_6820_SetHigh();
+
+        if(verify_pec(intermediate_buffer, 6, &intermediate_buffer[6]) == SUCCESS) // TODO make this work for multiple ICs
+        {
+            for(i = 0; i < 6; ++i) // copy intermediate buffer over to actual buffer
+            {
+                buffer[i] = intermediate_buffer[i];
+            }
+            return SUCCESS;
+        }
     }
     return FAILURE;
 }
@@ -479,11 +501,17 @@ uint8_t read_status_B(uint8_t* buffer)
     {
         CS_6820_SetLow();
         SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
-        SPI1_Exchange8bitBuffer(dummy_buf, 6*NUM_ICS, buffer);
+        uint8_t intermediate_buffer[8 * NUM_ICS];
+        SPI1_Exchange8bitBuffer(dummy_buf, 8*NUM_ICS, intermediate_buffer); 
+        // 6 data bytes plus 2 byte PEC
         CS_6820_SetHigh();
 
-        if(verify_pec(buffer, 6, &buffer[6]) == SUCCESS)
+        if(verify_pec(intermediate_buffer, 6, &intermediate_buffer[6]) == SUCCESS) // TODO make this work for multiple ICs
         {
+            for(i = 0; i < 6; ++i) // copy intermediate buffer over to actual buffer
+            {
+                buffer[i] = intermediate_buffer[i];
+            }
             return SUCCESS;
         }
     }

@@ -285,7 +285,7 @@ void self_test()
     i = 0;
     for(i = 0; i < NUM_ICS; ++i)
     {
-        uint8_t muxfail_bit = ((status_b[(i + 1) * 6]) >> 1) & 0b1;
+        uint8_t muxfail_bit = ((status_b[i * 6 + 5]) >> 1) & 0b1;
         if(muxfail_bit == 1)
         {
             increment_mux_self_test_fault(i);
