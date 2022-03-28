@@ -24,6 +24,7 @@ uint8_t missing_temperature_measurement_fault[NUM_ICS * AUX_REGISTERS_PER_IC];
 uint8_t sense_line_fault[NUM_CELLS];
 uint8_t cv_self_test_fault[NUM_ICS * CV_REGISTERS_PER_IC];
 uint8_t aux_self_test_fault[NUM_ICS * AUX_REGISTERS_PER_IC];
+uint8_t mux_self_test_fault[NUM_ICS];
 
 uint8_t fault_codes = 0;
 
@@ -37,7 +38,7 @@ static void shutdown_car(void);
 //////////////// public functions /////////////////////////////////////////////
 
 // initialize fault tracking arrays, enable BMS shutdown loop relay
-void fault_handler_initialize(void)
+void fault_handler_initialize(void) //TODO make sure all these for loop ranges are correct
 {
     BMS_RELAY_EN_SetLow();
     
@@ -74,6 +75,11 @@ void fault_handler_initialize(void)
         aux_self_test_fault[i] = 0;
     }
     
+    for(i = 0; i < NUM_ICS; ++i)
+    {
+        mux_self_test_fault[i] = 0;
+    }
+
     BMS_RELAY_EN_SetHigh();
 }
 
@@ -141,6 +147,15 @@ void check_for_fault(void)
     for(i = 0; i < NUM_ICS * AUX_REGISTERS_PER_IC; ++i)
     {
         if(aux_self_test_fault[i] > SELF_TEST_FAULTS_MAX)
+        {
+            shutdown_car();
+            set_self_test_fault_bit();
+        }
+    }
+
+    for(i = 0; i < NUM_ICS; ++i)
+    {
+        if(mux_self_test_fault[i] > SELF_TEST_FAULTS_MAX)
         {
             shutdown_car();
             set_self_test_fault_bit();
@@ -226,6 +241,16 @@ void increment_aux_self_test_fault(uint8_t section_id)
 void reset_aux_self_test_fault(uint8_t section_id)
 {
     aux_self_test_fault[section_id] = 0;
+}
+
+void increment_mux_self_test_fault(uint8_t chip_id)
+{
+    mux_self_test_fault[chip_id] += 1;
+}
+
+void reset_mux_self_test_fault(uint8_t chip_id)
+{
+    mux_self_test_fault[chip_id] = 0;
 }
 
 // TODO cell voltage fault check

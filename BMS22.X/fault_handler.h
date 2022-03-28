@@ -43,6 +43,8 @@ void increment_cv_self_test_fault(uint8_t section_id);
 void reset_cv_self_test_fault(uint8_t section_id);
 void increment_aux_self_test_fault(uint8_t section_id);
 void reset_aux_self_test_fault(uint8_t section_id);
+void increment_mux_self_test_fault(uint8_t chip_id);
+void reset_mux_self_test_fault(uint8_t chip_id);
 
 
 #ifdef	__cplusplus
