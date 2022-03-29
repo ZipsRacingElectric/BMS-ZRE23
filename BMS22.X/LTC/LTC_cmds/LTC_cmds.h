@@ -36,6 +36,12 @@ uint8_t read_config_A(uint8_t* buffer);
 void write_config_A(void);
 // write configuration register B
 void write_config_B(void);
+// read status register A
+uint8_t read_status_A(uint8_t* buffer);
+// read status register B
+uint8_t read_status_B(uint8_t* buffer);
+// start multiplexer self test
+void start_mux_self_test(void);
 
 #ifdef	__cplusplus
 }

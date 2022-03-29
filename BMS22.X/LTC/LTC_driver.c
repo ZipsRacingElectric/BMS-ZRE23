@@ -276,6 +276,25 @@ void self_test()
             reset_aux_self_test_fault(i);
         }
     }
+
+    start_mux_self_test();
+    __delay_ms(10); //TODO: is this delay necessary?
+    uint8_t status_b[6*NUM_ICS];
+    read_status_B(status_b);
+    // check MUXFAIL bits
+    i = 0;
+    for(i = 0; i < NUM_ICS; ++i)
+    {
+        uint8_t muxfail_bit = ((status_b[i * 6 + 5]) >> 1) & 0b1;
+        if(muxfail_bit == 1)
+        {
+            increment_mux_self_test_fault(i);
+        }
+        else
+        {
+            reset_mux_self_test_fault(i);
+        }
+    }
 }
 
 static uint8_t cell_voltage_check(uint16_t* cell_voltages) //TODO: implement timeout, or consecutive count of out-of-range samples
