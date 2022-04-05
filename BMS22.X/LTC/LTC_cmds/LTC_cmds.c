@@ -11,6 +11,7 @@
 #include "../../mcc_generated_files/spi1.h"
 #include "../../fault_handler.h"
 #include <stdint.h>
+#include <stdbool.h>
 #include "../../global_constants.h"
 
 // see LTC6813 datasheet page 59 table 37 Command Bit Descriptions
@@ -95,7 +96,7 @@ void poll_adc_status(void)
 /* receive voltage register data
  * command: RDCV
  */
-void receive_voltage_register(uint8_t which_reg, uint16_t* buf)
+void receive_voltage_register(uint8_t which_reg, uint16_t* buf, bool* valid_pec_ptr)
 {
     wakeup_daisychain();
         
@@ -142,44 +143,28 @@ void receive_voltage_register(uint8_t which_reg, uint16_t* buf)
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow();
     SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
+    // 8 data bytes = 2 * 3 cell voltages + 2 PEC bytes
+    uint8_t adcv_buf[8 * NUM_ICS];
+    SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adcv_buf);
 
     // verify PEC for each of the 6 cell voltage messages received from each of the ICs in the daisy chain
     // if PEC is valid, write cell voltages to buf to be shared over CAN bus
+    *valid_pec_ptr = true;
     uint8_t i = 0;
     for(i = 0; i < NUM_ICS; ++i)
     {
-        uint8_t k = 0;
-        bool got_valid_pec = false;
-        for(k = 0; k < 10; ++k) //TODO magic number. try 10 times to get valid PEC
+        // if valid PEC: update cell voltages, reset invalid counter
+        if(verify_pec(&adcv_buf[8*i], 6, &adcv_buf[8 * i + 6]) == SUCCESS)
         {
-            __delay_us(2); //TODO is this necessary? Want to put some time gap between attempts at reading registers
-            // 8 data bytes = 2 * 3 cell voltages + 2 PEC bytes
-            uint8_t adcv_buf[8 * NUM_ICS];
-            SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adcv_buf);
-    
-            // if valid PEC: update cell voltages, reset invalid counter
-            if(verify_pec(&adcv_buf[8*i], 6, &adcv_buf[8 * i + 6]) == SUCCESS)
-            {
-                buf[CELLS_PER_IC*i] = (adcv_buf[8*i + 1] << 8) + adcv_buf[8*i];
-                buf[CELLS_PER_IC*i + 1] = (adcv_buf[8*i + 3] << 8) + adcv_buf[8*i + 2];
-                buf[CELLS_PER_IC*i + 2] = (adcv_buf[8*i + 5] << 8) + adcv_buf[8*i + 4];
-                reset_missing_voltage_measurement_fault(which_reg + i*6);
-                // adcv_buf 6 and 7 are PEC bytes
-                got_valid_pec = true;
-                break; //end for loop
-            }
+            buf[CELLS_PER_IC*i] = (adcv_buf[8*i + 1] << 8) + adcv_buf[8*i];
+            buf[CELLS_PER_IC*i + 1] = (adcv_buf[8*i + 3] << 8) + adcv_buf[8*i + 2];
+            buf[CELLS_PER_IC*i + 2] = (adcv_buf[8*i + 5] << 8) + adcv_buf[8*i + 4];
+            reset_missing_voltage_measurement_fault(which_reg + i*6);
+            // adcv_buf 6 and 7 are PEC bytes
         }
-        
-        if(got_valid_pec == false)
+        else
         {
-            increment_missing_voltage_measurement_fault(which_reg + i*6);
-            // TODO only do this if we get several missing measurement faults in a row?
-            if(get_missing_voltage_measurement_fault(which_reg + i*6) > 10) //TODO magic number
-            {
-                buf[CELLS_PER_IC*i] = 0;
-                buf[CELLS_PER_IC*i + 1] = 0;
-                buf[CELLS_PER_IC*i + 2] = 0;
-            }
+            *valid_pec_ptr = false;
         }
     }
 

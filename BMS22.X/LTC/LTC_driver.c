@@ -52,12 +52,29 @@ uint8_t read_cell_voltages(uint16_t* cell_voltages)
     start_cell_voltage_adc_conversion();
     poll_adc_status();
     __delay_ms(10); //TODO: is this delay necessary?
-    receive_voltage_register(ADCVA, &cell_voltages[0]);
-    receive_voltage_register(ADCVB, &cell_voltages[3]);
-    receive_voltage_register(ADCVC, &cell_voltages[6]);
-    receive_voltage_register(ADCVD, &cell_voltages[9]);
-    receive_voltage_register(ADCVE, &cell_voltages[12]);
-    receive_voltage_register(ADCVF, &cell_voltages[15]);
+    bool valid_pecA = false;
+    bool valid_pecB = false;
+    bool valid_pecC = false;
+    bool valid_pecD = false;
+    bool valid_pecE = false;
+    bool valid_pecF = false;
+    
+    uint8_t i = 0;
+    for(i = 0; i < 10; ++i)
+    {
+        if(valid_pecA == false)
+            receive_voltage_register(ADCVA, &cell_voltages[0], &valid_pecA);
+        if(valid_pecB == false)
+            receive_voltage_register(ADCVB, &cell_voltages[3], &valid_pecB);
+        if(valid_pecC == false)
+            receive_voltage_register(ADCVC, &cell_voltages[6], &valid_pecC);
+        if(valid_pecD == false)
+            receive_voltage_register(ADCVD, &cell_voltages[9], &valid_pecD);
+        if(valid_pecE == false)
+            receive_voltage_register(ADCVE, &cell_voltages[12], &valid_pecE);
+        if(valid_pecF == false)
+            receive_voltage_register(ADCVF, &cell_voltages[15], &valid_pecF);
+    }
     
     return cell_voltage_check(cell_voltages);
 }
@@ -123,12 +140,13 @@ void open_sense_line_check(uint32_t* sense_line_status)
         cell_pu[i] = 0;
     }
     
-    receive_voltage_register(ADCVA, &cell_pu[0]);
-    receive_voltage_register(ADCVB, &cell_pu[3]);
-    receive_voltage_register(ADCVC, &cell_pu[6]);
-    receive_voltage_register(ADCVD, &cell_pu[9]);
-    receive_voltage_register(ADCVE, &cell_pu[12]);
-    receive_voltage_register(ADCVF, &cell_pu[15]);
+    bool temp = false; //TODO fix this
+    receive_voltage_register(ADCVA, &cell_pu[0], &temp);
+    receive_voltage_register(ADCVB, &cell_pu[3], &temp);
+    receive_voltage_register(ADCVC, &cell_pu[6], &temp);
+    receive_voltage_register(ADCVD, &cell_pu[9], &temp);
+    receive_voltage_register(ADCVE, &cell_pu[12], &temp);
+    receive_voltage_register(ADCVF, &cell_pu[15], &temp);
     
     start_open_wire_check(0); // param: pull dir 0 for down 1 for up
     poll_adc_status();
@@ -153,12 +171,12 @@ void open_sense_line_check(uint32_t* sense_line_status)
         cell_pd[i] = 0;
     }
 
-    receive_voltage_register(ADCVA, &cell_pd[0]);
-    receive_voltage_register(ADCVB, &cell_pd[3]);
-    receive_voltage_register(ADCVC, &cell_pd[6]);
-    receive_voltage_register(ADCVD, &cell_pd[9]);
-    receive_voltage_register(ADCVE, &cell_pd[12]);
-    receive_voltage_register(ADCVF, &cell_pd[15]);
+    receive_voltage_register(ADCVA, &cell_pd[0], &temp);
+    receive_voltage_register(ADCVB, &cell_pd[3], &temp);
+    receive_voltage_register(ADCVC, &cell_pd[6], &temp);
+    receive_voltage_register(ADCVD, &cell_pd[9], &temp);
+    receive_voltage_register(ADCVE, &cell_pd[12], &temp);
+    receive_voltage_register(ADCVF, &cell_pd[15], &temp);
     
     for(i = 0; i < NUM_CELLS; ++i) // for each ic - 0-5
     {
@@ -212,12 +230,13 @@ void self_test()
     start_cell_voltage_self_test();
     __delay_ms(10); //TODO: is this delay necessary?
     uint16_t cell_voltages[NUM_CELLS];
-    receive_voltage_register(ADCVA, &cell_voltages[0]);
-    receive_voltage_register(ADCVB, &cell_voltages[3]);
-    receive_voltage_register(ADCVC, &cell_voltages[6]);
-    receive_voltage_register(ADCVD, &cell_voltages[9]);
-    receive_voltage_register(ADCVE, &cell_voltages[12]);
-    receive_voltage_register(ADCVF, &cell_voltages[15]);
+    bool temp = false; //TODO fix this
+    receive_voltage_register(ADCVA, &cell_voltages[0], &temp);
+    receive_voltage_register(ADCVB, &cell_voltages[3], &temp);
+    receive_voltage_register(ADCVC, &cell_voltages[6], &temp);
+    receive_voltage_register(ADCVD, &cell_voltages[9], &temp);
+    receive_voltage_register(ADCVE, &cell_voltages[12], &temp);
+    receive_voltage_register(ADCVF, &cell_voltages[15], &temp);
     
     // check whether received values are expected value
     uint8_t i = 0;
