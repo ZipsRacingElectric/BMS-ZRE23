@@ -39,7 +39,7 @@ void can_initialize(void)
 void report_cell_voltages(uint16_t* cell_voltages)
 {
     uint8_t i = 0;
-    uint8_t upper_bound = (NUM_CELLS + 4 - (NUM_CELLS % 4)) / 4;
+    uint8_t upper_bound = (NUM_CELLS + 3) / 4;
     for(i = 0; i < upper_bound; ++i)
     {
         uint8_t can_data[8] = {(uint8_t)(cell_voltages[4*i] >> 8), (uint8_t)(cell_voltages[4*i] & 0xFF), 
@@ -65,7 +65,7 @@ void report_sense_line_status(uint32_t* sense_line_status)
 void report_pack_temperatures(uint16_t* pack_temperatures)
 {
     uint8_t i = 0;
-    uint8_t upper_bound = (NUM_TEMP_SENSORS + 4 - (NUM_TEMP_SENSORS % 4)) / 4;
+    uint8_t upper_bound = (NUM_TEMP_SENSORS + 3) / 4;
     for(i = 0; i < upper_bound; ++i)
     {
         uint8_t can_data[8] = {(uint8_t)(pack_temperatures[4*i] >> 8), (uint8_t)(pack_temperatures[4*i] & 0xFF), 
