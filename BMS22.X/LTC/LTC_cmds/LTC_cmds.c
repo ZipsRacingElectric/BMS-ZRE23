@@ -174,7 +174,7 @@ void receive_voltage_register(uint8_t which_reg, uint16_t* buf, bool* valid_pec_
 /* receive GPIO register data. Temperature data is in these registers
  * command: RDAUX
  */
-void receive_aux_register(uint8_t which_reg, uint16_t* buf)
+void receive_aux_register(uint8_t which_reg, uint16_t* buf, bool* valid_pec_ptr)
 {
     wakeup_daisychain();
         
@@ -210,46 +210,29 @@ void receive_aux_register(uint8_t which_reg, uint16_t* buf)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow();
+    // 8 data bytes = 2 * 3 registers + 2 PEC bytes
     SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
+    uint8_t aux_buf[8 * NUM_ICS];
+    SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, aux_buf);
 
     // verify PEC for each of the 4 GPIO registers received from each of the ICs in the daisy chain
     // if PEC is valid, write GPIO messages to buf to be shared over CAN bus
+    *valid_pec_ptr = true;
     uint8_t i = 0;
     for(i = 0; i < NUM_ICS; ++i)
     {
-        uint8_t k = 0;
-        bool got_valid_pec = false;
-        for(k = 0; k < 10; ++k) //TODO magic number. try 10 times to get valid PEC
+        // if valid PEC: update cell voltages, reset invalid counter
+        if(verify_pec(&aux_buf[8*i], 6, &aux_buf[8 * i + 6]) == SUCCESS)
         {
-            __delay_us(2); //TODO is this necessary? Want to put some time gap between attempts at reading registers
-            // 8 data bytes = 2 * 3 GPIO results + 2 PEC bytes
-            uint8_t adaux_buf[8 * NUM_ICS];
-            SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adaux_buf);
-
-            // if valid PEC: update cell voltages, reset invalid counter
-            if(verify_pec(&adaux_buf[8*i], 6, &adaux_buf[8 * i + 6]) == SUCCESS)
-            {
-                // for each IC, 12 aux data bytes will be returned
-                buf[12*i] = (adaux_buf[8*i + 1] << 8) + adaux_buf[8*i];
-                buf[12*i + 1] = (adaux_buf[8*i + 3] << 8) + adaux_buf[8*i + 2];
-                buf[12*i + 2] = (adaux_buf[8*i + 5] << 8) + adaux_buf[8*i + 4];
-                // adaux_buf 6 and 7 are PEC bytes
-                reset_missing_temperature_fault(which_reg + i*4);
-                got_valid_pec = true;
-                break; //end for loop
-            }
+            buf[12*i] = (aux_buf[8*i + 1] << 8) + aux_buf[8*i];
+            buf[12*i + 1] = (aux_buf[8*i + 3] << 8) + aux_buf[8*i + 2];
+            buf[12*i + 2] = (aux_buf[8*i + 5] << 8) + aux_buf[8*i + 4];
+            reset_missing_voltage_measurement_fault(which_reg + i*6);
+            // aux_buf 6 and 7 are PEC bytes
         }
-
-        if(got_valid_pec == false)
+        else
         {
-            increment_missing_temperature_fault(which_reg + i*4);
-            // TODO only do this if we get several missing measurement faults in a row?
-            if(get_missing_temperature_fault(which_reg + i*4) > 10) //TODO magic number
-            {
-                buf[12*i] = 0;
-                buf[12*i + 1] = 0;
-                buf[12*i + 2] = 0;
-            }
+            *valid_pec_ptr = false;
         }
     }
 

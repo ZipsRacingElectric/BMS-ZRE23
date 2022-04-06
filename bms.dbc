@@ -1,7 +1,7 @@
 VERSION ""
 
 
-NS_ : 
+NS_ :
 	NS_DESC_
 	CM_
 	BA_DEF_
@@ -184,8 +184,8 @@ BO_ 1047 cell_voltages22: 4 BMS
 BO_ 1051 pack_temperatures0: 8 BMS
  SG_ therm0 : 7|16@0+ (-0.0033,76) [0|0] "C" Vector__XXX
  SG_ therm1 : 23|16@0+ (-0.0033,76) [0|0] "C" Vector__XXX
- SG_ therm2 : 39|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm3 : 55|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ therm2 : 39|16@0+ (-0.0033,76) [0|0] "C" Vector__XXX
+ SG_ therm3 : 55|16@0+ (-0.0033,76) [0|0] "C" Vector__XXX
 
 BO_ 1052 pack_temperatures1: 8 BMS
  SG_ therm4 : 7|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
@@ -194,7 +194,7 @@ BO_ 1052 pack_temperatures1: 8 BMS
  SG_ therm7 : 55|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
 
 BO_ 1053 pack_temperatures2: 8 BMS
- SG_ therm8 : 7|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ therm8 : 7|16@0+ (-0.0033,76) [0|0] "C" Vector__XXX
  SG_ therm9 : 23|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
  SG_ therm10 : 39|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
  SG_ therm11 : 55|16@0+ (0.0001,0) [0|0] "V" Vector__XXX

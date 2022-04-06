@@ -15,8 +15,6 @@
 #include "../global_constants.h"
 
 //TODO come up with better way to verify that valid PEC is received from commands'
-
-uint16_t aux_reg[12*NUM_ICS] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; //TODO initialize in for loop
     
 static uint8_t cell_voltage_check(uint16_t* cell_voltages);
 static uint8_t pack_temperature_check(uint16_t* pack_temperatures);
@@ -85,28 +83,41 @@ uint8_t read_temperatures(uint16_t* pack_temperatures)
     start_temperature_adc_conversion();
     poll_adc_status();
     __delay_ms(10); //TODO: is this delay necessary?
-    
+    bool valid_pecA = false;
+    bool valid_pecB = false;
+    bool valid_pecC = false;
+    bool valid_pecD = false;
+
     // store aux register values in intermediate array since not all data
     // is temperature sensor data. See LTC6813 datasheet pg 62
-
-    receive_aux_register(AUXA, &aux_reg[0*NUM_ICS]); // TODO are these indices correct?
-    receive_aux_register(AUXB, &aux_reg[3*NUM_ICS]);
-    receive_aux_register(AUXC, &aux_reg[6*NUM_ICS]);
-    receive_aux_register(AUXD, &aux_reg[9*NUM_ICS]);
-    // copy over temperature data to temperature array
+    uint16_t aux_reg[12*NUM_ICS];
     uint8_t i = 0;
+    for(i = 0; i < 10; ++i)
+    {
+        if(valid_pecA == false)
+            receive_aux_register(AUXA, &aux_reg[0], &valid_pecA);
+        if(valid_pecB == false)
+            receive_aux_register(AUXB, &aux_reg[3], &valid_pecB);
+        if(valid_pecC == false)
+            receive_aux_register(AUXC, &aux_reg[6], &valid_pecC);
+        if(valid_pecD == false)
+            receive_aux_register(AUXD, &aux_reg[9], &valid_pecD);
+    }
+    
+    // copy over temperature data to temperature array
+    i = 0;
     // TODO RHS indices seem wrong
     for(i = 0; i < NUM_ICS; ++i)
     {
-        pack_temperatures[i*TEMP_SENSORS_PER_IC] = aux_reg[3*i];
-        pack_temperatures[i*TEMP_SENSORS_PER_IC + 1] = aux_reg[(3*i) + 1];
-        pack_temperatures[i*TEMP_SENSORS_PER_IC + 2] = aux_reg[(3*i) + 2];
-        pack_temperatures[i*TEMP_SENSORS_PER_IC + 3] = aux_reg[(3*i) + (3*NUM_ICS)];
-        pack_temperatures[i*TEMP_SENSORS_PER_IC + 4] = aux_reg[(3*i) + (3*NUM_ICS) + 1];
-        pack_temperatures[i*TEMP_SENSORS_PER_IC + 5] = aux_reg[(3*i) + (6*NUM_ICS)];
-        pack_temperatures[i*TEMP_SENSORS_PER_IC + 6] = aux_reg[(3*i) + (6*NUM_ICS) + 1];
-        pack_temperatures[i*TEMP_SENSORS_PER_IC + 7] = aux_reg[(3*i) + (6*NUM_ICS) + 2];
-        pack_temperatures[i*TEMP_SENSORS_PER_IC + 8] = aux_reg[(3*i) + (9*NUM_ICS)];
+        pack_temperatures[i*TEMP_SENSORS_PER_IC] = aux_reg[12*i];
+        pack_temperatures[i*TEMP_SENSORS_PER_IC + 1] = aux_reg[(12*i) + 1];
+        pack_temperatures[i*TEMP_SENSORS_PER_IC + 2] = aux_reg[(12*i) + 2];
+        pack_temperatures[i*TEMP_SENSORS_PER_IC + 3] = aux_reg[(12*i) + 3];
+        pack_temperatures[i*TEMP_SENSORS_PER_IC + 4] = aux_reg[(12*i) + 4];
+        pack_temperatures[i*TEMP_SENSORS_PER_IC + 5] = aux_reg[(12*i) + 6];
+        pack_temperatures[i*TEMP_SENSORS_PER_IC + 6] = aux_reg[(12*i) + 7];
+        pack_temperatures[i*TEMP_SENSORS_PER_IC + 7] = aux_reg[(12*i) + 8];
+        pack_temperatures[i*TEMP_SENSORS_PER_IC + 8] = aux_reg[(12*i) + 9];
     }
     
     return pack_temperature_check(pack_temperatures);
@@ -140,13 +151,29 @@ void open_sense_line_check(uint32_t* sense_line_status)
         cell_pu[i] = 0;
     }
     
-    bool temp = false; //TODO fix this
-    receive_voltage_register(ADCVA, &cell_pu[0], &temp);
-    receive_voltage_register(ADCVB, &cell_pu[3], &temp);
-    receive_voltage_register(ADCVC, &cell_pu[6], &temp);
-    receive_voltage_register(ADCVD, &cell_pu[9], &temp);
-    receive_voltage_register(ADCVE, &cell_pu[12], &temp);
-    receive_voltage_register(ADCVF, &cell_pu[15], &temp);
+    bool valid_pecA = false;
+    bool valid_pecB = false;
+    bool valid_pecC = false;
+    bool valid_pecD = false;
+    bool valid_pecE = false;
+    bool valid_pecF = false;
+    
+    i = 0;
+    for(i = 0; i < 10; ++i)
+    {
+        if(valid_pecA == false)
+            receive_voltage_register(ADCVA, &cell_pu[0], &valid_pecA);
+        if(valid_pecB == false)
+            receive_voltage_register(ADCVB, &cell_pu[3], &valid_pecB);
+        if(valid_pecC == false)
+            receive_voltage_register(ADCVC, &cell_pu[6], &valid_pecC);
+        if(valid_pecD == false)
+            receive_voltage_register(ADCVD, &cell_pu[9], &valid_pecD);
+        if(valid_pecE == false)
+            receive_voltage_register(ADCVE, &cell_pu[12], &valid_pecE);
+        if(valid_pecF == false)
+            receive_voltage_register(ADCVF, &cell_pu[15], &valid_pecF);
+    }
     
     start_open_wire_check(0); // param: pull dir 0 for down 1 for up
     poll_adc_status();
@@ -171,12 +198,29 @@ void open_sense_line_check(uint32_t* sense_line_status)
         cell_pd[i] = 0;
     }
 
-    receive_voltage_register(ADCVA, &cell_pd[0], &temp);
-    receive_voltage_register(ADCVB, &cell_pd[3], &temp);
-    receive_voltage_register(ADCVC, &cell_pd[6], &temp);
-    receive_voltage_register(ADCVD, &cell_pd[9], &temp);
-    receive_voltage_register(ADCVE, &cell_pd[12], &temp);
-    receive_voltage_register(ADCVF, &cell_pd[15], &temp);
+    valid_pecA = false;
+    valid_pecB = false;
+    valid_pecC = false;
+    valid_pecD = false;
+    valid_pecE = false;
+    valid_pecF = false;
+    
+    i = 0;
+    for(i = 0; i < 10; ++i)
+    {
+        if(valid_pecA == false)
+            receive_voltage_register(ADCVA, &cell_pd[0], &valid_pecA);
+        if(valid_pecB == false)
+            receive_voltage_register(ADCVB, &cell_pd[3], &valid_pecB);
+        if(valid_pecC == false)
+            receive_voltage_register(ADCVC, &cell_pd[6], &valid_pecC);
+        if(valid_pecD == false)
+            receive_voltage_register(ADCVD, &cell_pd[9], &valid_pecD);
+        if(valid_pecE == false)
+            receive_voltage_register(ADCVE, &cell_pd[12], &valid_pecE);
+        if(valid_pecF == false)
+            receive_voltage_register(ADCVF, &cell_pd[15], &valid_pecF);
+    }
     
     for(i = 0; i < NUM_CELLS; ++i) // for each ic - 0-5
     {
@@ -229,14 +273,30 @@ void self_test()
 {
     start_cell_voltage_self_test();
     __delay_ms(10); //TODO: is this delay necessary?
-    uint16_t cell_voltages[NUM_CELLS];
-    bool temp = false; //TODO fix this
-    receive_voltage_register(ADCVA, &cell_voltages[0], &temp);
-    receive_voltage_register(ADCVB, &cell_voltages[3], &temp);
-    receive_voltage_register(ADCVC, &cell_voltages[6], &temp);
-    receive_voltage_register(ADCVD, &cell_voltages[9], &temp);
-    receive_voltage_register(ADCVE, &cell_voltages[12], &temp);
-    receive_voltage_register(ADCVF, &cell_voltages[15], &temp);
+    uint16_t self_test_cv[NUM_CELLS];
+    bool valid_pecA = false;
+    bool valid_pecB = false;
+    bool valid_pecC = false;
+    bool valid_pecD = false;
+    bool valid_pecE = false;
+    bool valid_pecF = false;
+    
+    uint8_t j = 0;
+    for(j = 0; j < 10; ++j)
+    {
+        if(valid_pecA == false)
+            receive_voltage_register(ADCVA, &self_test_cv[0], &valid_pecA);
+        if(valid_pecB == false)
+            receive_voltage_register(ADCVB, &self_test_cv[3], &valid_pecB);
+        if(valid_pecC == false)
+            receive_voltage_register(ADCVC, &self_test_cv[6], &valid_pecC);
+        if(valid_pecD == false)
+            receive_voltage_register(ADCVD, &self_test_cv[9], &valid_pecD);
+        if(valid_pecE == false)
+            receive_voltage_register(ADCVE, &self_test_cv[12], &valid_pecE);
+        if(valid_pecF == false)
+            receive_voltage_register(ADCVF, &self_test_cv[15], &valid_pecF);
+    }
     
     // check whether received values are expected value
     uint8_t i = 0;
@@ -246,7 +306,7 @@ void self_test()
         bool pass = true;
         for(k = i * CELLS_PER_REGISTER; k < (i + 1) * CELLS_PER_REGISTER; ++k)
         {
-            if(cell_voltages[k] != CV_SELF_TEST_RESULT)
+            if(self_test_cv[k] != CV_SELF_TEST_RESULT)
             {
                 pass = false;
             }   
@@ -264,10 +324,22 @@ void self_test()
     start_aux_reg_self_test();
     __delay_ms(10) //TODO is this necessary?
     uint16_t aux_registers[12 * NUM_ICS];
-    receive_aux_register(AUXA, &aux_registers[0]);
-    receive_aux_register(AUXB, &aux_registers[3]);
-    receive_aux_register(AUXC, &aux_registers[6]);
-    receive_aux_register(AUXD, &aux_registers[9]);
+    j = 0;
+    valid_pecA = false;
+    valid_pecB = false;
+    valid_pecC = false;
+    valid_pecD = false;
+    for(j = 0; j < 10; ++j)
+    {
+        if(valid_pecA == false)
+            receive_voltage_register(ADCVA, &aux_registers[0], &valid_pecA);
+        if(valid_pecB == false)
+            receive_voltage_register(ADCVB, &aux_registers[3], &valid_pecB);
+        if(valid_pecC == false)
+            receive_voltage_register(ADCVC, &aux_registers[6], &valid_pecC);
+        if(valid_pecD == false)
+            receive_voltage_register(ADCVD, &aux_registers[9], &valid_pecD);
+    }
     
     // check whether received values are expected value
     i = 0;
