@@ -59,8 +59,8 @@
 
 //TODO why are these globals?
 uint16_t cell_voltages[NUM_CELLS];
-
 uint16_t pack_temperatures[NUM_TEMP_SENSORS];
+uint32_t sense_line_status[NUM_ICS];
 
 /*
                          Main application
@@ -79,6 +79,10 @@ int main(void)
     for(i = 0; i < NUM_TEMP_SENSORS; ++i)
     {
         pack_temperatures[i] = 0;
+    }
+    for(i = 0; i < NUM_ICS; ++i)
+    {
+        sense_line_status[i] = 0;
     }
 
     soc_initialize();
@@ -106,12 +110,6 @@ int main(void)
         read_temperatures(pack_temperatures);
         report_pack_temperatures(pack_temperatures);
         
-        uint32_t sense_line_status[NUM_ICS];
-        
-        for(i = 0; i < NUM_ICS; ++i)
-        {
-            sense_line_status[i] = 0;
-        }
         open_sense_line_check(sense_line_status);
         report_sense_line_status(sense_line_status);
         

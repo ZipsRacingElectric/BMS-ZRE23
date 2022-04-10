@@ -159,7 +159,6 @@ void receive_voltage_register(uint8_t which_reg, uint16_t* buf, bool* valid_pec_
             buf[CELLS_PER_IC*i] = (adcv_buf[8*i + 1] << 8) + adcv_buf[8*i];
             buf[CELLS_PER_IC*i + 1] = (adcv_buf[8*i + 3] << 8) + adcv_buf[8*i + 2];
             buf[CELLS_PER_IC*i + 2] = (adcv_buf[8*i + 5] << 8) + adcv_buf[8*i + 4];
-            reset_missing_voltage_measurement_fault(which_reg + i*6);
             // adcv_buf 6 and 7 are PEC bytes
         }
         else

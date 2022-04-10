@@ -58,7 +58,7 @@ uint8_t read_cell_voltages(uint16_t* cell_voltages)
     bool valid_pecF = false;
     
     uint8_t i = 0;
-    for(i = 0; i < 10; ++i)
+    for(i = 0; i < 10; ++i) // try 10 times to get valid pec
     {
         if(valid_pecA == false)
             receive_voltage_register(ADCVA, &cell_voltages[0], &valid_pecA);
@@ -255,12 +255,14 @@ void open_sense_line_check(uint32_t* sense_line_status)
             int16_t delta = cell_pu[i+1] - cell_pd[i+1]; // V * 10000
             if(delta < -4000) //TODO magic number
             {
-                sense_line_status[i / 18] |= (1 << (i % 18));
+                uint8_t shift_num = i % 18;
+                uint32_t store_num = (uint32_t)(1 << (i % 18));
+                sense_line_status[(uint8_t)(i / 18)] |= (1 << (i % 18));
                 increment_sense_line_fault(i);
             }
             else
             {
-                sense_line_status[i / 18] &= (uint32_t)(~(1 << (i % 18)));
+                sense_line_status[(uint8_t)(i / 18)] &= (uint32_t)(~(1 << (i % 18)));
                 reset_sense_line_fault(i);
             }
         }
