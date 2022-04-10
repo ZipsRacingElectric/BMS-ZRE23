@@ -227,7 +227,7 @@ void receive_aux_register(uint8_t which_reg, uint16_t* buf, bool* valid_pec_ptr)
             buf[12*i] = (aux_buf[8*i + 1] << 8) + aux_buf[8*i];
             buf[12*i + 1] = (aux_buf[8*i + 3] << 8) + aux_buf[8*i + 2];
             buf[12*i + 2] = (aux_buf[8*i + 5] << 8) + aux_buf[8*i + 4];
-            reset_missing_voltage_measurement_fault(which_reg + i*6);
+            reset_missing_temperature_fault(which_reg + i*6);
             // aux_buf 6 and 7 are PEC bytes
         }
         else
@@ -331,6 +331,7 @@ uint8_t read_config_A(uint8_t* buffer)
     cmd[3] = (uint8_t)(cmd_pec);
 
     uint8_t i = 0;
+    bool valid_pec[NUM_ICS] = {false, false};
     for(i = 0; i < 10; ++i) // 10 tries to get valid PEC
     {
         CS_6820_SetLow();
@@ -340,16 +341,22 @@ uint8_t read_config_A(uint8_t* buffer)
         // 6 data bytes plus 2 byte PEC
         CS_6820_SetHigh();
 
-        if(verify_pec(intermediate_buffer, 6, &intermediate_buffer[6]) == SUCCESS) // TODO make this work for multiple ICs
+        uint8_t k = 0;
+        for(k = 0; k < NUM_ICS; ++k)
         {
-            for(i = 0; i < 6; ++i) // copy intermediate buffer over to actual buffer
+            if(verify_pec(&intermediate_buffer[8*k], 6, &intermediate_buffer[8*i + 6]) == SUCCESS) // TODO make this work for multiple ICs
             {
-                buffer[i] = intermediate_buffer[i];
+                buffer[6*k] = intermediate_buffer[8*k];
+                buffer[6*k + 1] = intermediate_buffer[8*k + 1];
+                buffer[6*k + 2] = intermediate_buffer[8*k + 2];
+                buffer[6*k + 3] = intermediate_buffer[8*k + 3];
+                buffer[6*k + 4] = intermediate_buffer[8*k + 4];
+                buffer[6*k + 5] = intermediate_buffer[8*k + 5];
+                valid_pec[k] = true;
             }
-            return SUCCESS;
         }
     }
-    return FAILURE;
+    return (bool)(valid_pec[0] && valid_pec[1]);
 }
 
 /*
@@ -429,25 +436,32 @@ uint8_t read_status_A(uint8_t* buffer)
     cmd[3] = (uint8_t)(cmd_pec);
 
     uint8_t i = 0;
+    bool valid_pec[NUM_ICS] = {false, false};
     for(i = 0; i < 10; ++i) // 10 tries to get valid PEC
     {
         CS_6820_SetLow();
         SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
-        uint8_t intermediate_buffer[8 * NUM_ICS];
+        uint8_t intermediate_buffer[8 * NUM_ICS]; //TODO is intermediate buffer the best way to do this?
         SPI1_Exchange8bitBuffer(dummy_buf, 8*NUM_ICS, intermediate_buffer); 
         // 6 data bytes plus 2 byte PEC
         CS_6820_SetHigh();
 
-        if(verify_pec(intermediate_buffer, 6, &intermediate_buffer[6]) == SUCCESS) // TODO make this work for multiple ICs
+        uint8_t k = 0;
+        for(k = 0; k < NUM_ICS; ++k)
         {
-            for(i = 0; i < 6; ++i) // copy intermediate buffer over to actual buffer
+            if(verify_pec(&intermediate_buffer[8*k], 6, &intermediate_buffer[8*i + 6]) == SUCCESS) // TODO make this work for multiple ICs
             {
-                buffer[i] = intermediate_buffer[i];
+                buffer[6*k] = intermediate_buffer[8*k];
+                buffer[6*k + 1] = intermediate_buffer[8*k + 1];
+                buffer[6*k + 2] = intermediate_buffer[8*k + 2];
+                buffer[6*k + 3] = intermediate_buffer[8*k + 3];
+                buffer[6*k + 4] = intermediate_buffer[8*k + 4];
+                buffer[6*k + 5] = intermediate_buffer[8*k + 5];
+                valid_pec[k] = true;
             }
-            return SUCCESS;
         }
     }
-    return FAILURE;
+    return (bool)(valid_pec[0] && valid_pec[1]);
 }
 
 /*
@@ -465,25 +479,32 @@ uint8_t read_status_B(uint8_t* buffer)
     cmd[3] = (uint8_t)(cmd_pec);
 
     uint8_t i = 0;
+    bool valid_pec[NUM_ICS] = {false, false};
     for(i = 0; i < 10; ++i) // 10 tries to get valid PEC
     {
         CS_6820_SetLow();
         SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
-        uint8_t intermediate_buffer[8 * NUM_ICS];
+        uint8_t intermediate_buffer[8 * NUM_ICS]; //TODO is intermediate buffer the best way to do this?
         SPI1_Exchange8bitBuffer(dummy_buf, 8*NUM_ICS, intermediate_buffer); 
         // 6 data bytes plus 2 byte PEC
         CS_6820_SetHigh();
 
-        if(verify_pec(intermediate_buffer, 6, &intermediate_buffer[6]) == SUCCESS) // TODO make this work for multiple ICs
+        uint8_t k = 0;
+        for(k = 0; k < NUM_ICS; ++k)
         {
-            for(i = 0; i < 6; ++i) // copy intermediate buffer over to actual buffer
+            if(verify_pec(&intermediate_buffer[8*k], 6, &intermediate_buffer[8*i + 6]) == SUCCESS) // TODO make this work for multiple ICs
             {
-                buffer[i] = intermediate_buffer[i];
+                buffer[6*k] = intermediate_buffer[8*k];
+                buffer[6*k + 1] = intermediate_buffer[8*k + 1];
+                buffer[6*k + 2] = intermediate_buffer[8*k + 2];
+                buffer[6*k + 3] = intermediate_buffer[8*k + 3];
+                buffer[6*k + 4] = intermediate_buffer[8*k + 4];
+                buffer[6*k + 5] = intermediate_buffer[8*k + 5];
+                valid_pec[k] = true;
             }
-            return SUCCESS;
         }
     }
-    return FAILURE;
+    return (bool)(valid_pec[0] && valid_pec[1]);
 }
 
 /*

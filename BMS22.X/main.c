@@ -85,10 +85,11 @@ int main(void)
     can_initialize();
     LTC_initialize();
     fault_handler_initialize();
-//    balance_timer_initialize(); TODO turn off when using resistor ladder circuit
+    balance_timer_initialize();
     
     while (1)
     {
+        LED1_HEARTBEAT_Toggle();
         // WARN: don't put all the CAN output back to back to back here, 
         //       the transmit buffers will overflow
         calc_soc();
@@ -101,24 +102,25 @@ int main(void)
         update_cell_balance_array(cell_voltages);
         uint32_t* cell_needs_balanced = get_cell_balance_array();
         report_balancing(cell_needs_balanced);
-        update_config_A_and_B();
 
         read_temperatures(pack_temperatures);
         report_pack_temperatures(pack_temperatures);
         
         uint32_t sense_line_status[NUM_ICS];
+        
+        for(i = 0; i < NUM_ICS; ++i)
+        {
+            sense_line_status[i] = 0;
+        }
         open_sense_line_check(sense_line_status);
         report_sense_line_status(sense_line_status);
+        
+        uint8_t test = 0;
         
         self_test();
         
         check_for_fault();
         report_status();
-        
-        LED1_HEARTBEAT_SetHigh();
-        __delay_ms(150);
-        LED1_HEARTBEAT_SetLow();
-        __delay_ms(150);
     }
     return 1; 
 }

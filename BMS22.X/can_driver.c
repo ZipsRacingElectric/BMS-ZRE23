@@ -54,11 +54,21 @@ void report_cell_voltages(uint16_t* cell_voltages)
 // put sense line status on CAN bus
 void report_sense_line_status(uint32_t* sense_line_status)
 {
-    uint8_t sense_line0[6] = {(sense_line_status[0] & 0xFF), ((sense_line_status[0] >> 8) & 0xFF), ((sense_line_status[0] >> 16) & 0xFF)};
-//    uint8_t sense_line1[6] = {};
-//    uint8_t sense_line2[3]= {}; TODO add these when NUM_IC increases
-
+    uint8_t sense_line0[6] = {(sense_line_status[0] & 0xFF), ((sense_line_status[0] >> 8) & 0xFF), ((sense_line_status[0] >> 16) & 0xFF),
+                              (sense_line_status[1] & 0xFF), ((sense_line_status[1] >> 8) & 0xFF), ((sense_line_status[1] >> 16) & 0xFF)};
     CAN_Msg_Send(CAN_ID_SENSE_LINE, 6, sense_line0);
+    
+    if(NUM_CELLS > 36)
+    {
+        uint8_t sense_line1[6] = {(sense_line_status[2] & 0xFF), ((sense_line_status[2] >> 8) & 0xFF), ((sense_line_status[2] >> 16) & 0xFF),
+                                  (sense_line_status[3] & 0xFF), ((sense_line_status[3] >> 8) & 0xFF), ((sense_line_status[3] >> 16) & 0xFF)};
+        CAN_Msg_Send(CAN_ID_SENSE_LINE + 1, 6, sense_line1);
+    }
+    if(NUM_CELLS > 72)
+    {
+        uint8_t sense_line2[6] = {(sense_line_status[4] & 0xFF), ((sense_line_status[4] >> 8) & 0xFF), ((sense_line_status[4] >> 16) & 0xFF)};
+        CAN_Msg_Send(CAN_ID_SENSE_LINE + 2, 6, sense_line2);
+    }
 }
 
 // put pack temperatures on the CAN bus
@@ -96,16 +106,21 @@ void report_status(void)
 // put cell balance information on the CAN bus
 void report_balancing(uint32_t* cell_needs_balanced)
 {
-    // TODO make this work for multiple ICS
-    uint8_t can_data[8] = {(cell_needs_balanced[0] & 0xFF),
-                           (cell_needs_balanced[0] >> 8) & 0xFF,
-                           (cell_needs_balanced[0] >> 16) & 0xFF,
-                           0, 0, 0, 0, 0};
-//    uint8_t balance_data_two[4] = {};
-
-    CAN_Msg_Send(CAN_ID_CELL_BALANCING, CAN_DLC_8, can_data);
+    uint8_t balance_data0[6] = {(cell_needs_balanced[0] & 0xFF), ((cell_needs_balanced[0] >> 8) & 0xFF), ((cell_needs_balanced[0] >> 16) & 0xFF),
+                                (cell_needs_balanced[1] & 0xFF), ((cell_needs_balanced[1] >> 8) & 0xFF), ((cell_needs_balanced[1] >> 16) & 0xFF)};
+    CAN_Msg_Send(CAN_ID_CELL_BALANCING, 6, balance_data0);
     
-    // TODO add code for rest of cells (2nd & 3rd balancing status msg)
+    if(NUM_CELLS > 36)
+    {
+        uint8_t balance_data1[6] = {(cell_needs_balanced[2] & 0xFF), ((cell_needs_balanced[2] >> 8) & 0xFF), ((cell_needs_balanced[2] >> 16) & 0xFF),
+                                    (cell_needs_balanced[3] & 0xFF), ((cell_needs_balanced[3] >> 8) & 0xFF), ((cell_needs_balanced[3] >> 16) & 0xFF)};
+        CAN_Msg_Send(CAN_ID_CELL_BALANCING + 1, 6, balance_data1);
+    }
+    if(NUM_CELLS > 72)
+    {
+        uint8_t balance_data2[6] = {(cell_needs_balanced[4] & 0xFF), ((cell_needs_balanced[4] >> 8) & 0xFF), ((cell_needs_balanced[4] >> 16) & 0xFF)};
+        CAN_Msg_Send(CAN_ID_CELL_BALANCING + 2, 6, balance_data2);
+    }
 }
 
 static void CAN_Msg_Send(uint16_t id, CAN_DLC dlc, uint8_t *tx_data)

@@ -228,12 +228,12 @@ void open_sense_line_check(uint32_t* sense_line_status)
         {
             if(cell_pu[i] == 0) // TODO: exactly equal to zero or just close to zero?
             {
-                sense_line_status[i / 18] |= (1 << i);
+                sense_line_status[i / 18] |= (1 << (i % 18));
                 increment_sense_line_fault(i);
             }
             else
             {
-                sense_line_status[i / 18] &= (uint32_t)(~(1 << i));
+                sense_line_status[i / 18] &= (uint32_t)(~(1 << (i % 18)));
                 reset_sense_line_fault(i);
             }
         }
@@ -241,12 +241,12 @@ void open_sense_line_check(uint32_t* sense_line_status)
         {
             if(cell_pd[i] == 0) // TODO: exactly equal to zero or just close to zero?
             {
-                sense_line_status[i / 18] |= (1 << i);
+                sense_line_status[i / 18] |= (1 << (i % 18));
                 increment_sense_line_fault(i);
             }
             else
             {
-                sense_line_status[i / 18] &= (uint32_t)(~(1 << i));
+                sense_line_status[i / 18] &= (uint32_t)(~(1 << (i % 18)));
                 reset_sense_line_fault(i);
             }
         }
@@ -255,12 +255,12 @@ void open_sense_line_check(uint32_t* sense_line_status)
             int16_t delta = cell_pu[i+1] - cell_pd[i+1]; // V * 10000
             if(delta < -4000) //TODO magic number
             {
-                sense_line_status[i / 18] |= (1 << i);
+                sense_line_status[i / 18] |= (1 << (i % 18));
                 increment_sense_line_fault(i);
             }
             else
             {
-                sense_line_status[i / 18] &= (uint32_t)(~(1 << i));
+                sense_line_status[i / 18] &= (uint32_t)(~(1 << (i % 18)));
                 reset_sense_line_fault(i);
             }
         }
@@ -332,13 +332,13 @@ void self_test()
     for(j = 0; j < 10; ++j)
     {
         if(valid_pecA == false)
-            receive_voltage_register(ADCVA, &aux_registers[0], &valid_pecA);
+            receive_aux_register(ADCVA, &aux_registers[0], &valid_pecA);
         if(valid_pecB == false)
-            receive_voltage_register(ADCVB, &aux_registers[3], &valid_pecB);
+            receive_aux_register(ADCVB, &aux_registers[3], &valid_pecB);
         if(valid_pecC == false)
-            receive_voltage_register(ADCVC, &aux_registers[6], &valid_pecC);
+            receive_aux_register(ADCVC, &aux_registers[6], &valid_pecC);
         if(valid_pecD == false)
-            receive_voltage_register(ADCVD, &aux_registers[9], &valid_pecD);
+            receive_aux_register(ADCVD, &aux_registers[9], &valid_pecD);
     }
     
     // check whether received values are expected value
