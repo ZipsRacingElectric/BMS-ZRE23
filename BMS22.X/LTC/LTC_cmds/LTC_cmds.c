@@ -383,7 +383,7 @@ void write_config_A(void)
         uint16_t data_pec = pec15_calc(data_to_write, 6);
         uint8_t data_pec_transmit[2] = {(uint8_t)(data_pec >> 8), (uint8_t)(data_pec & 0xFF)};    
 
-        SPI1_Exchange8bitBuffer(data_to_write, 6*NUM_ICS, dummy_buf);
+        SPI1_Exchange8bitBuffer(data_to_write, 6, dummy_buf);
         SPI1_Exchange8bitBuffer(data_pec_transmit, 2, dummy_buf);
     }
     CS_6820_SetHigh();
@@ -414,7 +414,7 @@ void write_config_B(void)
         uint16_t data_pec = pec15_calc(data_to_write, 6);
         uint8_t data_pec_transmit[2] = {(uint8_t)(data_pec >> 8), (uint8_t)(data_pec & 0xFF)};    
 
-        SPI1_Exchange8bitBuffer(data_to_write, 6*NUM_ICS, dummy_buf);
+        SPI1_Exchange8bitBuffer(data_to_write, 6, dummy_buf);
         SPI1_Exchange8bitBuffer(data_pec_transmit, 2, dummy_buf); 
     }
     CS_6820_SetHigh();
