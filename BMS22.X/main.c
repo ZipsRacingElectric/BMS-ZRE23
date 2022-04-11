@@ -56,6 +56,7 @@
 #include "fault_handler.h"
 #include "cell_balancing.h"
 #include "global_constants.h"
+#include "eeprom.h"
 
 //TODO why are these globals?
 uint16_t cell_voltages[NUM_CELLS];

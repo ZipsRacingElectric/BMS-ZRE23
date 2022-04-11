@@ -90,12 +90,12 @@ uint8_t verify_pec(uint8_t* data, uint8_t size, uint8_t* received_pec)
     uint16_t transmitted_pec = (received_pec[0] << 8) + received_pec[1];
     if(calculated_pec == transmitted_pec)
     {
-        LED5_SetHigh();
+        LED6_SetHigh();
         return SUCCESS;
     }
     else
     {
-        LED5_SetLow();
+        LED6_SetLow();
         return FAILURE;
     }
 }

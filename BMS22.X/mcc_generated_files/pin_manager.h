@@ -2263,11 +2263,11 @@
   @Example
     <code>
     // Set RC6 high (1)
-    LED5_SetHigh();
+    LED5_EEPROM_SetHigh();
     </code>
 
 */
-#define LED5_SetHigh()          (_LATC6 = 1)
+#define LED5_EEPROM_SetHigh()          (_LATC6 = 1)
 /**
   @Summary
     Sets the GPIO pin, RC6, low using LATC6.
@@ -2287,11 +2287,11 @@
   @Example
     <code>
     // Set RC6 low (0)
-    LED5_SetLow();
+    LED5_EEPROM_SetLow();
     </code>
 
 */
-#define LED5_SetLow()           (_LATC6 = 0)
+#define LED5_EEPROM_SetLow()           (_LATC6 = 0)
 /**
   @Summary
     Toggles the GPIO pin, RC6, using LATC6.
@@ -2311,11 +2311,11 @@
   @Example
     <code>
     // Toggle RC6
-    LED5_Toggle();
+    LED5_EEPROM_Toggle();
     </code>
 
 */
-#define LED5_Toggle()           (_LATC6 ^= 1)
+#define LED5_EEPROM_Toggle()           (_LATC6 ^= 1)
 /**
   @Summary
     Reads the value of the GPIO pin, RC6.
@@ -2337,11 +2337,11 @@
     uint16_t portValue;
 
     // Read RC6
-    postValue = LED5_GetValue();
+    postValue = LED5_EEPROM_GetValue();
     </code>
 
 */
-#define LED5_GetValue()         _RC6
+#define LED5_EEPROM_GetValue()         _RC6
 /**
   @Summary
     Configures the GPIO pin, RC6, as an input.
@@ -2361,11 +2361,11 @@
   @Example
     <code>
     // Sets the RC6 as an input
-    LED5_SetDigitalInput();
+    LED5_EEPROM_SetDigitalInput();
     </code>
 
 */
-#define LED5_SetDigitalInput()  (_TRISC6 = 1)
+#define LED5_EEPROM_SetDigitalInput()  (_TRISC6 = 1)
 /**
   @Summary
     Configures the GPIO pin, RC6, as an output.
@@ -2385,11 +2385,11 @@
   @Example
     <code>
     // Sets the RC6 as an output
-    LED5_SetDigitalOutput();
+    LED5_EEPROM_SetDigitalOutput();
     </code>
 
 */
-#define LED5_SetDigitalOutput() (_TRISC6 = 0)
+#define LED5_EEPROM_SetDigitalOutput() (_TRISC6 = 0)
 /**
   @Summary
     Sets the GPIO pin, RC7, high using LATC7.
