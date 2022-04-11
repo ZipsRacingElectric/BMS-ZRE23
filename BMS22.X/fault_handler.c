@@ -12,7 +12,7 @@
 #define OUTOFRANGE_VOLTAGE_MAX_FAULTS           30 //TODO make this 10 (50 ms measurement period, 500 ms fault period)
 #define MISSING_VOLTAGE_MEASUREMENT_MAX_FAULTS  30
 #define OPEN_SENSE_LINE_MAX_FAULTS              30
-#define OUTOFRANGE_TEMPERATURE_MAX_FAULTS       10
+#define OUTOFRANGE_TEMPERATURE_MAX_FAULTS       30
 #define MISSING_TEMP_MEASUREMENT_FAULTS_MAX     30
 #define SELF_TEST_FAULTS_MAX                    30
 

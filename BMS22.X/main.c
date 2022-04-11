@@ -91,7 +91,7 @@ int main(void)
     can_initialize();
     LTC_initialize();
     fault_handler_initialize();
-    balance_timer_initialize();
+//    balance_timer_initialize();
     
     while (1)
     {
@@ -114,7 +114,7 @@ int main(void)
         open_sense_line_check(sense_line_status);
         report_sense_line_status(sense_line_status);
         
-        uint8_t test = 0;
+        uint8_t test = 0; // TODO remove this
         
         self_test();
         

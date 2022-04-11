@@ -43,7 +43,7 @@ volatile uint32_t sum_cs_lo_samples = 0;
 volatile uint32_t sum_cs_hi_samples = 0;
 volatile uint16_t sample_lo_count = 0;
 volatile uint16_t sample_hi_count = 0;
-volatile uint8_t eeprom_write_counter = 0;
+uint8_t eeprom_write_counter = 0;
 
 ////////////////interrupt prototypes///////////////////////////////////////////
 void timer1_interrupt(void);
@@ -94,6 +94,15 @@ void calc_soc(void)
      * measured using the low channel
      */
     cs_hi_to_transmit = (int16_t)CS_HIGH_ADC_BITS_TO_AMPS(ADCBUF3); //(cs_high_sample)
+    
+    ++eeprom_write_counter;
+    if(eeprom_write_counter > 10)
+    {
+        eeprom_write_counter = 0;
+        LED5_EEPROM_Toggle();
+        uint16_t soc_int = (uint16_t)state_of_charge_float;
+        write_eeprom(soc_int);
+    }
 }
 
 ///////////////set/getters/////////////////////////////////////////////////////
@@ -120,15 +129,6 @@ void timer1_interrupt(void)
     
     //start ADC sampling for both channels
     ADC1_SoftwareTriggerEnable();
-    
-    ++eeprom_write_counter;
-    if(eeprom_write_counter > 250)
-    {
-        eeprom_write_counter = 0;
-        LED5_EEPROM_Toggle();
-        uint16_t soc_int = (uint16_t)state_of_charge_float;
-        write_eeprom(soc_int);
-    }
     
     LED3_TMR1_SetLow();
 }

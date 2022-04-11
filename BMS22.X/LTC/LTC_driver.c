@@ -222,6 +222,8 @@ void open_sense_line_check(uint32_t* sense_line_status)
             receive_voltage_register(ADCVF, &cell_pd[15], &valid_pecF);
     }
     
+    uint8_t test = 0;
+
     for(i = 0; i < NUM_CELLS; ++i) // for each ic - 0-5
     {
         if(i % 18 == 0) // sense line 0 in a segment
@@ -237,7 +239,7 @@ void open_sense_line_check(uint32_t* sense_line_status)
                 reset_sense_line_fault(i);
             }
         }
-        else if(i % 18 == 17) // cell 18 in a segment
+        else if(i % 18 == 17) // sense line 18 in a segment
         {
             if(cell_pd[i] == 0) // TODO: exactly equal to zero or just close to zero?
             {

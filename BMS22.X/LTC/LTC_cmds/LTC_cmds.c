@@ -253,7 +253,7 @@ void start_open_wire_check(uint8_t pull_dir)
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow(); 
     SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
-
+     __delay_us(15); //TODO is this necessary?
     CS_6820_SetHigh();
 }
 
