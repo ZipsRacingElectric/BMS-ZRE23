@@ -11,6 +11,7 @@
 #include "mcc_generated_files/tmr1.h"
 #include "mcc_generated_files/can_types.h"
 #include "mcc_generated_files/pin_manager.h"
+#include "eeprom.h"
 
 ////////////////defines////////////////////////////////////////////////////////
 #define TOTAL_CHARGE_AH                 2.5
@@ -54,6 +55,9 @@ void soc_initialize(void)
     TMR1_SetInterruptHandler(timer1_interrupt); //my function to handle timer1 interrupts
     ADC1_SetCS_LOInterruptHandler(adc1_cs_lo_interrupt); //my function to handle ADC interrupts
 
+    uint16_t state_of_charge_int = get_state_of_charge_from_eeprom();
+    state_of_charge_float = (float)state_of_charge_int;
+
     ADC1_Enable();
     TMR1_Start();
 }
@@ -89,6 +93,9 @@ void calc_soc(void)
      * measured using the low channel
      */
     cs_hi_to_transmit = (int16_t)CS_HIGH_ADC_BITS_TO_AMPS(ADCBUF3); //(cs_high_sample)
+    
+    uint16_t soc_int = (uint16_t)state_of_charge_float;
+    write_eeprom(soc_int);
 }
 
 ///////////////set/getters/////////////////////////////////////////////////////

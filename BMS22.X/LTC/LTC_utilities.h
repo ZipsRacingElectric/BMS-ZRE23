@@ -36,9 +36,10 @@ extern "C" {
 #define CELL_VOLTAGE_MIN        (30000)
 #define CELL_BALANCE_THRESHOLD  100 // 0.02 V threshold for cell balancing
 // GPIO voltage x 10000 comes from LTC6813 chip
-#define CELL_TEMPERATURE_MAX    18536 // 15 C
-#define CELL_TEMPERATURE_MIN    5825  // 60 C
-    
+#define CELL_TEMPERATURE_MAX    40000 // -5 C
+#define CELL_TEMPERATURE_MIN    21000 // SENIOR DESIGN DEMO 5825  // 60 C
+
+// TODO maybe this should be an enum
 #define ADCVA       0
 #define ADCVB       1
 #define ADCVC       2

@@ -144,7 +144,16 @@ void check_for_fault(void)
         }
     }
     
-    for(i = 3; i < 5; ++i) // TODO track faults in all temp sensors 9*NUM_ICS; ++i)
+    for(i = 4; i < 5; ++i) // TODO track faults in all temp sensors 9*NUM_ICS; ++i)
+    {
+        if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
+        {
+            shutdown_car();
+            set_temperature_fault_bit();
+        }
+    }
+    
+    for(i = 7; i < 8; ++i) // TODO track faults in all temp sensors 9*NUM_ICS; ++i)
     {
         if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
         {
