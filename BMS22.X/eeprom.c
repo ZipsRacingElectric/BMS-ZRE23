@@ -25,6 +25,8 @@ uint8_t eeprom_dummy_buf[4] = {0, 0, 0, 0};
 
 void eeprom_initialize(void)
 {
+    CS_EEPROM_SetHigh();
+    __delay_us(2); // EEPROM chip must see falling edge on CS
     // read from EEPROM
     uint8_t read_bytes[4] = {0, 0, 0, 0};
     CS_EEPROM_SetLow();
@@ -66,15 +68,23 @@ uint16_t get_state_of_charge_from_eeprom(void)
 
 void write_eeprom(uint16_t write_data)
 {
-    CS_EEPROM_SetLow();
-    SPI1_Exchange8bit(READ_STATUS);
-    uint8_t status = SPI1_Exchange8bit(eeprom_dummy_buf[0]);
-    CS_EEPROM_SetHigh();
-    __delay_us(1);
-    
+//    CS_EEPROM_SetLow();
+//    SPI1_Exchange8bit(READ_STATUS);
+//    uint8_t status = SPI1_Exchange8bit(eeprom_dummy_buf[0]);
+//    CS_EEPROM_SetHigh();
+//    __delay_us(1);
+//    
     CS_EEPROM_SetLow();
     uint8_t write_bytes[6] = {WRITE_CMD, ADDRESS, (write_data & 0xFF), (write_data >> 8) & 0xFF, EEPROM_INITIALIZED_CODE_0, EEPROM_INITIALIZED_CODE_1};
     SPI1_Exchange8bitBuffer(write_bytes, 6, eeprom_dummy_buf); // write four memory bytes
     CS_EEPROM_SetHigh();
+//    uint8_t test = 0;
+//    __delay_us(10);
+//    uint8_t read_bytes[4] = {0, 0, 0, 0};
+//    CS_EEPROM_SetLow();
+//    SPI1_Exchange8bitBuffer(&READ_CMD, 1, eeprom_dummy_buf); // send read command
+//    SPI1_Exchange8bitBuffer(&ADDRESS, 1, eeprom_dummy_buf); // send read address
+//    SPI1_Exchange8bitBuffer(eeprom_dummy_buf, 4, read_bytes); // read four memory bytes
+//    CS_EEPROM_SetHigh();
 }
 

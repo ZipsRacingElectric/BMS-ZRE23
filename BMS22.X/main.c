@@ -85,6 +85,7 @@ int main(void)
         sense_line_status[i] = 0;
     }
 
+    eeprom_initialize(); // TODO call this in soc init?
     soc_initialize();
     can_initialize();
     LTC_initialize();
