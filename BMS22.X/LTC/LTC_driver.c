@@ -14,7 +14,7 @@
 #include <stdbool.h>
 #include "../global_constants.h"
 
-//TODO come up with better way to verify that valid PEC is received from commands'
+//TODO come up with better way to verify that valid PEC is received from commands
     
 static uint8_t cell_voltage_check(uint16_t* cell_voltages);
 static uint8_t pack_temperature_check(uint16_t* pack_temperatures);
@@ -390,7 +390,7 @@ void self_test()
     }
 }
 
-static uint8_t cell_voltage_check(uint16_t* cell_voltages) //TODO: implement timeout, or consecutive count of out-of-range samples
+static uint8_t cell_voltage_check(uint16_t* cell_voltages)
 {
     uint8_t i = 0;
     uint8_t ret_val = SUCCESS;

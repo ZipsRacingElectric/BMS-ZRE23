@@ -93,7 +93,24 @@ void check_for_fault(void)
 {
     uint8_t i = 0;
     
+    // 1st ic SENIOR DESIGN DEMO
     for(i = 0; i < 5; ++i)// TODO check all cell voltages NUM_CELLS; ++i)
+    {
+        if(outofrange_voltage_fault[i] > OUTOFRANGE_VOLTAGE_MAX_FAULTS)
+        {
+            shutdown_car();
+            set_voltage_fault_bit();
+        }
+   
+        if(sense_line_fault[i] > OPEN_SENSE_LINE_MAX_FAULTS)
+        {
+            shutdown_car();
+            set_sense_line_fault_bit();
+        }
+    }
+    
+    // 2nd IC
+    for(i = 18; i < 18+5; ++i)
     {
         if(outofrange_voltage_fault[i] > OUTOFRANGE_VOLTAGE_MAX_FAULTS)
         {
@@ -117,12 +134,31 @@ void check_for_fault(void)
         }
     }
     
+    // SENIOR DESIGN DEMO
     for(i = 0; i < 2; ++i) // TODO track faults in all temp sensors 9*NUM_ICS; ++i)
     {
         if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
         {
-//            shutdown_car(); TODO uncomment when back to board with thermistors
-//            set_temperature_fault_bit();
+            shutdown_car();
+            set_temperature_fault_bit();
+        }
+    }
+    
+    for(i = 3; i < 5; ++i) // TODO track faults in all temp sensors 9*NUM_ICS; ++i)
+    {
+        if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
+        {
+            shutdown_car();
+            set_temperature_fault_bit();
+        }
+    }
+    
+    for(i = 9; i < 11; ++i) // TODO track faults in all temp sensors 9*NUM_ICS; ++i)
+    {
+        if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
+        {
+            shutdown_car();
+            set_temperature_fault_bit();
         }
     }
     
@@ -252,9 +288,6 @@ void reset_mux_self_test_fault(uint8_t chip_id)
 {
     mux_self_test_fault[chip_id] = 0;
 }
-
-// TODO cell voltage fault check
-// possible faults: over voltage, under voltage, missing measurement
 
 //////////////// private functions ////////////////////////////////////////////
 

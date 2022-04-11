@@ -98,13 +98,12 @@ int main(void)
         //       the transmit buffers will overflow
         calc_soc();
         
-        //TODO balance for 20 s, check cell voltages, balance for 20 more s...
-        
         read_cell_voltages(cell_voltages);
         report_cell_voltages(cell_voltages);
         
         update_cell_balance_array(cell_voltages);
         uint32_t* cell_needs_balanced = get_cell_balance_array();
+        update_config_A_and_B(); // sends cell balance bits to 6813s
         report_balancing(cell_needs_balanced);
 
         read_temperatures(pack_temperatures);
