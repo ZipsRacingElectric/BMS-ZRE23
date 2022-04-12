@@ -44,7 +44,6 @@ void start_cell_voltage_adc_conversion(void)
     CS_6820_SetLow(); 
     SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
     CS_6820_SetHigh();
-    __delay_us(2); //TODO is this necessary?
 }
 
 /* send command to start ADC conversion for GPIO pins (temp sensors)
@@ -63,7 +62,6 @@ void start_temperature_adc_conversion(void)
     CS_6820_SetLow(); 
     SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
     CS_6820_SetHigh();
-    __delay_us(2); //TODO is this necessary?
 }
 
 /* send command to poll ADC status
@@ -253,7 +251,6 @@ void start_open_wire_check(uint8_t pull_dir)
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow(); 
     SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
-     __delay_us(15); //TODO is this necessary?
     CS_6820_SetHigh();
 }
 
@@ -448,7 +445,7 @@ uint8_t read_status_A(uint8_t* buffer)
         uint8_t k = 0;
         for(k = 0; k < NUM_ICS; ++k)
         {
-            if(verify_pec(&intermediate_buffer[8*k], 6, &intermediate_buffer[8*i + 6]) == SUCCESS) // TODO make this work for multiple ICs
+            if(verify_pec(&intermediate_buffer[8*k], 6, &intermediate_buffer[8*i + 6]) == SUCCESS)
             {
                 buffer[6*k] = intermediate_buffer[8*k];
                 buffer[6*k + 1] = intermediate_buffer[8*k + 1];
@@ -491,7 +488,7 @@ uint8_t read_status_B(uint8_t* buffer)
         uint8_t k = 0;
         for(k = 0; k < NUM_ICS; ++k)
         {
-            if(verify_pec(&intermediate_buffer[8*k], 6, &intermediate_buffer[8*i + 6]) == SUCCESS) // TODO make this work for multiple ICs
+            if(verify_pec(&intermediate_buffer[8*k], 6, &intermediate_buffer[8*i + 6]) == SUCCESS)
             {
                 buffer[6*k] = intermediate_buffer[8*k];
                 buffer[6*k + 1] = intermediate_buffer[8*k + 1];

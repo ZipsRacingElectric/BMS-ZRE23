@@ -49,7 +49,6 @@ uint8_t read_cell_voltages(uint16_t* cell_voltages)
 {
     start_cell_voltage_adc_conversion();
     poll_adc_status();
-    __delay_ms(10); //TODO: is this delay necessary?
     bool valid_pecA = false;
     bool valid_pecB = false;
     bool valid_pecC = false;
@@ -82,7 +81,6 @@ uint8_t read_temperatures(uint16_t* pack_temperatures)
 {
     start_temperature_adc_conversion();
     poll_adc_status();
-    __delay_ms(10); //TODO: is this delay necessary?
     bool valid_pecA = false;
     bool valid_pecB = false;
     bool valid_pecC = false;
@@ -106,7 +104,6 @@ uint8_t read_temperatures(uint16_t* pack_temperatures)
     
     // copy over temperature data to temperature array
     i = 0;
-    // TODO RHS indices seem wrong
     for(i = 0; i < NUM_ICS; ++i)
     {
         pack_temperatures[i*TEMP_SENSORS_PER_IC] = aux_reg[12*i];
@@ -129,19 +126,19 @@ void open_sense_line_check(uint32_t* sense_line_status)
     //see pg 32 of 6813 datasheet for info
     start_open_wire_check(1); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(10);
+    __delay_us(2);
     start_open_wire_check(1); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(10);
+    __delay_us(2);
     start_open_wire_check(1); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(10);
+    __delay_us(2);
     start_open_wire_check(1); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(10);
+    __delay_us(2);
     start_open_wire_check(1); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(10);
+    __delay_us(2);
     start_open_wire_check(1); // param: pull dir 0 for down 1 for up
     poll_adc_status();
     uint16_t cell_pu[NUM_CELLS];
@@ -177,19 +174,19 @@ void open_sense_line_check(uint32_t* sense_line_status)
     
     start_open_wire_check(0); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(10);
+    __delay_us(2);
     start_open_wire_check(0); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(10);
+    __delay_us(2);
     start_open_wire_check(0); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(10);
+    __delay_us(2);
     start_open_wire_check(0); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(10);
+    __delay_us(2);
     start_open_wire_check(0); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(10);
+    __delay_us(2);
     start_open_wire_check(0); // param: pull dir 0 for down 1 for up
     poll_adc_status();
     uint16_t cell_pd[NUM_CELLS];
@@ -221,8 +218,6 @@ void open_sense_line_check(uint32_t* sense_line_status)
         if(valid_pecF == false)
             receive_voltage_register(ADCVF, &cell_pd[15], &valid_pecF);
     }
-    
-    uint8_t test = 0;
 
     for(i = 0; i < NUM_CELLS; ++i) // for each ic - 0-5
     {
@@ -276,7 +271,6 @@ void open_sense_line_check(uint32_t* sense_line_status)
 void self_test()
 {
     start_cell_voltage_self_test();
-    __delay_ms(10); //TODO: is this delay necessary?
     uint16_t self_test_cv[NUM_CELLS];
     bool valid_pecA = false;
     bool valid_pecB = false;
@@ -326,7 +320,6 @@ void self_test()
     }
     
     start_aux_reg_self_test();
-    __delay_ms(10) //TODO is this necessary?
     uint16_t aux_registers[12 * NUM_ICS];
     j = 0;
     valid_pecA = false;
@@ -373,7 +366,6 @@ void self_test()
     }
 
     start_mux_self_test();
-    __delay_ms(10); //TODO: is this delay necessary?
     uint8_t status_b[6*NUM_ICS];
     read_status_B(status_b);
     // check MUXFAIL bits
