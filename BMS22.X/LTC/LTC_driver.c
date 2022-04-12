@@ -126,19 +126,14 @@ void open_sense_line_check(uint32_t* sense_line_status)
     //see pg 32 of 6813 datasheet for info
     start_open_wire_check(1); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(2);
     start_open_wire_check(1); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(2);
     start_open_wire_check(1); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(2);
     start_open_wire_check(1); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(2);
     start_open_wire_check(1); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(2);
     start_open_wire_check(1); // param: pull dir 0 for down 1 for up
     poll_adc_status();
     uint16_t cell_pu[NUM_CELLS];
@@ -174,19 +169,14 @@ void open_sense_line_check(uint32_t* sense_line_status)
     
     start_open_wire_check(0); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(2);
     start_open_wire_check(0); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(2);
     start_open_wire_check(0); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(2);
     start_open_wire_check(0); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(2);
     start_open_wire_check(0); // param: pull dir 0 for down 1 for up
     poll_adc_status();
-    __delay_us(2);
     start_open_wire_check(0); // param: pull dir 0 for down 1 for up
     poll_adc_status();
     uint16_t cell_pd[NUM_CELLS];
@@ -252,8 +242,6 @@ void open_sense_line_check(uint32_t* sense_line_status)
             int16_t delta = cell_pu[i+1] - cell_pd[i+1]; // V * 10000
             if(delta < -4000) //TODO magic number
             {
-                uint8_t shift_num = i % 18;
-                uint32_t store_num = (uint32_t)(1 << (i % 18));
                 sense_line_status[(uint8_t)(i / 18)] |= (1 << (i % 18));
                 increment_sense_line_fault(i);
             }

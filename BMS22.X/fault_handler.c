@@ -302,17 +302,17 @@ void reset_mux_self_test_fault(uint8_t chip_id)
 
 static void set_voltage_fault_bit(void)
 {
-    fault_codes |= (1 << 1); //TODO magic numbers?
+    fault_codes |= (1 << 1);
 }
 
 static void set_temperature_fault_bit(void)
 {
-    fault_codes |= (1 << 0); //TODO magic numbers?
+    fault_codes |= (1 << 0);
 }
 
 static void set_sense_line_fault_bit(void)
 {
-    fault_codes |= (1 << 4); //TODO magic numbers?
+    fault_codes |= (1 << 4);
 }
 
 static void set_self_test_fault_bit(void)

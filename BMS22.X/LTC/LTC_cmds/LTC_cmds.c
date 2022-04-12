@@ -332,7 +332,7 @@ uint8_t read_config_A(uint8_t* buffer)
     {
         CS_6820_SetLow();
         SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
-        uint8_t intermediate_buffer[8 * NUM_ICS]; //TODO is intermediate buffer the best way to do this?
+        uint8_t intermediate_buffer[8 * NUM_ICS];
         SPI1_Exchange8bitBuffer(dummy_buf, 8*NUM_ICS, intermediate_buffer); 
         // 6 data bytes plus 2 byte PEC
         CS_6820_SetHigh();
@@ -340,7 +340,7 @@ uint8_t read_config_A(uint8_t* buffer)
         uint8_t k = 0;
         for(k = 0; k < NUM_ICS; ++k)
         {
-            if(verify_pec(&intermediate_buffer[8*k], 6, &intermediate_buffer[8*i + 6]) == SUCCESS) // TODO make this work for multiple ICs
+            if(verify_pec(&intermediate_buffer[8*k], 6, &intermediate_buffer[8*i + 6]) == SUCCESS)
             {
                 buffer[6*k] = intermediate_buffer[8*k];
                 buffer[6*k + 1] = intermediate_buffer[8*k + 1];
@@ -437,7 +437,7 @@ uint8_t read_status_A(uint8_t* buffer)
     {
         CS_6820_SetLow();
         SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
-        uint8_t intermediate_buffer[8 * NUM_ICS]; //TODO is intermediate buffer the best way to do this?
+        uint8_t intermediate_buffer[8 * NUM_ICS];
         SPI1_Exchange8bitBuffer(dummy_buf, 8*NUM_ICS, intermediate_buffer); 
         // 6 data bytes plus 2 byte PEC
         CS_6820_SetHigh();
@@ -480,7 +480,7 @@ uint8_t read_status_B(uint8_t* buffer)
     {
         CS_6820_SetLow();
         SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
-        uint8_t intermediate_buffer[8 * NUM_ICS]; //TODO is intermediate buffer the best way to do this?
+        uint8_t intermediate_buffer[8 * NUM_ICS];
         SPI1_Exchange8bitBuffer(dummy_buf, 8*NUM_ICS, intermediate_buffer); 
         // 6 data bytes plus 2 byte PEC
         CS_6820_SetHigh();

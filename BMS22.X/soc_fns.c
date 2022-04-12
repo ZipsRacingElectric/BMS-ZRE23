@@ -88,7 +88,7 @@ void calc_soc(void)
 
     cs_lo_to_transmit = (int16_t)CS_LOW_ADC_BITS_TO_AMPS(ADCBUF2);
     
-    /* TODO
+    /* TODO: why is cs_hi val always junk? 
      * do I need/want the following line? cs_high_sample is often junk value 
      * since we only retrieve the high sample val if current is too big to be 
      * measured using the low channel
@@ -96,7 +96,7 @@ void calc_soc(void)
     cs_hi_to_transmit = (int16_t)CS_HIGH_ADC_BITS_TO_AMPS(ADCBUF3); //(cs_high_sample)
     
     ++eeprom_write_counter;
-    if(eeprom_write_counter > 10)
+    if(eeprom_write_counter > 20)
     {
         eeprom_write_counter = 0;
         LED5_EEPROM_Toggle();
