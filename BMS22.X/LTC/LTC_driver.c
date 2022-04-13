@@ -215,12 +215,12 @@ void open_sense_line_check(uint32_t* sense_line_status)
         {
             if(cell_pu[i] == 0) // TODO: exactly equal to zero or just close to zero?
             {
-                sense_line_status[i / 18] |= (1 << (i % 18));
+                sense_line_status[i / 18] |= (1UL << (i % 18));
                 increment_sense_line_fault(i);
             }
             else
             {
-                sense_line_status[i / 18] &= (uint32_t)(~(1 << (i % 18)));
+                sense_line_status[i / 18] &= (uint32_t)(~(1UL << (i % 18)));
                 reset_sense_line_fault(i);
             }
         }
@@ -228,12 +228,12 @@ void open_sense_line_check(uint32_t* sense_line_status)
         {
             if(cell_pd[i] == 0) // TODO: exactly equal to zero or just close to zero?
             {
-                sense_line_status[i / 18] |= (1 << (i % 18));
+                sense_line_status[i / 18] |= (1UL << (i % 18));
                 increment_sense_line_fault(i);
             }
             else
             {
-                sense_line_status[i / 18] &= (uint32_t)(~(1 << (i % 18)));
+                sense_line_status[i / 18] &= (uint32_t)(~(1UL << (i % 18)));
                 reset_sense_line_fault(i);
             }
         }
@@ -242,12 +242,12 @@ void open_sense_line_check(uint32_t* sense_line_status)
             int16_t delta = cell_pu[i+1] - cell_pd[i+1]; // V * 10000
             if(delta < -4000) //TODO magic number
             {
-                sense_line_status[(uint8_t)(i / 18)] |= (1 << (i % 18));
+                sense_line_status[(uint8_t)(i / 18)] |= (1UL << (i % 18));
                 increment_sense_line_fault(i);
             }
             else
             {
-                sense_line_status[(uint8_t)(i / 18)] &= (uint32_t)(~(1 << (i % 18)));
+                sense_line_status[(uint8_t)(i / 18)] &= (uint32_t)(~(1UL << (i % 18)));
                 reset_sense_line_fault(i);
             }
         }

@@ -45,7 +45,16 @@ void update_cell_balance_array(uint16_t* cell_voltages)
         }
     }
     
-     for(i = 0; i < NUM_ICS; ++i)
+    if(balancing_enabled == 0)
+    {
+        for(i = 0; i < NUM_ICS; ++i)
+        {
+            cell_needs_balanced[i] = 0;
+        }
+        return;
+    }
+    
+    for(i = 0; i < NUM_ICS; ++i)
     {
         uint8_t k = 0;
         for(k = 0; k < CELLS_PER_IC; ++k)
