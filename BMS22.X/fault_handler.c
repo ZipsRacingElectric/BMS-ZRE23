@@ -94,7 +94,7 @@ void check_for_fault(void)
     uint8_t i = 0;
     
     // 1st ic SENIOR DESIGN DEMO
-    for(i = 0; i < 18; ++i)// TODO check all cell voltages NUM_CELLS; ++i)
+    for(i = 0; i < 36; ++i)// TODO check all cell voltages NUM_CELLS; ++i)
     {
         if(outofrange_voltage_fault[i] > OUTOFRANGE_VOLTAGE_MAX_FAULTS)
         {
@@ -108,22 +108,6 @@ void check_for_fault(void)
             set_sense_line_fault_bit();
         }
     }
-    
-    // 2nd IC
-//    for(i = 18; i < 18+5; ++i)
-//    {
-//        if(outofrange_voltage_fault[i] > OUTOFRANGE_VOLTAGE_MAX_FAULTS)
-//        {
-//            shutdown_car();
-//            set_voltage_fault_bit();
-//        }
-//   
-//        if(sense_line_fault[i] > OPEN_SENSE_LINE_MAX_FAULTS)
-//        {
-//            shutdown_car();
-//            set_sense_line_fault_bit();
-//        }
-//    }
     
 //    for(i = 0; i < 18; ++i) // TODO check all registers for missing voltage measurement NUM_ICS * 6; ++i)
 //    {
@@ -153,7 +137,7 @@ void check_for_fault(void)
         }
     }
     
-    for(i = 7; i < 8; ++i) // TODO track faults in all temp sensors 9*NUM_ICS; ++i)
+    for(i = 9; i < 11; ++i) // TODO track faults in all temp sensors 9*NUM_ICS; ++i)
     {
         if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
         {
@@ -162,14 +146,14 @@ void check_for_fault(void)
         }
     }
     
-//    for(i = 9; i < 11; ++i) // TODO track faults in all temp sensors 9*NUM_ICS; ++i)
-//    {
-//        if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
-//        {
-//            shutdown_car();
-//            set_temperature_fault_bit();
-//        }
-//    }
+    for(i = 12; i < 14; ++i) // TODO track faults in all temp sensors 9*NUM_ICS; ++i)
+    {
+        if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
+        {
+            shutdown_car();
+            set_temperature_fault_bit();
+        }
+    }
     
     for(i = 0; i < 1; ++i) // TODO track temp faults for all regs for all ICs 4*NUM_ICS; ++i)
     {

@@ -40,7 +40,7 @@ void eeprom_initialize(void)
     // if not valid, make valid
     if(!is_valid)
     {
-        eeprom_soc = 1000;
+        eeprom_soc = 50;
     }
     else
     {

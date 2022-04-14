@@ -21,7 +21,7 @@
 #define G_V_PER_A_HIGH                  0.004
 #define G_V_PER_A_LOW                   0.0267
 #define SAMPLE_TIME_S_X_THOU            4
-#define OFFSET_VOLTAGE                  2.475 //TODO is this correct? This seems to be what the ADC is reading on the CS Low pin when no current is flowing
+#define OFFSET_VOLTAGE                  2.508 //TODO is this correct? This seems to be what the ADC is reading on the CS Low pin when no current is flowing
 
 #define CS_SAMPLE_HI_COEFF              ADC_REF_VOLT * SAMPLE_TIME_S_X_THOU / (ADC_MAX_BITS * FIVE_THREE_V_DIV * G_V_PER_A_HIGH * 60 * 60)
 #define OFFSET_HI_COEFF                 SAMPLE_TIME_S_X_THOU / (G_V_PER_A_HIGH * 60 * 60)

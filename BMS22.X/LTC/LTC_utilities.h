@@ -19,7 +19,7 @@ extern "C" {
 #define CMD_SIZE_BYTES       4
 
 // system constants
-#define NUM_ICS                 1 //TODO: change to 5
+#define NUM_ICS                 2 //TODO: change to 5
 #define CELLS_PER_REGISTER      3
 #define CV_REGISTERS_PER_IC     6
 #define CELLS_PER_IC            18
@@ -34,10 +34,10 @@ extern "C" {
 // cell voltage x 10000 comes from LTC6813 chip
 #define CELL_VOLTAGE_MAX        (42000) //TODO: research what these values should be
 #define CELL_VOLTAGE_MIN        (30000)
-#define CELL_BALANCE_THRESHOLD  200 // 0.02 V threshold for cell balancing
+#define CELL_BALANCE_THRESHOLD  600 // 0.02 V threshold for cell balancing
 // GPIO voltage x 10000 comes from LTC6813 chip
 #define CELL_TEMPERATURE_MAX    40000 // -5 C
-#define CELL_TEMPERATURE_MIN    23000 // SENIOR DESIGN DEMO 5825  // 60 C
+#define CELL_TEMPERATURE_MIN    22000 // SENIOR DESIGN DEMO 5825  // 60 C
 
 // TODO maybe this should be an enum
 #define ADCVA       0

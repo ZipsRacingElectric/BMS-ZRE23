@@ -61,11 +61,11 @@ void update_cell_balance_array(uint16_t* cell_voltages)
         {
             if(cell_voltages[k + i*CELLS_PER_IC] > (minimum_voltage + CELL_BALANCE_THRESHOLD))
             {
-                cell_needs_balanced[i] |= (1 << k);
+                cell_needs_balanced[i] |= (1UL << k);
             }
             else
             {
-                cell_needs_balanced[i] &= (uint32_t)(~(1 << k));
+                cell_needs_balanced[i] &= (uint32_t)(~(1UL << k));
             }
         }
     }
