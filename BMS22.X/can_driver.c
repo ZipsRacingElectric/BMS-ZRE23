@@ -90,7 +90,7 @@ void report_pack_temperatures(uint16_t* pack_temperatures)
 // put status message on main vehicle CAN bus
 void report_status(void)
 {
-    int16_t cs_lo = get_cs_lo_xten();
+    int16_t cs_lo = get_cs_lo_xhundred();
     int16_t cs_hi = get_cs_hi_xten();
     uint16_t soc = get_soc_xten();
     uint8_t fault_codes = get_fault_codes();

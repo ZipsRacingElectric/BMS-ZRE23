@@ -21,17 +21,17 @@
 #define G_V_PER_A_HIGH                  0.004
 #define G_V_PER_A_LOW                   0.0267
 #define SAMPLE_TIME_S_X_THOU            4
-#define OFFSET_VOLTAGE                  2.508 //TODO is this correct? This seems to be what the ADC is reading on the CS Low pin when no current is flowing
+#define OFFSET_VOLTAGE                  2.5065 //TODO is this correct? This seems to be what the ADC is reading on the CS Low pin when no current is flowing
 
-#define CS_SAMPLE_HI_COEFF              ADC_REF_VOLT * SAMPLE_TIME_S_X_THOU / (ADC_MAX_BITS * FIVE_THREE_V_DIV * G_V_PER_A_HIGH * 60 * 60)
-#define OFFSET_HI_COEFF                 SAMPLE_TIME_S_X_THOU / (G_V_PER_A_HIGH * 60 * 60)
-#define CS_SAMPLE_LO_COEFF              ADC_REF_VOLT * SAMPLE_TIME_S_X_THOU / (ADC_MAX_BITS * FIVE_THREE_V_DIV * G_V_PER_A_LOW * 60 * 60)
-#define OFFSET_LO_COEFF                 SAMPLE_TIME_S_X_THOU / (G_V_PER_A_LOW * 60 * 60)
+const float CS_SAMPLE_HI_COEFF =        ADC_REF_VOLT * SAMPLE_TIME_S_X_THOU / (ADC_MAX_BITS * FIVE_THREE_V_DIV * G_V_PER_A_HIGH * 60 * 60);
+const float OFFSET_HI_COEFF =           SAMPLE_TIME_S_X_THOU / (G_V_PER_A_HIGH * 60 * 60);
+const float CS_SAMPLE_LO_COEFF =        ADC_REF_VOLT * SAMPLE_TIME_S_X_THOU / (ADC_MAX_BITS * FIVE_THREE_V_DIV * G_V_PER_A_LOW * 60 * 60);
+const float OFFSET_LO_COEFF =           SAMPLE_TIME_S_X_THOU / (G_V_PER_A_LOW * 60 * 60);
 
 #define USE_LO_THRESHOLD                3200 //~60 A in ADC bits as measured by CS LO channel
 
 #define CS_HIGH_ADC_BITS_TO_AMPS(x)     ((x * ADC_REF_VOLT * 10 / (ADC_MAX_BITS * FIVE_THREE_V_DIV * G_V_PER_A_HIGH)) - OFFSET_VOLTAGE/G_V_PER_A_HIGH * 10)
-#define CS_LOW_ADC_BITS_TO_AMPS(x)      ((x * ADC_REF_VOLT * 10 / (ADC_MAX_BITS * FIVE_THREE_V_DIV * G_V_PER_A_LOW)) - OFFSET_VOLTAGE/G_V_PER_A_LOW * 10)
+#define CS_LOW_ADC_BITS_TO_AMPS(x)      ((x * ADC_REF_VOLT * 10 / (ADC_MAX_BITS * FIVE_THREE_V_DIV * G_V_PER_A_LOW)) - OFFSET_VOLTAGE/G_V_PER_A_LOW * 100)
 
 ////////////////globals////////////////////////////////////////////////////////
 int16_t cs_lo_to_transmit = 0;
@@ -111,7 +111,7 @@ uint16_t get_soc_xten(void)
     return (uint16_t)state_of_charge_float;
 }
 
-int16_t get_cs_lo_xten(void)
+int16_t get_cs_lo_xhundred(void)
 {
     return cs_lo_to_transmit;
 }
