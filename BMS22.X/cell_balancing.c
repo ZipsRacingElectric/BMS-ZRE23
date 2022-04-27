@@ -26,7 +26,8 @@ void balance_timer_initialize(void)
     {
         cell_needs_balanced[i] = 0;
     }
-    TMR2_SetInterruptHandler(write_balance_switches); //my function to handle timer2 interrupts   
+    //my function to handle timer2 interrupts   
+    TMR2_SetInterruptHandler(write_balance_switches);
     TMR2_Start();
 }
 
@@ -39,7 +40,10 @@ void update_cell_balance_array(uint16_t* cell_voltages)
     uint16_t minimum_voltage = 42000;
     for(i = 0; i < NUM_CELLS; ++i)
     {
-        if(cell_voltages[i] < minimum_voltage && cell_voltages[i] > CELL_VOLTAGE_MIN) //TODO change this to a check that the cell voltage is > 0 -> since 0 is used to indicate invalid PEC or missing packet
+        //TODO change this to a check that the cell voltage is > 0 -> 
+        // since 0 is used to indicate invalid PEC or missing packet
+        if(cell_voltages[i] < minimum_voltage && 
+           cell_voltages[i] > CELL_VOLTAGE_MIN)
         {
             minimum_voltage = cell_voltages[i];
         }
@@ -59,7 +63,8 @@ void update_cell_balance_array(uint16_t* cell_voltages)
         uint8_t k = 0;
         for(k = 0; k < CELLS_PER_IC; ++k)
         {
-            if(cell_voltages[k + i*CELLS_PER_IC] > (minimum_voltage + CELL_BALANCE_THRESHOLD))
+            if(cell_voltages[k + i*CELLS_PER_IC] > (minimum_voltage + 
+                                                    CELL_BALANCE_THRESHOLD))
             {
                 cell_needs_balanced[i] |= (1UL << k);
             }

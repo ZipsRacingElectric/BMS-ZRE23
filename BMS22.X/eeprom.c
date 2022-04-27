@@ -30,12 +30,13 @@ void eeprom_initialize(void)
     // read from EEPROM
     uint8_t read_bytes[4] = {0, 0, 0, 0};
     CS_EEPROM_SetLow();
-    SPI1_Exchange8bitBuffer(&READ_CMD, 1, eeprom_dummy_buf); // send read command
-    SPI1_Exchange8bitBuffer(&ADDRESS, 1, eeprom_dummy_buf); // send read address
-    SPI1_Exchange8bitBuffer(eeprom_dummy_buf, 4, read_bytes); // read four memory bytes
+    SPI1_Exchange8bitBuffer(&READ_CMD, 1, eeprom_dummy_buf); // read command
+    SPI1_Exchange8bitBuffer(&ADDRESS, 1, eeprom_dummy_buf); // read address
+    SPI1_Exchange8bitBuffer(eeprom_dummy_buf, 4, read_bytes); // read bytes
     CS_EEPROM_SetHigh();
         
-    bool is_valid = (read_bytes[2] == EEPROM_INITIALIZED_CODE_0) && (read_bytes[3] == EEPROM_INITIALIZED_CODE_1);
+    bool is_valid = (read_bytes[2] == EEPROM_INITIALIZED_CODE_0) && 
+                    (read_bytes[3] == EEPROM_INITIALIZED_CODE_1);
     
     // if not valid, make valid
     if(!is_valid)
@@ -69,8 +70,11 @@ void write_eeprom(uint16_t write_data)
     __delay_us(1); //TODO is this necessary?
     
     CS_EEPROM_SetLow();
-    uint8_t write_bytes[6] = {WRITE_CMD, ADDRESS, (write_data & 0xFF), (write_data >> 8) & 0xFF, EEPROM_INITIALIZED_CODE_0, EEPROM_INITIALIZED_CODE_1};
-    SPI1_Exchange8bitBuffer(write_bytes, 6, eeprom_dummy_buf); // write four memory bytes
+    uint8_t write_bytes[6] = {WRITE_CMD, ADDRESS, (write_data & 0xFF), 
+                             (write_data >> 8) & 0xFF, 
+                             EEPROM_INITIALIZED_CODE_0, 
+                             EEPROM_INITIALIZED_CODE_1};
+    SPI1_Exchange8bitBuffer(write_bytes, 6, eeprom_dummy_buf); // write bytes
     CS_EEPROM_SetHigh();
 }
 

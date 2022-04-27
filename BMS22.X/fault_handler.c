@@ -123,7 +123,7 @@ void check_for_fault(void)
     {
         if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
         {
-//            shutdown_car();
+            shutdown_car();
             set_temperature_fault_bit();
         }
     }
@@ -132,7 +132,7 @@ void check_for_fault(void)
     {
         if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
         {
-//            shutdown_car();
+            shutdown_car();
             set_temperature_fault_bit();
         }
     }
@@ -141,7 +141,7 @@ void check_for_fault(void)
     {
         if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
         {
-//            shutdown_car();
+            shutdown_car();
             set_temperature_fault_bit();
         }
     }
@@ -150,7 +150,7 @@ void check_for_fault(void)
     {
         if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
         {
-//            shutdown_car();
+            shutdown_car();
             set_temperature_fault_bit();
         }
     }

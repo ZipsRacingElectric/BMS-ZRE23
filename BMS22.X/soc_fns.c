@@ -93,7 +93,7 @@ void calc_soc(void)
      * since we only retrieve the high sample val if current is too big to be 
      * measured using the low channel
      */
-    cs_hi_to_transmit = (int16_t)CS_HIGH_ADC_BITS_TO_AMPS(ADCBUF3); //(cs_high_sample)
+    cs_hi_to_transmit = (int16_t)CS_HIGH_ADC_BITS_TO_AMPS(ADCBUF3);
     
     ++eeprom_write_counter;
     if(eeprom_write_counter > 20)
