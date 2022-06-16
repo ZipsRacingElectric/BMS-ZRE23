@@ -128,6 +128,7 @@ BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
  SG_ cell62_balancing : 61|1@1+ (1,0) [0|0] "bitfield" Vector__XXX
  SG_ cell63_balancing : 62|1@1+ (1,0) [0|0] "bitfield" Vector__XXX
  SG_ cell64_balancing : 63|1@1+ (1,0) [0|0] "bitfield" Vector__XXX
+ SG_ NewSignal_0003 : 55|16@0+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 1088 status: 7 BMS
  SG_ cs_lo : 32|16@1- (0.1,0) [0|0] "A" Vector__XXX
@@ -267,78 +268,79 @@ BO_ 1046 cell_voltages21: 8 BMS
  SG_ cell87 : 39|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
  SG_ cell88 : 55|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
 
-BO_ 1047 cell_voltages22: 4 BMS
+BO_ 1047 cell_voltages22: 8 BMS
  SG_ cell89 : 7|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
  SG_ cell90 : 23|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ spam : 39|32@0+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 1051 pack_temperatures0: 8 BMS
  SG_ therm0 : 7|16@0+ (-0.0021933,81.297) [0|0] "C" Vector__XXX
  SG_ therm1 : 23|16@0+ (-0.0021933,81.297) [0|0] "C" Vector__XXX
- SG_ therm2 : 39|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm3 : 55|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ therm2 : 39|16@0+ (-0.0021933,81.297) [0|0] "C" Vector__XXX
+ SG_ therm3 : 55|16@0+ (-0.0021933,81.297) [0|0] "C" Vector__XXX
 
 BO_ 1052 pack_temperatures1: 8 BMS
  SG_ therm4 : 7|16@0+ (-0.0021933,81.297) [0|0] "C" Vector__XXX
- SG_ therm5 : 23|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm6 : 39|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ therm5 : 23|16@0+ (-0.0021933,81.297) [0|0] "C" Vector__XXX
+ SG_ therm6 : 39|16@0+ (-0.0021933,81.297) [0|0] "C" Vector__XXX
  SG_ therm7 : 55|16@0+ (-0.0021933,81.297) [0|0] "C" Vector__XXX
 
 BO_ 1053 pack_temperatures2: 8 BMS
- SG_ therm8 : 7|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ therm8 : 7|16@0+ (-0.0021933,81.297) [0|0] "C" Vector__XXX
  SG_ therm9 : 23|16@0+ (-0.0021933,81.297) [0|0] "C" Vector__XXX
  SG_ therm10 : 39|16@0+ (-0.0021933,81.297) [0|0] "C" Vector__XXX
- SG_ therm11 : 55|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ therm11 : 55|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
 
 BO_ 1054 pack_temperatures3: 8 BMS
- SG_ therm12 : 7|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm13 : 23|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm14 : 39|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm15 : 55|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ therm12 : 7|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm13 : 23|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm14 : 39|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm15 : 55|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
 
 BO_ 1055 pack_temperatures4: 8 BMS
- SG_ therm16 : 7|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm17 : 23|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm18 : 39|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm19 : 55|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ therm16 : 7|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm17 : 23|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm18 : 39|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm19 : 55|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
 
 BO_ 1056 pack_temperatures5: 8 BMS
- SG_ therm20 : 7|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm21 : 23|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm22 : 39|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm23 : 55|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ therm20 : 7|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm21 : 23|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm22 : 39|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm23 : 55|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
 
 BO_ 1057 pack_temperatures6: 8 BMS
- SG_ therm24 : 7|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm25 : 23|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm26 : 39|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm27 : 55|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ therm24 : 7|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm25 : 23|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm26 : 39|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm27 : 55|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
 
 BO_ 1058 pack_temperatures7: 8 BMS
- SG_ therm28 : 7|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm29 : 23|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm30 : 39|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm31 : 55|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ therm28 : 7|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm29 : 23|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm30 : 39|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm31 : 55|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
 
 BO_ 1059 pack_temperatures8: 8 BMS
- SG_ therm32 : 7|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm33 : 23|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm34 : 39|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm35 : 55|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ therm32 : 7|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm33 : 23|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm34 : 39|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm35 : 55|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
 
 BO_ 1060 pack_temperatures9: 8 BMS
- SG_ therm36 : 7|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm37 : 23|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm38 : 39|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm39 : 55|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ therm36 : 7|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm37 : 23|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm38 : 39|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm39 : 55|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
 
 BO_ 1061 pack_temperatures10: 8 BMS
- SG_ therm40 : 7|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm41 : 23|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm42 : 39|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
- SG_ therm43 : 55|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ therm40 : 7|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm41 : 23|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm42 : 39|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
+ SG_ therm43 : 55|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
 
 BO_ 1062 pack_temperatures11: 2 BMS
- SG_ therm44 : 7|16@0+ (0.0001,0) [0|0] "V" Vector__XXX
+ SG_ therm44 : 7|16@0+ (-0.0021933,81.297) [0|0] "V" Vector__XXX
 
 BO_ 1048 balancing0: 6 BMS
  SG_ cell1_balancing : 0|1@1+ (1,0) [0|0] "bit" Vector__XXX

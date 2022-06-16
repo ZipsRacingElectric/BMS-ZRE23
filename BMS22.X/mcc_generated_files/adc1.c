@@ -72,22 +72,22 @@ void ADC1_Initialize (void)
     ADCON2H = 0x00;
     // SWCTRG disabled; SHRSAMP disabled; SUSPEND disabled; SWLCTRG disabled; SUSPCIE disabled; CNVCHSEL AN0; REFSEL disabled; 
     ADCON3L = 0x00;
-    // SHREN disabled; C3EN enabled; C2EN enabled; C1EN disabled; C0EN disabled; CLKDIV 1; CLKSEL FOSC/2; 
-    ADCON3H = (0x0C & 0xFF00); //Disabling C0EN, C1EN, C2EN, C3EN and SHREN bits
+    // SHREN enabled; C3EN disabled; C2EN disabled; C1EN disabled; C0EN enabled; CLKDIV 1; CLKSEL FOSC/2; 
+    ADCON3H = (0x81 & 0xFF00); //Disabling C0EN, C1EN, C2EN, C3EN and SHREN bits
     // SAMC3EN disabled; SYNCTRG3 disabled; SAMC0EN disabled; SYNCTRG2 disabled; SAMC1EN disabled; SAMC2EN disabled; SYNCTRG1 disabled; SYNCTRG0 disabled; 
     ADCON4L = 0x00;
-    // C3CHS AN3; C0CHS AN0; C1CHS AN1; C2CHS AN2; 
-    ADCON4H = 0x00;
+    // C3CHS AN3; C0CHS AN0ALT; C1CHS AN1; C2CHS AN2; 
+    ADCON4H = 0x03;
     // SIGN0 disabled; SIGN4 disabled; SIGN3 disabled; SIGN2 disabled; SIGN1 disabled; SIGN7 disabled; SIGN6 disabled; DIFF0 disabled; DIFF1 disabled; DIFF2 disabled; DIFF3 disabled; DIFF4 disabled; DIFF6 disabled; DIFF7 disabled; 
     ADMOD0L = 0x00;
     // DIFF8 disabled; DIFF9 disabled; SIGN10 disabled; SIGN11 disabled; DIFF14 disabled; SIGN8 disabled; SIGN14 disabled; DIFF11 disabled; DIFF10 disabled; SIGN9 disabled; 
     ADMOD0H = 0x00;
     // DIFF19 disabled; DIFF18 disabled; SIGN20 disabled; DIFF17 disabled; SIGN21 disabled; SIGN17 disabled; DIFF21 disabled; SIGN18 disabled; DIFF20 disabled; SIGN19 disabled; 
     ADMOD1L = 0x00;
-    // IE1 disabled; IE0 disabled; IE3 enabled; IE2 enabled; IE4 disabled; IE10 disabled; IE7 disabled; IE6 disabled; IE9 disabled; IE8 disabled; IE14 disabled; IE11 disabled; 
-    ADIEL = 0x0C;
-    // IE17 disabled; IE18 disabled; IE19 disabled; IE20 disabled; IE21 disabled; 
-    ADIEH = 0x00;
+    // IE1 disabled; IE0 enabled; IE3 disabled; IE2 disabled; IE4 disabled; IE10 disabled; IE7 disabled; IE6 disabled; IE9 disabled; IE8 disabled; IE14 disabled; IE11 disabled; 
+    ADIEL = 0x01;
+    // IE17 enabled; IE18 disabled; IE19 disabled; IE20 disabled; IE21 disabled; 
+    ADIEH = 0x02;
     // CMPEN6 disabled; CMPEN10 disabled; CMPEN11 disabled; CMPEN4 disabled; CMPEN3 disabled; CMPEN2 disabled; CMPEN1 disabled; CMPEN0 disabled; CMPEN14 disabled; CMPEN9 disabled; CMPEN8 disabled; CMPEN7 disabled; 
     ADCMP0ENL = 0x00;
     // CMPEN6 disabled; CMPEN10 disabled; CMPEN11 disabled; CMPEN4 disabled; CMPEN3 disabled; CMPEN2 disabled; CMPEN1 disabled; CMPEN0 disabled; CMPEN14 disabled; CMPEN9 disabled; CMPEN8 disabled; CMPEN7 disabled; 
@@ -147,31 +147,31 @@ void ADC1_Initialize (void)
     ADC1_SetCS_HIInterruptHandler(&ADC1_CS_HI_CallBack);
     
     // Clearing CS_LO interrupt flag.
-    IFS7bits.ADCAN2IF = 0;
+    IFS10bits.ADCAN17IF = 0;
     // Enabling CS_LO interrupt.
-    IEC7bits.ADCAN2IE = 1;
+    IEC10bits.ADCAN17IE = 1;
     // Clearing CS_HI interrupt flag.
-    IFS7bits.ADCAN3IF = 0;
+    IFS6bits.ADCAN0IF = 0;
     // Enabling CS_HI interrupt.
-    IEC7bits.ADCAN3IE = 1;
+    IEC6bits.ADCAN0IE = 1;
 
     // Setting WARMTIME bit
     ADCON5Hbits.WARMTIME = 0xF;
     // Enabling ADC Module
     ADCON1Lbits.ADON = 0x1;
-    // Enabling Power for Core2
-    ADC1_Core2PowerEnable();
-    // Calibrating Core2
-    ADC1_Core2Calibration();
-    // Enabling Power for Core3
-    ADC1_Core3PowerEnable();
-    // Calibrating Core3
-    ADC1_Core3Calibration();
+    // Enabling Power for the Shared Core
+    ADC1_SharedCorePowerEnable();
+    // Calibrating the Shared Core
+    ADC1_SharedCoreCalibration();
+    // Enabling Power for Core0
+    ADC1_Core0PowerEnable();
+    // Calibrating Core0
+    ADC1_Core0Calibration();
 
-    //TRGSRC0 None; TRGSRC1 None; 
-    ADTRIG0L = 0x00;
-    //TRGSRC3 Common Software Trigger; TRGSRC2 Common Software Trigger; 
-    ADTRIG0H = 0x101;
+    //TRGSRC0 Common Software Trigger; TRGSRC1 None; 
+    ADTRIG0L = 0x01;
+    //TRGSRC3 None; TRGSRC2 None; 
+    ADTRIG0H = 0x00;
     //TRGSRC4 None; 
     ADTRIG1L = 0x00;
     //TRGSRC6 None; TRGSRC7 None; 
@@ -182,8 +182,8 @@ void ADC1_Initialize (void)
     ADTRIG2H = 0x00;
     //TRGSRC14 None; 
     ADTRIG3H = 0x00;
-    //TRGSRC17 None; 
-    ADTRIG4L = 0x00;
+    //TRGSRC17 Common Software Trigger; 
+    ADTRIG4L = 0x100;
     //TRGSRC19 None; TRGSRC18 None; 
     ADTRIG4H = 0x00;
     //TRGSRC20 None; TRGSRC21 None; 
@@ -294,7 +294,6 @@ void __attribute__ ((weak)) ADC1_Tasks ( void )
     }
 }
 
-
 void __attribute__ ((weak)) ADC1_CS_LO_CallBack( uint16_t adcVal )
 { 
 
@@ -305,11 +304,11 @@ void ADC1_SetCS_LOInterruptHandler(void* handler)
     ADC1_CS_LODefaultInterruptHandler = handler;
 }
 
-void __attribute__ ( ( __interrupt__ , auto_psv, weak ) ) _ADCAN2Interrupt ( void )
+void __attribute__ ( ( __interrupt__ , auto_psv, weak ) ) _ADCAN17Interrupt ( void )
 {
     uint16_t valCS_LO;
     //Read the ADC value from the ADCBUF
-    valCS_LO = ADCBUF2;
+    valCS_LO = ADCBUF17;
 
     if(ADC1_CS_LODefaultInterruptHandler) 
     { 
@@ -317,8 +316,9 @@ void __attribute__ ( ( __interrupt__ , auto_psv, weak ) ) _ADCAN2Interrupt ( voi
     }
 
     //clear the CS_LO interrupt flag
-    IFS7bits.ADCAN2IF = 0;
+    IFS10bits.ADCAN17IF = 0;
 }
+
 
 void __attribute__ ((weak)) ADC1_CS_HI_CallBack( uint16_t adcVal )
 { 
@@ -330,11 +330,11 @@ void ADC1_SetCS_HIInterruptHandler(void* handler)
     ADC1_CS_HIDefaultInterruptHandler = handler;
 }
 
-void __attribute__ ( ( __interrupt__ , auto_psv, weak ) ) _ADCAN3Interrupt ( void )
+void __attribute__ ( ( __interrupt__ , auto_psv, weak ) ) _ADCAN0Interrupt ( void )
 {
     uint16_t valCS_HI;
     //Read the ADC value from the ADCBUF
-    valCS_HI = ADCBUF3;
+    valCS_HI = ADCBUF0;
 
     if(ADC1_CS_HIDefaultInterruptHandler) 
     { 
@@ -342,7 +342,7 @@ void __attribute__ ( ( __interrupt__ , auto_psv, weak ) ) _ADCAN3Interrupt ( voi
     }
 
     //clear the CS_HI interrupt flag
-    IFS7bits.ADCAN3IF = 0;
+    IFS6bits.ADCAN0IF = 0;
 }
 
 

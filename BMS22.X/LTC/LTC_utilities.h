@@ -19,14 +19,14 @@ extern "C" {
 #define CMD_SIZE_BYTES       4
 
 // system constants
-#define NUM_ICS                  2 //TODO: change to 5
+#define NUM_ICS                  5 //@TODO: change to 5
 #define CELLS_PER_REGISTER       3
 #define CV_REGISTERS_PER_IC      6
 #define CELLS_PER_IC             18
-#define NUM_CELLS                (36) // WARN: If NUM_ICS or CELLS_PER_IC changes, you must change this number to be NUM_ICS * CELLS_PER_IC
+#define NUM_CELLS                (NUM_ICS * CELLS_PER_IC)
 #define TEMP_SENSORS_PER_IC      9
 #define AUX_REGISTERS_PER_IC     4
-#define NUM_TEMP_SENSORS         (18) // WARN: If NUM_ICS or TEMP_SENSORS_PER_IC changes, you must change the number to be NUM_ICS * TEMP_SENSORS_PER_IC
+#define NUM_TEMP_SENSORS         (NUM_ICS * TEMP_SENSORS_PER_IC)
     
 #define SUCCESS              0
 #define FAILURE              1

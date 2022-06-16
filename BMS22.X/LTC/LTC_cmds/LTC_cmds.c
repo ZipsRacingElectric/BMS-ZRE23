@@ -327,7 +327,7 @@ uint8_t read_config_A(uint8_t* buffer)
     cmd[3] = (uint8_t)(cmd_pec);
 
     uint8_t i = 0;
-    bool valid_pec[NUM_ICS] = {false, false};
+    bool valid_pec[NUM_ICS] = {false};
     for(i = 0; i < 10; ++i) // 10 tries to get valid PEC
     {
         CS_6820_SetLow();
@@ -432,7 +432,7 @@ uint8_t read_status_A(uint8_t* buffer)
     cmd[3] = (uint8_t)(cmd_pec);
 
     uint8_t i = 0;
-    bool valid_pec[NUM_ICS] = {false, false};
+    bool valid_pec[NUM_ICS] = {false};
     for(i = 0; i < 10; ++i) // 10 tries to get valid PEC
     {
         CS_6820_SetLow();
@@ -475,7 +475,7 @@ uint8_t read_status_B(uint8_t* buffer)
     cmd[3] = (uint8_t)(cmd_pec);
 
     uint8_t i = 0;
-    bool valid_pec[NUM_ICS] = {false, false};
+    bool valid_pec[NUM_ICS] = {false};
     for(i = 0; i < 10; ++i) // 10 tries to get valid PEC
     {
         CS_6820_SetLow();

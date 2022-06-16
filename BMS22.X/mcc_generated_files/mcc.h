@@ -54,16 +54,16 @@
 #include "reset.h"
 
 #include "tmr2.h"
-#include "spi1.h"
 #include "tmr1.h"
 #include "watchdog.h"
-#include "adc1.h"
-#include "reset.h"
-#include "dma.h"
 #include "interrupt_manager.h"
 #include "traps.h"
+#include "spi1.h"
+#include "dma.h"
 #include "can2.h"
 #include "can1.h"
+#include "adc1.h"
+#include "reset.h"
 
 #warning "This file will be removed in future MCC releases. Use system.h instead."
 

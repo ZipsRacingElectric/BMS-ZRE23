@@ -70,12 +70,12 @@ void INTERRUPT_Initialize (void)
     //    CRXI: CAN 1 Rx Data Ready
     //    Priority: 1
         IPC8bits.C1RXIP = 1;
-    //    ADCAN2: ADC AN2 Convert Done
+    //    ADCAN17: ADC AN17 Convert Done
     //    Priority: 1
-        IPC28bits.ADCAN2IP = 1;
-    //    ADCAN3: ADC AN3 Convert Done
+        IPC40bits.ADCAN17IP = 1;
+    //    ADCAN0: ADC AN0 Convert Done
     //    Priority: 1
-        IPC28bits.ADCAN3IP = 1;
+        IPC27bits.ADCAN0IP = 1;
     //    DMA1I: DMA Channel 1
     //    Priority: 1
         IPC3bits.DMA1IP = 1;

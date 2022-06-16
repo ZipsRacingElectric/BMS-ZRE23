@@ -93,8 +93,7 @@ void check_for_fault(void)
 {
     uint8_t i = 0;
     
-    // 1st ic SENIOR DESIGN DEMO
-    for(i = 0; i < 36; ++i)// TODO check all cell voltages NUM_CELLS; ++i)
+    for(i = 0; i < NUM_CELLS; ++i)
     {
         if(outofrange_voltage_fault[i] > OUTOFRANGE_VOLTAGE_MAX_FAULTS)
         {
@@ -109,17 +108,16 @@ void check_for_fault(void)
         }
     }
     
-//    for(i = 0; i < 18; ++i) // TODO check all registers for missing voltage measurement NUM_ICS * 6; ++i)
-//    {
-//        if(missing_voltage_measurement_fault[i] > MISSING_VOLTAGE_MEASUREMENT_MAX_FAULTS)
-//        {
-//            shutdown_car();
-//            set_voltage_fault_bit();
-//        }
-//    }
+    for(i = 0; i < NUM_ICS * CV_REGISTERS_PER_IC; ++i)
+    {
+        if(missing_voltage_measurement_fault[i] > MISSING_VOLTAGE_MEASUREMENT_MAX_FAULTS)
+        {
+            shutdown_car();
+            set_voltage_fault_bit();
+        }
+    }
     
-    // SENIOR DESIGN DEMO
-    for(i = 0; i < 2; ++i) // TODO track faults in all temp sensors 9*NUM_ICS; ++i)
+    for(i = 0; i < NUM_ICS * TEMP_SENSORS_PER_IC; ++i)
     {
         if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
         {
@@ -128,34 +126,7 @@ void check_for_fault(void)
         }
     }
     
-    for(i = 4; i < 5; ++i) // TODO track faults in all temp sensors 9*NUM_ICS; ++i)
-    {
-        if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
-        {
-            shutdown_car();
-            set_temperature_fault_bit();
-        }
-    }
-    
-    for(i = 9; i < 11; ++i) // TODO track faults in all temp sensors 9*NUM_ICS; ++i)
-    {
-        if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
-        {
-            shutdown_car();
-            set_temperature_fault_bit();
-        }
-    }
-    
-    for(i = 12; i < 14; ++i) // TODO track faults in all temp sensors 9*NUM_ICS; ++i)
-    {
-        if(outofrange_temperature_fault[i] > OUTOFRANGE_TEMPERATURE_MAX_FAULTS)
-        {
-            shutdown_car();
-            set_temperature_fault_bit();
-        }
-    }
-    
-    for(i = 0; i < 1; ++i) // TODO track temp faults for all regs for all ICs 4*NUM_ICS; ++i)
+    for(i = 0; i < NUM_ICS * AUX_REGISTERS_PER_IC; ++i)
     {
         if(missing_temperature_measurement_fault[i] > MISSING_TEMP_MEASUREMENT_FAULTS_MAX)
         {

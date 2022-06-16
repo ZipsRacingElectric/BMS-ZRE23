@@ -68,9 +68,9 @@ void PIN_MANAGER_Initialize (void)
     /****************************************************************************
      * Setting the GPIO Direction SFR(s)
      ***************************************************************************/
-    TRISA = 0x000E;
-    TRISB = 0x023B;
-    TRISC = 0x2607;
+    TRISA = 0x0010;
+    TRISB = 0x7A1B;
+    TRISC = 0x306A;
 
     /****************************************************************************
      * Setting the Weak Pull Up and Weak Pull Down SFR(s)
@@ -92,24 +92,24 @@ void PIN_MANAGER_Initialize (void)
     /****************************************************************************
      * Setting the Analog/Digital Configuration SFR(s)
      ***************************************************************************/
-    ANSELA = 0x0004;
-    ANSELB = 0x0201;
-    ANSELC = 0x0606;
+    ANSELA = 0x0000;
+    ANSELB = 0x0000;
+    ANSELC = 0x0062;
     
     /****************************************************************************
      * Set the PPS
      ***************************************************************************/
     __builtin_write_OSCCONL(OSCCON & 0xbf); // unlock PPS
 
-    RPINR20bits.SCK1INR = 0x002F;    //RB15->SPI1:SCK1
+    RPINR20bits.SCK1INR = 0x0029;    //RB9->SPI1:SCK1
+    RPOR7bits.RP41R = 0x0006;    //RB9->SPI1:SCK1
+    RPINR26bits.C2RXR = 0x0014;    //RA4->ECAN2:C2RXR
+    RPOR1bits.RP19R = 0x000F;    //RA3->ECAN2:C2TX
+    RPINR20bits.SDI1R = 0x0020;    //RB0->SPI1:SDI1
+    RPOR14bits.RP57R = 0x0005;    //RC9->SPI1:SDO1
     RPOR0bits.RP16R = 0x000E;    //RA0->ECAN1:C1TX
-    RPOR5bits.RP38R = 0x0005;    //RB6->SPI1:SDO1
-    RPOR2bits.RP20R = 0x000F;    //RA4->ECAN2:C2TX
-    RPOR9bits.RP47R = 0x0006;    //RB15->SPI1:SCK1
-    RPINR26bits.C1RXR = 0x0011;    //RA1->ECAN1:C1RXR
-    RPINR20bits.SDI1R = 0x0025;    //RB5->SPI1:SDI1
-    RPOR13bits.RP55R = 0x0007;    //RC7->SPI1:SS1
-    RPINR26bits.C2RXR = 0x0013;    //RA3->ECAN2:C2RXR
+    RPINR26bits.C1RXR = 0x003C;    //RC12->ECAN1:C1RXR
+    RPOR1bits.RP18R = 0x0007;    //RA2->SPI1:SS1
 
     __builtin_write_OSCCONL(OSCCON | 0x40); // lock PPS
 }

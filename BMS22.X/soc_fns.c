@@ -14,7 +14,7 @@
 #include "eeprom.h"
 
 ////////////////defines////////////////////////////////////////////////////////
-#define TOTAL_CHARGE_AH                 2.5
+#define TOTAL_CHARGE_AH                 17.5
 #define ADC_REF_VOLT                    3.3
 #define ADC_MAX_BITS                    4095
 #define FIVE_THREE_V_DIV                9.1 / (4.7 + 9.1)
@@ -31,7 +31,7 @@ const float OFFSET_LO_COEFF =           SAMPLE_TIME_S_X_THOU / (G_V_PER_A_LOW * 
 #define USE_LO_THRESHOLD                3200 //~60 A in ADC bits as measured by CS LO channel
 
 #define CS_HIGH_ADC_BITS_TO_AMPS(x)     ((x * ADC_REF_VOLT * 10 / (ADC_MAX_BITS * FIVE_THREE_V_DIV * G_V_PER_A_HIGH)) - OFFSET_VOLTAGE/G_V_PER_A_HIGH * 10)
-#define CS_LOW_ADC_BITS_TO_AMPS(x)      ((x * ADC_REF_VOLT * 10 / (ADC_MAX_BITS * FIVE_THREE_V_DIV * G_V_PER_A_LOW)) - OFFSET_VOLTAGE/G_V_PER_A_LOW * 100)
+#define CS_LOW_ADC_BITS_TO_AMPS(x)      ((x * ADC_REF_VOLT * 10 / (ADC_MAX_BITS * FIVE_THREE_V_DIV * G_V_PER_A_LOW)) - OFFSET_VOLTAGE/G_V_PER_A_LOW * 10)
 
 ////////////////globals////////////////////////////////////////////////////////
 int16_t cs_lo_to_transmit = 0;
@@ -86,14 +86,14 @@ void calc_soc(void)
         state_of_charge_float = 0;
     }
 
-    cs_lo_to_transmit = (int16_t)CS_LOW_ADC_BITS_TO_AMPS(ADCBUF2);
+    cs_lo_to_transmit = (int16_t)CS_LOW_ADC_BITS_TO_AMPS(ADCBUF0);
     
     /* TODO: why is cs_hi val always junk? 
      * do I need/want the following line? cs_high_sample is often junk value 
      * since we only retrieve the high sample val if current is too big to be 
      * measured using the low channel
      */
-    cs_hi_to_transmit = (int16_t)CS_HIGH_ADC_BITS_TO_AMPS(ADCBUF3);
+    cs_hi_to_transmit = (int16_t)CS_HIGH_ADC_BITS_TO_AMPS(ADCBUF17);
     
     ++eeprom_write_counter;
     if(eeprom_write_counter > 20)

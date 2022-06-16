@@ -104,14 +104,14 @@
 #include "system.h"
 #include "system_types.h"
 #include "tmr2.h"
-#include "spi1.h"
 #include "tmr1.h"
-#include "adc1.h"
-#include "dma.h"
 #include "interrupt_manager.h"
 #include "traps.h"
+#include "spi1.h"
+#include "dma.h"
 #include "can2.h"
 #include "can1.h"
+#include "adc1.h"
 
 void SYSTEM_Initialize(void)
 {
