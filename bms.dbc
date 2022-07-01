@@ -131,7 +131,7 @@ BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
  SG_ NewSignal_0003 : 55|16@0+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 1088 status: 7 BMS
- SG_ cs_lo : 32|16@1- (0.1,0) [0|0] "A" Vector__XXX
+ SG_ cs_lo : 32|16@1- (0.01,0) [0|0] "A" Vector__XXX
  SG_ cs_hi : 16|16@1- (0.1,0) [0|0] "A" Vector__XXX
  SG_ soc : 0|16@1+ (0.1,0) [0|0] "%" Vector__XXX
  SG_ fault_code : 48|8@1+ (1,0) [0|0] "bit field" Vector__XXX

@@ -86,14 +86,15 @@ void calc_soc(void)
         state_of_charge_float = 0;
     }
 
-    cs_lo_to_transmit = (int16_t)CS_LOW_ADC_BITS_TO_AMPS(ADCBUF0);
+    float cs_lo_a = CS_LOW_ADC_BITS_TO_AMPS(ADCBUF17);
+    cs_lo_to_transmit = (int16_t)(cs_lo_a * 10);
     
-    /* TODO: why is cs_hi val always junk? 
+    /* TODO: why is cs_hi val always junk?
      * do I need/want the following line? cs_high_sample is often junk value 
      * since we only retrieve the high sample val if current is too big to be 
      * measured using the low channel
      */
-    cs_hi_to_transmit = (int16_t)CS_HIGH_ADC_BITS_TO_AMPS(ADCBUF17);
+    cs_hi_to_transmit = (int16_t)CS_HIGH_ADC_BITS_TO_AMPS(ADCBUF0);
     
     ++eeprom_write_counter;
     if(eeprom_write_counter > 20)

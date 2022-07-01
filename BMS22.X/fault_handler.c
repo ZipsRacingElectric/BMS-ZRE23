@@ -7,6 +7,7 @@
 #include "mcc_generated_files/pin_manager.h"
 #include "mcc_generated_files/tmr2.h"
 #include "cell_balancing.h"
+#include "global_constants.h"
 #include <stdint.h>
 ////////////////defines////////////////////////////////////////////////////////
 #define OUTOFRANGE_VOLTAGE_MAX_FAULTS           30 //TODO make this 10 (50 ms measurement period, 500 ms fault period)
@@ -41,6 +42,7 @@ static void shutdown_car(void);
 void fault_handler_initialize(void) //TODO make sure all these for loop ranges are correct
 {
     BMS_RELAY_EN_SetLow();
+    __delay_ms(500);
     
     uint8_t i = 0;
     
