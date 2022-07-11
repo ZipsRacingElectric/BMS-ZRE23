@@ -42,7 +42,9 @@ static void shutdown_car(void);
 void fault_handler_initialize(void) //TODO make sure all these for loop ranges are correct
 {
     BMS_RELAY_EN_SetLow();
+    LED8_SetHigh();
     __delay_ms(500);
+    LED8_SetLow();
     
     uint8_t i = 0;
     
@@ -281,7 +283,6 @@ static void shutdown_car(void)
 {
     // turn off all balancing
     disable_cell_balancing();
-    
     // open shutdown loop
     BMS_RELAY_EN_SetLow();
 }

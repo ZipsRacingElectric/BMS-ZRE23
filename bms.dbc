@@ -449,6 +449,14 @@ BO_ 1050 balancing2: 3 BMS
  SG_ cell89_balancing : 16|1@1+ (1,0) [0|0] "bit" Vector__XXX
  SG_ cell90_balancing : 17|1@1+ (1,0) [0|0] "bit" Vector__XXX
 
+BO_ 256 main_status: 8 BMS
+ SG_ high_temp : 0|8@1+ (1,0) [0|0] "C" Vector__XXX
+ SG_ power : 8|8@1- (1,0) [0|0] "kW" Vector__XXX
+ SG_ SoC : 16|8@1+ (1,0) [0|0] "%" Vector__XXX
+ SG_ pack_voltage : 24|16@1+ (1,0) [0|0] "V" Vector__XXX
+ SG_ faults : 40|8@1+ (1,0) [0|0] "bitfield" Vector__XXX
+ SG_ pack_current : 48|16@1- (0.01,0) [0|0] "A" Vector__XXX
+
 
 
 

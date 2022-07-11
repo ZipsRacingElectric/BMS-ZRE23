@@ -91,7 +91,7 @@ void report_pack_temperatures(uint16_t* pack_temperatures)
 }
 
 // put status message on main vehicle CAN bus
-void report_status(void)
+void report_status(uint16_t pack_voltage, uint8_t high_temp)
 {
     int16_t cs_lo = get_cs_lo_xhundred();
     int16_t cs_hi = get_cs_hi_xten();
@@ -103,6 +103,20 @@ void report_status(void)
                            (uint8_t)(cs_lo & 0xFF), (uint8_t)(cs_lo >> 8),
                            fault_codes};
 
+    uint8_t soc_byte = soc / 10;
+    int8_t current_byte = cs_lo / 100;
+    if(current_byte < 0)
+    {
+        current_byte *= -1;
+    }
+    uint8_t power_kw = (uint8_t)(pack_voltage * current_byte / 1000);
+    uint8_t status_data[8] = { (uint8_t) high_temp,
+                               (uint8_t) power_kw,
+                               (uint8_t) soc_byte,
+                               (uint8_t)(pack_voltage & 0xFF), (uint8_t)(pack_voltage >> 8),
+                               (uint8_t) fault_codes,
+                               (uint8_t)(cs_lo & 0xFF), (uint8_t)(cs_lo >> 8)};
+    CAN_Msg_Send(0x100, CAN_DLC_8, status_data, MAIN_CAN);
     CAN_Msg_Send(CAN_ID_STATUS, CAN_DLC_7, can_data, BMS_CAN);
     CAN_Msg_Send(CAN_ID_STATUS, CAN_DLC_7, can_data, MAIN_CAN);
 }

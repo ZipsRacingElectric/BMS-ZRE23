@@ -117,7 +117,22 @@ int main(void)
         self_test();
         
         check_for_fault();
-        report_status();
+        uint16_t pack_voltage = 0;
+        uint8_t i = 0;
+        for(i = 0; i < NUM_CELLS; ++i)
+        {
+            pack_voltage += (cell_voltages[i] / 1000);
+        }
+        uint16_t low_div_output = 0xFFFF;
+        for(i = 0; i < NUM_TEMP_SENSORS; ++i)
+        {
+            if(pack_temperatures[i] < low_div_output)
+            {
+                low_div_output = pack_temperatures[i];
+            }
+        }
+        uint8_t high_temp = (uint8_t)((-0.0021933) * low_div_output + 81.297);
+        report_status(pack_voltage / 10, high_temp);
     }
     return 1; 
 }
