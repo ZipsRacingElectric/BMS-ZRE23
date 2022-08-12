@@ -19,7 +19,7 @@ void soc_initialize(void);
 void calc_soc(void);
 
 uint16_t get_soc_xten(void);
-int16_t get_cs_lo_xten(void);
+int16_t get_cs_lo_xhundred(void);
 int16_t get_cs_hi_xten(void);
 
 #ifdef	__cplusplus

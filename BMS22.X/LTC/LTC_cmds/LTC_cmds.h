@@ -13,6 +13,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <stdbool.h>
     
 // send command to start ADC conversion for cell voltages
 void start_cell_voltage_adc_conversion(void);
@@ -21,9 +22,9 @@ void start_temperature_adc_conversion(void);
 // send command to poll ADC status
 void poll_adc_status(void);
 // receive cell voltage register data
-void receive_voltage_register(uint8_t which_reg, uint16_t* buf);
+void receive_voltage_register(uint8_t which_reg, uint16_t* buf, bool* valid_pec_ptr);
 // receive GPIO voltage register data. Temperature data is in these registers
-void receive_aux_register(uint8_t which_reg, uint16_t* buf);
+void receive_aux_register(uint8_t which_reg, uint16_t* buf, bool* valid_pec_ptr);
 // send command to start open sense line check
 void start_open_wire_check(uint8_t pull_dir);
 // run self test command on cell voltage ADCs

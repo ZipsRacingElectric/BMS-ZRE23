@@ -29,7 +29,7 @@ void report_pack_temperatures(uint16_t* pack_temperatures);
 // put sense line status on BMS CAN bus
 void report_sense_line_status(uint32_t* sense_line_status);
 // put status message on main vehicle CAN bus
-void report_status(void);
+void report_status(uint16_t pack_voltage, uint8_t high_temp);
 // put cell balancing status on BMS CAN bus
 void report_balancing(uint32_t* cell_needs_balanced);
 

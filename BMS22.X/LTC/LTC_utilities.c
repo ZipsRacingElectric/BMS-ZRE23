@@ -77,9 +77,9 @@ void wakeup_daisychain(void)
 	for (i = 0; i < NUM_ICS; ++i)
 	{
 	   CS_6820_SetLow();
-	   __delay_us(300); // Guarantees the LTC681x will be in standby (rather than sleep)
+	   __delay_us(2); // Guarantees the LTC681x will be in standby (rather than sleep)
 	   CS_6820_SetHigh();
-	   __delay_us(10);
+	   __delay_us(1);
 	}
 }
 
@@ -90,12 +90,12 @@ uint8_t verify_pec(uint8_t* data, uint8_t size, uint8_t* received_pec)
     uint16_t transmitted_pec = (received_pec[0] << 8) + received_pec[1];
     if(calculated_pec == transmitted_pec)
     {
-        LED5_SetHigh();
+        LED6_SetHigh();
         return SUCCESS;
     }
     else
     {
-        LED5_SetLow();
+        LED6_SetLow();
         return FAILURE;
     }
 }

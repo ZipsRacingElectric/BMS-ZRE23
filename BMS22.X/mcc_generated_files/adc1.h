@@ -90,8 +90,8 @@
  */
 typedef enum 
 {
-    CS_LO,//Channel Name:AN2   Assigned to:Dedicated Core2
-    CS_HI,//Channel Name:AN3   Assigned to:Dedicated Core3
+    CS_LO,//Channel Name:AN17   Assigned to:Shared Channel
+    CS_HI,//Channel Name:AN0ALT   Assigned to:Dedicated Core0
 } ADC1_CHANNEL;
 
 /**
@@ -383,10 +383,10 @@ inline static uint16_t ADC1_ConversionResultGet( ADC1_CHANNEL channel )
     switch(channel)
     {
         case CS_LO:
-                result = ADCBUF2;
+                result = ADCBUF17;
                 break;
         case CS_HI:
-                result = ADCBUF3;
+                result = ADCBUF0;
                 break;
         default:
                 break;
@@ -438,10 +438,10 @@ inline static bool ADC1_IsConversionComplete(ADC1_CHANNEL channel)
     switch(channel)
     {
         case CS_LO:
-                status = ADSTATLbits.AN2RDY;
+                status = ADSTATHbits.AN17RDY;
                 break;
         case CS_HI:
-                status = ADSTATLbits.AN3RDY;
+                status = ADSTATLbits.AN0RDY;
                 break;
         default:
                 break;
@@ -654,10 +654,10 @@ inline static void ADC1_IndividualChannelInterruptEnable(ADC1_CHANNEL channel)
     switch(channel)
     {
         case CS_LO:
-                IEC7bits.ADCAN2IE = 1;
+                IEC10bits.ADCAN17IE = 1;
                 break;
         case CS_HI:
-                IEC7bits.ADCAN3IE = 1;
+                IEC6bits.ADCAN0IE = 1;
                 break;
         default:
                 break;
@@ -691,10 +691,10 @@ inline static void ADC1_IndividualChannelInterruptDisable(ADC1_CHANNEL channel)
     switch(channel)
     {
         case CS_LO:
-                IEC7bits.ADCAN2IE = 0;
+                IEC10bits.ADCAN17IE = 0;
                 break;
         case CS_HI:
-                IEC7bits.ADCAN3IE = 0;
+                IEC6bits.ADCAN0IE = 0;
                 break;
         default:
                 break;
@@ -727,16 +727,15 @@ inline static void ADC1_IndividualChannelInterruptFlagClear(ADC1_CHANNEL channel
     switch(channel)
     {
         case CS_LO:
-                IFS7bits.ADCAN2IF = 0;
+                IFS10bits.ADCAN17IF = 0;
                 break;
         case CS_HI:
-                IFS7bits.ADCAN3IF = 0;
+                IFS6bits.ADCAN0IF = 0;
                 break;
         default:
                 break;
     }
 }
-
 
 /**
   @Summary
@@ -783,6 +782,7 @@ void ADC1_CS_LO_CallBack(uint16_t adcVal);
     </code>
 */
 void ADC1_SetCS_LOInterruptHandler(void* handler);
+
 
 /**
   @Summary
@@ -1790,6 +1790,61 @@ inline static void __attribute__((deprecated("\nThis will be removed in future M
 inline static void __attribute__((deprecated("\nThis will be removed in future MCC releases."))) ADC1_SharedCoreConversionClockPrescalerSet(uint8_t prescaler)
 {
     ADCON2Lbits.SHRADCS = prescaler;
+}
+/**
+  @Summary
+    Returns the ADC1 conversion value for the shared core channel AN17
+
+  @Description
+    This routine is used to get the analog to digital converted value for channel AN17. This
+    routine gets converted values from the shared core channel AN17.
+ 
+  @Preconditions
+    The shared core must be enabled and calibrated before calling this routine 
+    using ADC1_SharedCorePowerEnable() and ADC1_SharedCoreCalibration() 
+    respectively. This routine returns the conversion value only after the 
+    conversion is complete. Completion status conversion can be checked using 
+    ADC1_IsSharedChannelAN17ConversionComplete() routine.
+   
+  @Returns
+    Returns the buffer containing the conversion value.
+
+  @Param
+    Buffer address
+  
+  @Example
+    Refer to ADC1_Initialize(); for an example
+ */
+inline static uint16_t __attribute__((deprecated("\nThis will be removed in future MCC releases."))) ADC1_SharedChannelAN17ConversionResultGet(void) 
+{
+    return ADCBUF17;
+}
+/**
+  @Summary
+    Returns the conversion status of shared channel AN17 selected for conversion
+
+  @Description
+    This routine is used to return the conversion status of the shared channel AN17 
+    selected for conversion.
+  
+  @Preconditions
+    ADC1_Initialize() function should have been 
+    called before calling this function.
+ 
+  @Returns
+    The value of the Channel AN17 Conversion register
+
+  @Param
+    None
+  
+  @Example
+    Refer to ADC1_Initialize(); for an example
+ 
+*/
+
+inline static bool __attribute__((deprecated("\nThis will be removed in future MCC releases."))) ADC1_IsSharedChannelAN17ConversionComplete(void)
+{   
+    return ADSTATHbits.AN17RDY;
 }
 
 #ifdef __cplusplus  // Provide C++ Compatibility

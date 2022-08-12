@@ -11,6 +11,7 @@
 #include "../../mcc_generated_files/spi1.h"
 #include "../../fault_handler.h"
 #include <stdint.h>
+#include <stdbool.h>
 #include "../../global_constants.h"
 
 // see LTC6813 datasheet page 59 table 37 Command Bit Descriptions
@@ -43,7 +44,6 @@ void start_cell_voltage_adc_conversion(void)
     CS_6820_SetLow(); 
     SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
     CS_6820_SetHigh();
-    __delay_us(2); //TODO is this necessary?
 }
 
 /* send command to start ADC conversion for GPIO pins (temp sensors)
@@ -62,7 +62,6 @@ void start_temperature_adc_conversion(void)
     CS_6820_SetLow(); 
     SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
     CS_6820_SetHigh();
-    __delay_us(2); //TODO is this necessary?
 }
 
 /* send command to poll ADC status
@@ -95,7 +94,7 @@ void poll_adc_status(void)
 /* receive voltage register data
  * command: RDCV
  */
-void receive_voltage_register(uint8_t which_reg, uint16_t* buf)
+void receive_voltage_register(uint8_t which_reg, uint16_t* buf, bool* valid_pec_ptr)
 {
     wakeup_daisychain();
         
@@ -142,44 +141,27 @@ void receive_voltage_register(uint8_t which_reg, uint16_t* buf)
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow();
     SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
+    // 8 data bytes = 2 * 3 cell voltages + 2 PEC bytes
+    uint8_t adcv_buf[8 * NUM_ICS];
+    SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adcv_buf);
 
     // verify PEC for each of the 6 cell voltage messages received from each of the ICs in the daisy chain
     // if PEC is valid, write cell voltages to buf to be shared over CAN bus
+    *valid_pec_ptr = true;
     uint8_t i = 0;
     for(i = 0; i < NUM_ICS; ++i)
     {
-        uint8_t k = 0;
-        bool got_valid_pec = false;
-        for(k = 0; k < 10; ++k) //TODO magic number. try 10 times to get valid PEC
+        // if valid PEC: update cell voltages, reset invalid counter
+        if(verify_pec(&adcv_buf[8*i], 6, &adcv_buf[8 * i + 6]) == SUCCESS)
         {
-            __delay_us(2); //TODO is this necessary? Want to put some time gap between attempts at reading registers
-            // 8 data bytes = 2 * 3 cell voltages + 2 PEC bytes
-            uint8_t adcv_buf[8 * NUM_ICS];
-            SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adcv_buf);
-    
-            // if valid PEC: update cell voltages, reset invalid counter
-            if(verify_pec(&adcv_buf[8*i], 6, &adcv_buf[8 * i + 6]) == SUCCESS)
-            {
-                buf[CELLS_PER_IC*i] = (adcv_buf[8*i + 1] << 8) + adcv_buf[8*i];
-                buf[CELLS_PER_IC*i + 1] = (adcv_buf[8*i + 3] << 8) + adcv_buf[8*i + 2];
-                buf[CELLS_PER_IC*i + 2] = (adcv_buf[8*i + 5] << 8) + adcv_buf[8*i + 4];
-                reset_missing_voltage_measurement_fault(which_reg + i*6);
-                // adcv_buf 6 and 7 are PEC bytes
-                got_valid_pec = true;
-                break; //end for loop
-            }
+            buf[CELLS_PER_IC*i] = (adcv_buf[8*i + 1] << 8) + adcv_buf[8*i];
+            buf[CELLS_PER_IC*i + 1] = (adcv_buf[8*i + 3] << 8) + adcv_buf[8*i + 2];
+            buf[CELLS_PER_IC*i + 2] = (adcv_buf[8*i + 5] << 8) + adcv_buf[8*i + 4];
+            // adcv_buf 6 and 7 are PEC bytes
         }
-        
-        if(got_valid_pec == false)
+        else
         {
-            increment_missing_voltage_measurement_fault(which_reg + i*6);
-            // TODO only do this if we get several missing measurement faults in a row?
-            if(get_missing_voltage_measurement_fault(which_reg + i*6) > 10) //TODO magic number
-            {
-                buf[CELLS_PER_IC*i] = 0;
-                buf[CELLS_PER_IC*i + 1] = 0;
-                buf[CELLS_PER_IC*i + 2] = 0;
-            }
+            *valid_pec_ptr = false;
         }
     }
 
@@ -189,7 +171,7 @@ void receive_voltage_register(uint8_t which_reg, uint16_t* buf)
 /* receive GPIO register data. Temperature data is in these registers
  * command: RDAUX
  */
-void receive_aux_register(uint8_t which_reg, uint16_t* buf)
+void receive_aux_register(uint8_t which_reg, uint16_t* buf, bool* valid_pec_ptr)
 {
     wakeup_daisychain();
         
@@ -225,46 +207,29 @@ void receive_aux_register(uint8_t which_reg, uint16_t* buf)
     cmd[2] = (uint8_t)(cmd_pec >> 8);
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow();
+    // 8 data bytes = 2 * 3 registers + 2 PEC bytes
     SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
+    uint8_t aux_buf[8 * NUM_ICS];
+    SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, aux_buf);
 
     // verify PEC for each of the 4 GPIO registers received from each of the ICs in the daisy chain
     // if PEC is valid, write GPIO messages to buf to be shared over CAN bus
+    *valid_pec_ptr = true;
     uint8_t i = 0;
     for(i = 0; i < NUM_ICS; ++i)
     {
-        uint8_t k = 0;
-        bool got_valid_pec = false;
-        for(k = 0; k < 10; ++k) //TODO magic number. try 10 times to get valid PEC
+        // if valid PEC: update cell voltages, reset invalid counter
+        if(verify_pec(&aux_buf[8*i], 6, &aux_buf[8 * i + 6]) == SUCCESS)
         {
-            __delay_us(2); //TODO is this necessary? Want to put some time gap between attempts at reading registers
-            // 8 data bytes = 2 * 3 GPIO results + 2 PEC bytes
-            uint8_t adaux_buf[8 * NUM_ICS];
-            SPI1_Exchange8bitBuffer(dummy_buf, 8 * NUM_ICS, adaux_buf);
-
-            // if valid PEC: update cell voltages, reset invalid counter
-            if(verify_pec(&adaux_buf[8*i], 6, &adaux_buf[8 * i + 6]) == SUCCESS)
-            {
-                // for each IC, 12 aux data bytes will be returned
-                buf[12*i] = (adaux_buf[8*i + 1] << 8) + adaux_buf[8*i];
-                buf[12*i + 1] = (adaux_buf[8*i + 3] << 8) + adaux_buf[8*i + 2];
-                buf[12*i + 2] = (adaux_buf[8*i + 5] << 8) + adaux_buf[8*i + 4];
-                // adaux_buf 6 and 7 are PEC bytes
-                reset_missing_temperature_fault(which_reg + i*4);
-                got_valid_pec = true;
-                break; //end for loop
-            }
+            buf[12*i] = (aux_buf[8*i + 1] << 8) + aux_buf[8*i];
+            buf[12*i + 1] = (aux_buf[8*i + 3] << 8) + aux_buf[8*i + 2];
+            buf[12*i + 2] = (aux_buf[8*i + 5] << 8) + aux_buf[8*i + 4];
+            reset_missing_temperature_fault(which_reg + i*6);
+            // aux_buf 6 and 7 are PEC bytes
         }
-
-        if(got_valid_pec == false)
+        else
         {
-            increment_missing_temperature_fault(which_reg + i*4);
-            // TODO only do this if we get several missing measurement faults in a row?
-            if(get_missing_temperature_fault(which_reg + i*4) > 10) //TODO magic number
-            {
-                buf[12*i] = 0;
-                buf[12*i + 1] = 0;
-                buf[12*i + 2] = 0;
-            }
+            *valid_pec_ptr = false;
         }
     }
 
@@ -286,7 +251,6 @@ void start_open_wire_check(uint8_t pull_dir)
     cmd[3] = (uint8_t)(cmd_pec);
     CS_6820_SetLow(); 
     SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
-
     CS_6820_SetHigh();
 }
 
@@ -363,25 +327,32 @@ uint8_t read_config_A(uint8_t* buffer)
     cmd[3] = (uint8_t)(cmd_pec);
 
     uint8_t i = 0;
+    bool valid_pec[NUM_ICS] = {false};
     for(i = 0; i < 10; ++i) // 10 tries to get valid PEC
     {
         CS_6820_SetLow();
         SPI1_Exchange8bitBuffer(cmd, CMD_SIZE_BYTES, dummy_buf);
-        uint8_t intermediate_buffer[8 * NUM_ICS]; //TODO is intermediate buffer the best way to do this?
+        uint8_t intermediate_buffer[8 * NUM_ICS];
         SPI1_Exchange8bitBuffer(dummy_buf, 8*NUM_ICS, intermediate_buffer); 
         // 6 data bytes plus 2 byte PEC
         CS_6820_SetHigh();
 
-        if(verify_pec(intermediate_buffer, 6, &intermediate_buffer[6]) == SUCCESS) // TODO make this work for multiple ICs
+        uint8_t k = 0;
+        for(k = 0; k < NUM_ICS; ++k)
         {
-            for(i = 0; i < 6; ++i) // copy intermediate buffer over to actual buffer
+            if(verify_pec(&intermediate_buffer[8*k], 6, &intermediate_buffer[8*i + 6]) == SUCCESS)
             {
-                buffer[i] = intermediate_buffer[i];
+                buffer[6*k] = intermediate_buffer[8*k];
+                buffer[6*k + 1] = intermediate_buffer[8*k + 1];
+                buffer[6*k + 2] = intermediate_buffer[8*k + 2];
+                buffer[6*k + 3] = intermediate_buffer[8*k + 3];
+                buffer[6*k + 4] = intermediate_buffer[8*k + 4];
+                buffer[6*k + 5] = intermediate_buffer[8*k + 5];
+                valid_pec[k] = true;
             }
-            return SUCCESS;
         }
     }
-    return FAILURE;
+    return (bool)(valid_pec[0] && valid_pec[1]);
 }
 
 /*
@@ -409,7 +380,7 @@ void write_config_A(void)
         uint16_t data_pec = pec15_calc(data_to_write, 6);
         uint8_t data_pec_transmit[2] = {(uint8_t)(data_pec >> 8), (uint8_t)(data_pec & 0xFF)};    
 
-        SPI1_Exchange8bitBuffer(data_to_write, 6*NUM_ICS, dummy_buf);
+        SPI1_Exchange8bitBuffer(data_to_write, 6, dummy_buf);
         SPI1_Exchange8bitBuffer(data_pec_transmit, 2, dummy_buf);
     }
     CS_6820_SetHigh();
@@ -440,7 +411,7 @@ void write_config_B(void)
         uint16_t data_pec = pec15_calc(data_to_write, 6);
         uint8_t data_pec_transmit[2] = {(uint8_t)(data_pec >> 8), (uint8_t)(data_pec & 0xFF)};    
 
-        SPI1_Exchange8bitBuffer(data_to_write, 6*NUM_ICS, dummy_buf);
+        SPI1_Exchange8bitBuffer(data_to_write, 6, dummy_buf);
         SPI1_Exchange8bitBuffer(data_pec_transmit, 2, dummy_buf); 
     }
     CS_6820_SetHigh();
@@ -461,6 +432,7 @@ uint8_t read_status_A(uint8_t* buffer)
     cmd[3] = (uint8_t)(cmd_pec);
 
     uint8_t i = 0;
+    bool valid_pec[NUM_ICS] = {false};
     for(i = 0; i < 10; ++i) // 10 tries to get valid PEC
     {
         CS_6820_SetLow();
@@ -470,16 +442,22 @@ uint8_t read_status_A(uint8_t* buffer)
         // 6 data bytes plus 2 byte PEC
         CS_6820_SetHigh();
 
-        if(verify_pec(intermediate_buffer, 6, &intermediate_buffer[6]) == SUCCESS) // TODO make this work for multiple ICs
+        uint8_t k = 0;
+        for(k = 0; k < NUM_ICS; ++k)
         {
-            for(i = 0; i < 6; ++i) // copy intermediate buffer over to actual buffer
+            if(verify_pec(&intermediate_buffer[8*k], 6, &intermediate_buffer[8*i + 6]) == SUCCESS)
             {
-                buffer[i] = intermediate_buffer[i];
+                buffer[6*k] = intermediate_buffer[8*k];
+                buffer[6*k + 1] = intermediate_buffer[8*k + 1];
+                buffer[6*k + 2] = intermediate_buffer[8*k + 2];
+                buffer[6*k + 3] = intermediate_buffer[8*k + 3];
+                buffer[6*k + 4] = intermediate_buffer[8*k + 4];
+                buffer[6*k + 5] = intermediate_buffer[8*k + 5];
+                valid_pec[k] = true;
             }
-            return SUCCESS;
         }
     }
-    return FAILURE;
+    return (bool)(valid_pec[0] && valid_pec[1]);
 }
 
 /*
@@ -497,6 +475,7 @@ uint8_t read_status_B(uint8_t* buffer)
     cmd[3] = (uint8_t)(cmd_pec);
 
     uint8_t i = 0;
+    bool valid_pec[NUM_ICS] = {false};
     for(i = 0; i < 10; ++i) // 10 tries to get valid PEC
     {
         CS_6820_SetLow();
@@ -506,16 +485,22 @@ uint8_t read_status_B(uint8_t* buffer)
         // 6 data bytes plus 2 byte PEC
         CS_6820_SetHigh();
 
-        if(verify_pec(intermediate_buffer, 6, &intermediate_buffer[6]) == SUCCESS) // TODO make this work for multiple ICs
+        uint8_t k = 0;
+        for(k = 0; k < NUM_ICS; ++k)
         {
-            for(i = 0; i < 6; ++i) // copy intermediate buffer over to actual buffer
+            if(verify_pec(&intermediate_buffer[8*k], 6, &intermediate_buffer[8*i + 6]) == SUCCESS)
             {
-                buffer[i] = intermediate_buffer[i];
+                buffer[6*k] = intermediate_buffer[8*k];
+                buffer[6*k + 1] = intermediate_buffer[8*k + 1];
+                buffer[6*k + 2] = intermediate_buffer[8*k + 2];
+                buffer[6*k + 3] = intermediate_buffer[8*k + 3];
+                buffer[6*k + 4] = intermediate_buffer[8*k + 4];
+                buffer[6*k + 5] = intermediate_buffer[8*k + 5];
+                valid_pec[k] = true;
             }
-            return SUCCESS;
         }
     }
-    return FAILURE;
+    return (bool)(valid_pec[0] && valid_pec[1]);
 }
 
 /*

@@ -56,11 +56,12 @@
 #include "fault_handler.h"
 #include "cell_balancing.h"
 #include "global_constants.h"
+#include "eeprom.h"
 
 //TODO why are these globals?
 uint16_t cell_voltages[NUM_CELLS];
-
 uint16_t pack_temperatures[NUM_TEMP_SENSORS];
+uint32_t sense_line_status[NUM_ICS];
 
 /*
                          Main application
@@ -80,45 +81,58 @@ int main(void)
     {
         pack_temperatures[i] = 0;
     }
+    for(i = 0; i < NUM_ICS; ++i)
+    {
+        sense_line_status[i] = 0;
+    }
 
+    eeprom_initialize(); // TODO call this in soc init?
     soc_initialize();
     can_initialize();
     LTC_initialize();
     fault_handler_initialize();
-//    balance_timer_initialize(); TODO turn off when using resistor ladder circuit
+    balance_timer_initialize();
     
     while (1)
     {
+        LED1_HEARTBEAT_Toggle();
         // WARN: don't put all the CAN output back to back to back here, 
         //       the transmit buffers will overflow
         calc_soc();
-        
-        //TODO balance for 20 s, check cell voltages, balance for 20 more s...
         
         read_cell_voltages(cell_voltages);
         report_cell_voltages(cell_voltages);
         
         update_cell_balance_array(cell_voltages);
         uint32_t* cell_needs_balanced = get_cell_balance_array();
+        update_config_A_and_B(); // sends cell balance bits to 6813s
         report_balancing(cell_needs_balanced);
-        update_config_A_and_B();
 
         read_temperatures(pack_temperatures);
         report_pack_temperatures(pack_temperatures);
         
-        uint32_t sense_line_status[NUM_ICS];
         open_sense_line_check(sense_line_status);
         report_sense_line_status(sense_line_status);
         
         self_test();
         
         check_for_fault();
-        report_status();
-        
-        LED1_HEARTBEAT_SetHigh();
-        __delay_ms(150);
-        LED1_HEARTBEAT_SetLow();
-        __delay_ms(150);
+        uint16_t pack_voltage = 0;
+        uint8_t i = 0;
+        for(i = 0; i < NUM_CELLS; ++i)
+        {
+            pack_voltage += (cell_voltages[i] / 1000);
+        }
+        uint16_t low_div_output = 0xFFFF;
+        for(i = 0; i < NUM_TEMP_SENSORS; ++i)
+        {
+            if(pack_temperatures[i] < low_div_output)
+            {
+                low_div_output = pack_temperatures[i];
+            }
+        }
+        uint8_t high_temp = (uint8_t)((-0.0021933) * low_div_output + 81.297);
+        report_status(pack_voltage / 10, high_temp);
     }
     return 1; 
 }
