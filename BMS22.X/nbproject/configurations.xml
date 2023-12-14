@@ -91,10 +91,10 @@
         <targetDevice>dsPIC33EP128GS804</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD4Tool</platformTool>
+        <platformTool>Simulator</platformTool>
         <languageToolchain>XC16</languageToolchain>
-        <languageToolchainVersion>2.00</languageToolchainVersion>
-        <platform>3</platform>
+        <languageToolchainVersion>1.70</languageToolchainVersion>
+        <platform>4</platform>
       </toolsSet>
       <packs>
         <pack name="dsPIC33E-GS_DFP" vendor="Microchip" version="1.3.91"/>
@@ -167,9 +167,6 @@
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
       </C30>
-      <C30-AR>
-        <property key="additional-options-chop-files" value="false"/>
-      </C30-AR>
       <C30-AS>
         <property key="assembler-symbols" value=""/>
         <property key="expand-macros" value="false"/>
@@ -313,6 +310,8 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-1577f"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="/Users/bglen/Documents/github/BMS22/BMS22.X/debug/default/BMS22_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.ledbrightness" value="5"/>
@@ -339,6 +338,11 @@
                   value="Press to select which tool pack to use"/>
         <property key="voltagevalue" value="3.25"/>
       </ICD4Tool>
+      <Simulator>
+        <property key="W0237_ADC_UNKNOWN_DATASHEET" value="report"/>
+        <property key="periphADC1.minTacq" value="8600"/>
+        <property key="periphADC1.minTacqUnits" value="nsec"/>
+      </Simulator>
       <Tool>
         <property key="ADFRZ" value="true"/>
         <property key="AutoSelectMemRanges" value="auto"/>
@@ -380,6 +384,7 @@
                   value="Press to select which tool pack to use"/>
         <property key="UART 1" value="true"/>
         <property key="UART 2" value="true"/>
+        <property key="W0237_ADC_UNKNOWN_DATASHEET" value="report"/>
         <property key="communication.interface.jtag" value="2wire"/>
         <property key="debugoptions.simultaneous.debug" value="false"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
@@ -397,6 +402,8 @@
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-1577f"/>
+        <property key="periphADC1.minTacq" value="8600"/>
+        <property key="periphADC1.minTacqUnits" value="nsec"/>
         <property key="poweroptions.powerenable" value="false"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
