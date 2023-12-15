@@ -37,6 +37,7 @@
       <itemPath>cell_balancing.h</itemPath>
       <itemPath>global_constants.h</itemPath>
       <itemPath>eeprom.h</itemPath>
+      <itemPath>current_limiting.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -72,6 +73,7 @@
       <itemPath>LTC/LTC_cmds/LTC_cmds.c</itemPath>
       <itemPath>cell_balancing.c</itemPath>
       <itemPath>eeprom.c</itemPath>
+      <itemPath>current_limiting.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
