@@ -141,6 +141,15 @@ void report_balancing(uint32_t* cell_needs_balanced)
     }
 }
 
+// put inverter current limits on MAIN CAN bus
+void update_current_limits(uint16_t discharge_current_limit, uint16_t charge_current_limit)
+{
+    // arrange data in little endian format in the data array (LSB first)
+    uint16_t can_data[4] = {(uint8_t)(discharge_current_limit & 0xFF), (uint8_t)(discharge_current_limit & 0xFF00), (uint8_t)(charge_current_limit & 0xFF), (uint8_t)(charge_current_limit & 0xFF00)};
+    
+    CAN_Msg_Send(0x202, CAN_DLC_4, can_data, MAIN_CAN);
+}
+
 static void CAN_Msg_Send(uint16_t id, CAN_DLC dlc, uint8_t *tx_data, uint8_t can_port)
 {
     CAN_MSG_FIELD overhead = {
