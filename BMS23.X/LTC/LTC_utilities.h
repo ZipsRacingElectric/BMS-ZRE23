@@ -13,48 +13,6 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-
-#define DUMMY                0xFF
-    
-#define CMD_SIZE_BYTES       4
-
-// system constants
-#define NUM_ICS                  5
-#define CELLS_PER_REGISTER       3
-#define CV_REGISTERS_PER_IC      6
-#define CELLS_PER_IC             18
-#define NUM_CELLS                (NUM_ICS * CELLS_PER_IC)
-#define TEMP_SENSORS_PER_IC      9
-#define AUX_REGISTERS_PER_IC     4
-#define NUM_TEMP_SENSORS         (NUM_ICS * TEMP_SENSORS_PER_IC)
-    
-#define SUCCESS              0
-#define FAILURE              1
-    
-// cell voltage x 10000 comes from LTC6813 chip
-#define CELL_VOLTAGE_MAX        (41500) // 4.15V maximum
-#define CELL_VOLTAGE_MIN        (28000) // 2.8V minimum
-#define CELL_BALANCE_THRESHOLD  200 // 0.03 V threshold for cell balancing
-    
-// GPIO voltage x 10000 comes from LTC6813 chip
-#define CELL_TEMPERATURE_MAX    40000 // -5 C
-#define CELL_TEMPERATURE_MIN    5825  // 60 C
-
-// TODO maybe this should be an enum
-#define ADCVA       0
-#define ADCVB       1 
-#define ADCVC       2
-#define ADCVD       3
-#define ADCVE       4
-#define ADCVF       5
-    
-#define AUXA        0
-#define AUXB        1
-#define AUXC        2
-#define AUXD        3
-    
-#define CV_SELF_TEST_RESULT    0x9555
-#define AUX_SELF_TEST_RESULT   0x9555
     
 // initialize config register A and B values
 void init_cfgr_A_and_B_buffers(void);

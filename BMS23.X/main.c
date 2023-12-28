@@ -145,8 +145,10 @@ int main(void)
         report_status(pack_voltage / 10, high_temp);
         
         // update current limits to inverter
-        uint16_t max_pack_voltage = NUM_CELLS;
-        update_current_limits(get_discharge_current_limit(pack_voltage), get_charge_current_limit(pack_voltage));
+        uint16_t max_pack_voltage = (NUM_CELLS * (CELL_VOLTAGE_MAX / 100)) / 100;
+        uint16_t discharge_limit = get_discharge_current_limit(pack_voltage, max_pack_voltage);
+        uint16_t charge_limit = get_charge_current_limit(pack_voltage, max_pack_voltage);
+        update_current_limits(discharge_limit, charge_limit);
         
         // Watchdog Timer self test for tech inspection
         if(wdt_test)

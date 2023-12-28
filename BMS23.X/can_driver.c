@@ -13,9 +13,6 @@
 #include "cell_balancing.h"
 #include <stdbool.h>
 #include "global_constants.h"
-////////////////defines////////////////////////////////////////////////////////
-#define MAIN_CAN        1
-#define BMS_CAN         2
 
 ////////////////globals////////////////////////////////////////////////////////
 
@@ -45,12 +42,13 @@ void report_cell_voltages(uint16_t* cell_voltages)
     uint8_t upper_bound = (NUM_CELLS + 3) / 4;
     for(i = 0; i < upper_bound; ++i)
     {
+        // Split cell voltage data into LSB and MSB, send 4 values per CAN message.
         uint8_t can_data[8] = {(uint8_t)(cell_voltages[4*i] >> 8), (uint8_t)(cell_voltages[4*i] & 0xFF), 
                                (uint8_t)(cell_voltages[4*i + 1] >> 8), (uint8_t)(cell_voltages[4*i + 1] & 0xFF), 
                                (uint8_t)(cell_voltages[4*i + 2] >> 8), (uint8_t)(cell_voltages[4*i + 2] & 0xFF), 
                                (uint8_t)(cell_voltages[4*i + 3] >> 8), (uint8_t)(cell_voltages[4*i + 3] & 0xFF)};
 
-        CAN_Msg_Send(CAN_ID_CELL_VOLTAGES + i, CAN_DLC_8, can_data, BMS_CAN);
+        CAN_Msg_Send(AUX_CAN_ID_CELL_VOLTAGES + i, CAN_DLC_8, can_data, BMS_CAN);
     }
 }
 
@@ -59,18 +57,18 @@ void report_sense_line_status(uint32_t* sense_line_status)
 {
     uint8_t sense_line0[6] = {(sense_line_status[0] & 0xFF), ((sense_line_status[0] >> 8) & 0xFF), ((sense_line_status[0] >> 16) & 0xFF),
                               (sense_line_status[1] & 0xFF), ((sense_line_status[1] >> 8) & 0xFF), ((sense_line_status[1] >> 16) & 0xFF)};
-    CAN_Msg_Send(CAN_ID_SENSE_LINE, 6, sense_line0, BMS_CAN);
+    CAN_Msg_Send(AUX_CAN_ID_SENSE_LINE_STATUS, 6, sense_line0, BMS_CAN);
     
     if(NUM_CELLS > 36)
     {
         uint8_t sense_line1[6] = {(sense_line_status[2] & 0xFF), ((sense_line_status[2] >> 8) & 0xFF), ((sense_line_status[2] >> 16) & 0xFF),
                                   (sense_line_status[3] & 0xFF), ((sense_line_status[3] >> 8) & 0xFF), ((sense_line_status[3] >> 16) & 0xFF)};
-        CAN_Msg_Send(CAN_ID_SENSE_LINE + 1, 6, sense_line1, BMS_CAN);
+        CAN_Msg_Send(AUX_CAN_ID_SENSE_LINE_STATUS + 1, 6, sense_line1, BMS_CAN);
     }
     if(NUM_CELLS > 72)
     {
         uint8_t sense_line2[6] = {(sense_line_status[4] & 0xFF), ((sense_line_status[4] >> 8) & 0xFF), ((sense_line_status[4] >> 16) & 0xFF)};
-        CAN_Msg_Send(CAN_ID_SENSE_LINE + 2, 6, sense_line2, BMS_CAN);
+        CAN_Msg_Send(AUX_CAN_ID_SENSE_LINE_STATUS + 2, 6, sense_line2, BMS_CAN);
     }
 }
 
@@ -86,7 +84,7 @@ void report_pack_temperatures(uint16_t* pack_temperatures)
                        (uint8_t)(pack_temperatures[4*i + 2] >> 8), (uint8_t)(pack_temperatures[4*i + 2] & 0xFF), 
                        (uint8_t)(pack_temperatures[4*i + 3] >> 8), (uint8_t)(pack_temperatures[4*i + 3] & 0xFF)};
 
-        CAN_Msg_Send(CAN_ID_PACK_TEMPERATURE + i, CAN_DLC_8, can_data, BMS_CAN);
+        CAN_Msg_Send(AUX_CAN_ID_PACK_TEMPERATURE + i, CAN_DLC_8, can_data, BMS_CAN);
     }
 }
 
@@ -117,8 +115,8 @@ void report_status(uint16_t pack_voltage, uint8_t high_temp)
                                (uint8_t) fault_codes,
                                (uint8_t)(cs_lo & 0xFF), (uint8_t)(cs_lo >> 8)};
     CAN_Msg_Send(0x100, CAN_DLC_8, status_data, MAIN_CAN);
-    CAN_Msg_Send(CAN_ID_STATUS, CAN_DLC_7, can_data, BMS_CAN);
-    CAN_Msg_Send(CAN_ID_STATUS, CAN_DLC_7, can_data, MAIN_CAN);
+    CAN_Msg_Send(AUX_CAN_ID_STATUS, CAN_DLC_7, can_data, BMS_CAN);
+    CAN_Msg_Send(AUX_CAN_ID_STATUS, CAN_DLC_7, can_data, MAIN_CAN);
 }
 
 // put cell balance information on the CAN bus
@@ -126,18 +124,18 @@ void report_balancing(uint32_t* cell_needs_balanced)
 {
     uint8_t balance_data0[6] = {(cell_needs_balanced[0] & 0xFF), ((cell_needs_balanced[0] >> 8) & 0xFF), ((cell_needs_balanced[0] >> 16) & 0xFF),
                                 (cell_needs_balanced[1] & 0xFF), ((cell_needs_balanced[1] >> 8) & 0xFF), ((cell_needs_balanced[1] >> 16) & 0xFF)};
-    CAN_Msg_Send(CAN_ID_CELL_BALANCING, 6, balance_data0, BMS_CAN);
+    CAN_Msg_Send(AUX_CAN_ID_CELL_BALANCING, 6, balance_data0, BMS_CAN);
     
     if(NUM_CELLS > 36)
     {
         uint8_t balance_data1[6] = {(cell_needs_balanced[2] & 0xFF), ((cell_needs_balanced[2] >> 8) & 0xFF), ((cell_needs_balanced[2] >> 16) & 0xFF),
                                     (cell_needs_balanced[3] & 0xFF), ((cell_needs_balanced[3] >> 8) & 0xFF), ((cell_needs_balanced[3] >> 16) & 0xFF)};
-        CAN_Msg_Send(CAN_ID_CELL_BALANCING + 1, 6, balance_data1, BMS_CAN);
+        CAN_Msg_Send(AUX_CAN_ID_CELL_BALANCING + 1, 6, balance_data1, BMS_CAN);
     }
     if(NUM_CELLS > 72)
     {
         uint8_t balance_data2[6] = {(cell_needs_balanced[4] & 0xFF), ((cell_needs_balanced[4] >> 8) & 0xFF), ((cell_needs_balanced[4] >> 16) & 0xFF)};
-        CAN_Msg_Send(CAN_ID_CELL_BALANCING + 2, 6, balance_data2, BMS_CAN);
+        CAN_Msg_Send(AUX_CAN_ID_CELL_BALANCING + 2, 6, balance_data2, BMS_CAN);
     }
 }
 
@@ -147,7 +145,7 @@ void update_current_limits(uint16_t discharge_current_limit, uint16_t charge_cur
     // arrange data in little endian format in the data array (LSB first)
     uint16_t can_data[4] = {(uint8_t)(discharge_current_limit & 0xFF), (uint8_t)(discharge_current_limit & 0xFF00), (uint8_t)(charge_current_limit & 0xFF), (uint8_t)(charge_current_limit & 0xFF00)};
     
-    CAN_Msg_Send(0x202, CAN_DLC_4, can_data, MAIN_CAN);
+    CAN_Msg_Send(MAIN_CAN_ID_CURRENT_LIMITS, CAN_DLC_4, can_data, MAIN_CAN);
 }
 
 static void CAN_Msg_Send(uint16_t id, CAN_DLC dlc, uint8_t *tx_data, uint8_t can_port)
