@@ -35,7 +35,7 @@ void can_initialize(void)
     CAN2_STDBY_SetLow();
 }
 
-// put cell voltages on BMS CAN bus
+// put cell voltages on AUX CAN bus
 void report_cell_voltages(uint16_t* cell_voltages)
 {
     uint8_t i = 0;
@@ -43,36 +43,37 @@ void report_cell_voltages(uint16_t* cell_voltages)
     for(i = 0; i < upper_bound; ++i)
     {
         // Split cell voltage data into LSB and MSB, send 4 values per CAN message.
+        // Note: This function seems to go out-of-bounds on the cell_voltages array. For the last message it tries to access past the end of the array.
         uint8_t can_data[8] = {(uint8_t)(cell_voltages[4*i] >> 8), (uint8_t)(cell_voltages[4*i] & 0xFF), 
                                (uint8_t)(cell_voltages[4*i + 1] >> 8), (uint8_t)(cell_voltages[4*i + 1] & 0xFF), 
                                (uint8_t)(cell_voltages[4*i + 2] >> 8), (uint8_t)(cell_voltages[4*i + 2] & 0xFF), 
                                (uint8_t)(cell_voltages[4*i + 3] >> 8), (uint8_t)(cell_voltages[4*i + 3] & 0xFF)};
 
-        CAN_Msg_Send(AUX_CAN_ID_CELL_VOLTAGES + i, CAN_DLC_8, can_data, BMS_CAN);
+        CAN_Msg_Send(AUX_CAN_ID_CELL_VOLTAGES + i, CAN_DLC_8, can_data, AUX_CAN);
     }
 }
 
-// put sense line status on CAN bus
+// put sense line status on AUX CAN bus
 void report_sense_line_status(uint32_t* sense_line_status)
 {
     uint8_t sense_line0[6] = {(sense_line_status[0] & 0xFF), ((sense_line_status[0] >> 8) & 0xFF), ((sense_line_status[0] >> 16) & 0xFF),
                               (sense_line_status[1] & 0xFF), ((sense_line_status[1] >> 8) & 0xFF), ((sense_line_status[1] >> 16) & 0xFF)};
-    CAN_Msg_Send(AUX_CAN_ID_SENSE_LINE_STATUS, 6, sense_line0, BMS_CAN);
+    CAN_Msg_Send(AUX_CAN_ID_SENSE_LINE_STATUS, 6, sense_line0, AUX_CAN);
     
     if(NUM_CELLS > 36)
     {
         uint8_t sense_line1[6] = {(sense_line_status[2] & 0xFF), ((sense_line_status[2] >> 8) & 0xFF), ((sense_line_status[2] >> 16) & 0xFF),
                                   (sense_line_status[3] & 0xFF), ((sense_line_status[3] >> 8) & 0xFF), ((sense_line_status[3] >> 16) & 0xFF)};
-        CAN_Msg_Send(AUX_CAN_ID_SENSE_LINE_STATUS + 1, 6, sense_line1, BMS_CAN);
+        CAN_Msg_Send(AUX_CAN_ID_SENSE_LINE_STATUS + 1, 6, sense_line1, AUX_CAN);
     }
     if(NUM_CELLS > 72)
     {
         uint8_t sense_line2[6] = {(sense_line_status[4] & 0xFF), ((sense_line_status[4] >> 8) & 0xFF), ((sense_line_status[4] >> 16) & 0xFF)};
-        CAN_Msg_Send(AUX_CAN_ID_SENSE_LINE_STATUS + 2, 6, sense_line2, BMS_CAN);
+        CAN_Msg_Send(AUX_CAN_ID_SENSE_LINE_STATUS + 2, 6, sense_line2, AUX_CAN);
     }
 }
 
-// put pack temperatures on the CAN bus
+// put pack temperatures on the AUX CAN bus
 void report_pack_temperatures(uint16_t* pack_temperatures)
 {
     uint8_t i = 0;
@@ -84,11 +85,11 @@ void report_pack_temperatures(uint16_t* pack_temperatures)
                        (uint8_t)(pack_temperatures[4*i + 2] >> 8), (uint8_t)(pack_temperatures[4*i + 2] & 0xFF), 
                        (uint8_t)(pack_temperatures[4*i + 3] >> 8), (uint8_t)(pack_temperatures[4*i + 3] & 0xFF)};
 
-        CAN_Msg_Send(AUX_CAN_ID_PACK_TEMPERATURE + i, CAN_DLC_8, can_data, BMS_CAN);
+        CAN_Msg_Send(AUX_CAN_ID_PACK_TEMPERATURE + i, CAN_DLC_8, can_data, AUX_CAN);
     }
 }
 
-// put status message on main vehicle CAN bus
+// put status message on MAIN CAN bus and AUX CAN bus
 void report_status(uint16_t pack_voltage, uint8_t high_temp)
 {
     int16_t cs_lo = get_cs_lo_xhundred();
@@ -114,28 +115,29 @@ void report_status(uint16_t pack_voltage, uint8_t high_temp)
                                (uint8_t)(pack_voltage & 0xFF), (uint8_t)(pack_voltage >> 8),
                                (uint8_t) fault_codes,
                                (uint8_t)(cs_lo & 0xFF), (uint8_t)(cs_lo >> 8)};
+    
     CAN_Msg_Send(0x100, CAN_DLC_8, status_data, MAIN_CAN);
-    CAN_Msg_Send(AUX_CAN_ID_STATUS, CAN_DLC_7, can_data, BMS_CAN);
+    CAN_Msg_Send(AUX_CAN_ID_STATUS, CAN_DLC_7, can_data, AUX_CAN);
     CAN_Msg_Send(AUX_CAN_ID_STATUS, CAN_DLC_7, can_data, MAIN_CAN);
 }
 
-// put cell balance information on the CAN bus
+// put cell balance information on the AUX CAN bus
 void report_balancing(uint32_t* cell_needs_balanced)
 {
     uint8_t balance_data0[6] = {(cell_needs_balanced[0] & 0xFF), ((cell_needs_balanced[0] >> 8) & 0xFF), ((cell_needs_balanced[0] >> 16) & 0xFF),
                                 (cell_needs_balanced[1] & 0xFF), ((cell_needs_balanced[1] >> 8) & 0xFF), ((cell_needs_balanced[1] >> 16) & 0xFF)};
-    CAN_Msg_Send(AUX_CAN_ID_CELL_BALANCING, 6, balance_data0, BMS_CAN);
+    CAN_Msg_Send(AUX_CAN_ID_CELL_BALANCING, 6, balance_data0, AUX_CAN);
     
     if(NUM_CELLS > 36)
     {
         uint8_t balance_data1[6] = {(cell_needs_balanced[2] & 0xFF), ((cell_needs_balanced[2] >> 8) & 0xFF), ((cell_needs_balanced[2] >> 16) & 0xFF),
                                     (cell_needs_balanced[3] & 0xFF), ((cell_needs_balanced[3] >> 8) & 0xFF), ((cell_needs_balanced[3] >> 16) & 0xFF)};
-        CAN_Msg_Send(AUX_CAN_ID_CELL_BALANCING + 1, 6, balance_data1, BMS_CAN);
+        CAN_Msg_Send(AUX_CAN_ID_CELL_BALANCING + 1, 6, balance_data1, AUX_CAN);
     }
     if(NUM_CELLS > 72)
     {
         uint8_t balance_data2[6] = {(cell_needs_balanced[4] & 0xFF), ((cell_needs_balanced[4] >> 8) & 0xFF), ((cell_needs_balanced[4] >> 16) & 0xFF)};
-        CAN_Msg_Send(AUX_CAN_ID_CELL_BALANCING + 2, 6, balance_data2, BMS_CAN);
+        CAN_Msg_Send(AUX_CAN_ID_CELL_BALANCING + 2, 6, balance_data2, AUX_CAN);
     }
 }
 
