@@ -15,13 +15,11 @@ extern "C" {
     
 //---------------- General ----------------------------------------------------
 #define FCY                           40000000UL // Instruction cycle frequency, Hz - required for __delayXXX() to work
-
-//---------------- Includes ---------------------------------------------------
-#include <libpic30.h>        // __delayXXX() functions macros defined here
+#include <libpic30.h>        // __delayXXX() functions macros defined here. Must be included after FCY definition.
     
 //---------------- CANbus -----------------------------------------------------
 #define MAIN_CAN                      1
-#define BMS_CAN                       2
+#define AUX_CAN                       2
     
 //---------------- Main CANBus IDs --------------------------------------------
 
