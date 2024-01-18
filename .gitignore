@@ -1,5 +1,7 @@
-BMS22.X/build/
-BMS22.X/dist/
-BMS22.X/nbproject/private/
-BMS22.X/nbproject/Makefile-*
-BMS22.X/nbproject/Package-*
+**/build/
+**/dist/
+**/nbproject/private/
+**/nbproject/Makefile-*
+**/nbproject/Package-*
+**/.generated_files/
+**/scope screenshots/
